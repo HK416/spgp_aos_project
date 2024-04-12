@@ -29,6 +29,8 @@ public class GameView extends View {
         currentCallback = null;
     };
 
+    private final GameTimer timer = new GameTimer();
+
     public GameView(Context context) {
         super(context);
         setFullScreen();
@@ -57,10 +59,13 @@ public class GameView extends View {
 
     private void onStartScheduling(long frameTimeNanos) {
         Log.d(TAG, "::onStartScheduling >> 게임 루프 시작.");
+        timer.reset(frameTimeNanos);
     }
 
     private void onUpdate(long frameTimeNanos) {
-        Log.d(TAG, "::onUpdate >> 게임 상태 갱신.");
+        timer.tick(frameTimeNanos);
+        Log.d(TAG, "::onUpdate >> ElapsedTimeSec:" + timer.getElapsedTimeSec()
+                + ", FPS:" + timer.getFrameRate());
     }
 
     private void onStopScheduling(long frameTimeNanos) {
