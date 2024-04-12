@@ -227,8 +227,14 @@
 - [x] 게임에 필요한 리소스 수집.
 
 #### 2주차 (04/12~04/18)
+- [ ] 게임 Framework 구현.
+    - GameTimer 구현.
+    - GameScene 구현.
+    - GameLoop와 GameEvent 처리.
 - [ ] 게임에서 사용되는 Renderer 구현.
-- [ ] 게임에서 사용되는 벡터 자료형 및 수학 함수 구현.
+    - Transform 구현.
+    - GameCamera 구현.
+    - DrawPipeline 구현.
 
 #### 3주차 (04/19~04/25)
 - [ ] Behavior Tree를 이용한 각 행동에 따른 플레이어의 움직임 구현.
