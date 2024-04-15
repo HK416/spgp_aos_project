@@ -227,7 +227,7 @@
 - [x] 게임에 필요한 리소스 수집.
 
 #### 2주차 (04/12~04/18)
-- [ ] 게임 Framework 구현.
+- [x] 게임 Framework 구현.
     - GameTimer 구현.
     - GameScene 구현.
     - GameLoop와 GameEvent 처리.
