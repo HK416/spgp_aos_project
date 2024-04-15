@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.util.Log;
 import android.view.Choreographer;
 import android.view.Choreographer.FrameCallback;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -56,6 +57,11 @@ public class GameView extends View {
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         SceneManager.getInstance().onDraw(canvas);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 
     private void onStartScheduling(long frameTimeNanos) {
