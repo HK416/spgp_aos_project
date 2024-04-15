@@ -1,5 +1,7 @@
 package com.hk416.fallingdowntino;
 
+import androidx.annotation.NonNull;
+
 import java.util.Stack;
 
 public final class SceneManager {
@@ -18,5 +20,20 @@ public final class SceneManager {
 
     public static SceneManager getInstance() {
         return instance;
+    }
+
+    public void changeScene(@NonNull IGameScene scene) {
+        nextScene = scene;
+        commands = CMD_CHANGE;
+    }
+
+    public void pushScene(@NonNull IGameScene scene) {
+        nextScene = scene;
+        commands = CMD_PUSH;
+    }
+
+    public void popScene() {
+        nextScene = null;
+        commands = CMD_POP;
     }
 }
