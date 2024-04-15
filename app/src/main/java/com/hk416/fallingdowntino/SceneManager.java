@@ -1,5 +1,6 @@
 package com.hk416.fallingdowntino;
 
+import android.graphics.Canvas;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,41 @@ public final class SceneManager {
         return instance;
     }
 
-    public void processCommands() {
+    public void onPause() {
+        IGameScene currentScene = getCurrentScene();
+        if (currentScene != null) {
+            // TODO: 현재 장면을 정지시킵니다.
+        }
+    }
+
+    public void onResume() {
+        IGameScene currentScene = getCurrentScene();
+        if (currentScene != null) {
+            // TODO: 현재 장면을 재개합니다.
+        }
+    }
+
+    public boolean onUpdate(float elapsedTimeSec, long frameRate) {
+        // 다음 장면을 설정하는 명령어를 수행합니다.
+        processCommands();
+
+        // 현재 장면을 갱신합니다.
+        IGameScene currentScene = getCurrentScene();
+        if (currentScene != null) {
+            // TODO: 현재 장면을 갱신합니다.
+            return true;
+        }
+        return false;
+    }
+
+    public void onDraw(@NonNull Canvas canvas) {
+        IGameScene currentScene = getCurrentScene();
+        if (currentScene != null) {
+            // TODO: 현재 장면을 그립니다.
+        }
+    }
+
+    private void processCommands() {
         switch (commands) {
             case CMD_NONE: /* empty */
                 break;

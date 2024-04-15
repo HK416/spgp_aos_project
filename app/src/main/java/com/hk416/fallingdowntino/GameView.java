@@ -55,20 +55,25 @@ public class GameView extends View {
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
+        SceneManager.getInstance().onDraw(canvas);
     }
 
     private void onStartScheduling(long frameTimeNanos) {
         Log.d(TAG, "::onStartScheduling >> 게임 루프 시작.");
         timer.reset(frameTimeNanos);
+        SceneManager.getInstance().onResume();
     }
 
     private void onUpdate(long frameTimeNanos) {
         timer.tick(frameTimeNanos);
-        Log.d(TAG, "::onUpdate >> ElapsedTimeSec:" + timer.getElapsedTimeSec()
-                + ", FPS:" + timer.getFrameRate());
+        SceneManager.getInstance().onUpdate(
+                timer.getElapsedTimeSec(),
+                timer.getFrameRate()
+        );
     }
 
     private void onStopScheduling(long frameTimeNanos) {
         Log.d(TAG, "::onStopScheduling >> 게임 루프 정지.");
+        SceneManager.getInstance().onPause();
     }
 }
