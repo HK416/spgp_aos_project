@@ -40,6 +40,9 @@ public class GameView extends View {
 
         // Context는 반드시 Activity라 가정한다.
         activity = (Activity)context;
+
+        // 게임의 첫 번째 장면을 추가.
+        SceneManager.getInstance().cmdPushScene(new InGameScene());
     }
 
     private void setFullScreen() {

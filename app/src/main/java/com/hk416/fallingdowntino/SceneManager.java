@@ -30,7 +30,6 @@ public final class SceneManager {
 
     public void addMotionEvent(@NonNull MotionEvent event) {
         eventQueue.push(event);
-        Log.d(TAG, "::addMotionEvent >> 이벤트 추가:" + event);
     }
 
     public void onPause() {
@@ -63,7 +62,6 @@ public final class SceneManager {
                     break;
                 }
 
-                Log.d(TAG, "::onUpdate >> event:" + e);
                 currentScene.handleEvent(e);
             }
 
