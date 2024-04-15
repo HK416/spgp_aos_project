@@ -19,8 +19,8 @@ public final class SceneManager {
     public static final int CMD_POP = 2;
     public static final int CMD_CHANGE = 3;
 
-    private ArrayDeque<MotionEvent> eventQueue = new ArrayDeque<>();
-    private Stack<IGameScene> sceneStack = new Stack<>();
+    private final ArrayDeque<MotionEvent> eventQueue = new ArrayDeque<>();
+    private final Stack<IGameScene> sceneStack = new Stack<>();
     private IGameScene nextScene = null;
     private int commands = CMD_NONE;
 
@@ -39,14 +39,14 @@ public final class SceneManager {
 
         IGameScene currentScene = getCurrentScene();
         if (currentScene != null) {
-            // TODO: 현재 장면을 정지시킵니다.
+            currentScene.onPause();
         }
     }
 
     public void onResume() {
         IGameScene currentScene = getCurrentScene();
         if (currentScene != null) {
-            // TODO: 현재 장면을 재개합니다.
+            currentScene.onResume();
         }
     }
 
@@ -58,16 +58,16 @@ public final class SceneManager {
         IGameScene currentScene = getCurrentScene();
         if (currentScene != null) {
             while (true) {
-                MotionEvent event = eventQueue.poll();
-                if (event == null) {
+                MotionEvent e = eventQueue.poll();
+                if (e == null) {
                     break;
                 }
 
-                // TODO: 현재 장면에 이벤트를 전달합니다.
-                Log.d(TAG, "::onUpdate >> event:" + event);
+                Log.d(TAG, "::onUpdate >> event:" + e);
+                currentScene.handleEvent(e);
             }
 
-            // TODO: 현재 장면을 갱신합니다.
+            currentScene.onUpdate(elapsedTimeSec, frameRate);
             return true;
         }
         return false;
@@ -76,7 +76,7 @@ public final class SceneManager {
     public void onDraw(@NonNull Canvas canvas) {
         IGameScene currentScene = getCurrentScene();
         if (currentScene != null) {
-            // TODO: 현재 장면을 그립니다.
+            currentScene.onDraw(canvas);
         }
     }
 
@@ -107,34 +107,34 @@ public final class SceneManager {
     private void processChangeScene() {
         IGameScene currentScene = getCurrentScene();
         if (currentScene != null) {
-            // TODO: 현재 장면에서 빠져나옵니다.
+            currentScene.onExit();
             sceneStack.pop();
         }
 
-        // TODO: 다음 장면에 진입합니다.
+        nextScene.onEnter();
         sceneStack.push(nextScene);
     }
 
     private void processPushScene() {
         IGameScene currentScene = getCurrentScene();
         if (currentScene != null) {
-            // TODO: 현재 장면을 정지시킵니다.
+            currentScene.onPause();
         }
 
-        // TODO: 다음 장면에 진입합니다.
+        nextScene.onEnter();
         sceneStack.push(nextScene);
     }
 
     private void processPopScene() {
         IGameScene currentScene = getCurrentScene();
         if (currentScene != null) {
-            // TODO: 현재 장면에서 빠져나옵니다.
+            currentScene.onExit();
             sceneStack.pop();
         }
 
-        currentScene = getCurrentScene();
-        if (currentScene != null) {
-            // TODO: 이전 장면을 재개합니다.
+        IGameScene previousScene = getCurrentScene();
+        if (previousScene != null) {
+            previousScene.onResume();
         }
     }
 
