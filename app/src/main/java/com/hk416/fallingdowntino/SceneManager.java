@@ -2,9 +2,11 @@ package com.hk416.fallingdowntino;
 
 import android.graphics.Canvas;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayDeque;
 import java.util.Stack;
 
 public final class SceneManager {
@@ -17,6 +19,7 @@ public final class SceneManager {
     public static final int CMD_POP = 2;
     public static final int CMD_CHANGE = 3;
 
+    private ArrayDeque<MotionEvent> eventQueue = new ArrayDeque<>();
     private Stack<IGameScene> sceneStack = new Stack<>();
     private IGameScene nextScene = null;
     private int commands = CMD_NONE;
@@ -25,7 +28,15 @@ public final class SceneManager {
         return instance;
     }
 
+    public void addMotionEvent(@NonNull MotionEvent event) {
+        eventQueue.push(event);
+        Log.d(TAG, "::addMotionEvent >> 이벤트 추가:" + event);
+    }
+
     public void onPause() {
+        // 이전에 추가된 이벤트들을 제거합니다.
+        eventQueue.clear();
+
         IGameScene currentScene = getCurrentScene();
         if (currentScene != null) {
             // TODO: 현재 장면을 정지시킵니다.
@@ -46,6 +57,16 @@ public final class SceneManager {
         // 현재 장면을 갱신합니다.
         IGameScene currentScene = getCurrentScene();
         if (currentScene != null) {
+            while (true) {
+                MotionEvent event = eventQueue.poll();
+                if (event == null) {
+                    break;
+                }
+
+                // TODO: 현재 장면에 이벤트를 전달합니다.
+                Log.d(TAG, "::onUpdate >> event:" + event);
+            }
+
             // TODO: 현재 장면을 갱신합니다.
             return true;
         }

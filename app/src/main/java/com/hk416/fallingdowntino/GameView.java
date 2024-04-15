@@ -1,5 +1,6 @@
 package com.hk416.fallingdowntino;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.Log;
@@ -31,10 +32,14 @@ public class GameView extends View {
     };
 
     private final GameTimer timer = new GameTimer();
+    private final Activity activity;
 
     public GameView(Context context) {
         super(context);
         setFullScreen();
+
+        // Context는 반드시 Activity라 가정한다.
+        activity = (Activity)context;
     }
 
     private void setFullScreen() {
@@ -61,7 +66,17 @@ public class GameView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+                SceneManager.getInstance().addMotionEvent(event);
+                return true;
+            case MotionEvent.ACTION_UP:
+                SceneManager.getInstance().addMotionEvent(event);
+                return false;
+            default:
+                return super.onTouchEvent(event);
+        }
     }
 
     private void onStartScheduling(long frameTimeNanos) {
@@ -72,10 +87,14 @@ public class GameView extends View {
 
     private void onUpdate(long frameTimeNanos) {
         timer.tick(frameTimeNanos);
-        SceneManager.getInstance().onUpdate(
+        boolean isRunning = SceneManager.getInstance().onUpdate(
                 timer.getElapsedTimeSec(),
                 timer.getFrameRate()
         );
+
+        if (!isRunning) {
+            activity.finish();
+        }
     }
 
     private void onStopScheduling(long frameTimeNanos) {
