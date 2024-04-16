@@ -33,10 +33,11 @@ public final class Viewport {
      */
     public PointF toScreenCoord(@NonNull Vector projectionPoint) {
         // 주어진 투영 좌표계(-1.0f ~ 1.0f)를 정규화(0.0f ~ 1.0f) 한다.
-        Vector norm = projectionPoint.postMul(0.5f).postAdd(0.5f);
+        float x = (0.5f * projectionPoint.x) + 0.5f;
+        float y = 1.0f - (0.5f * projectionPoint.y) + 0.5f;
         return new PointF(
-                left + norm.x * getWidth(),
-                top + norm.y * getHeight()
+                left + x * getWidth(),
+                top + y * getHeight()
         );
     }
 
@@ -47,8 +48,8 @@ public final class Viewport {
      * @return 투영 좌표계 상의 한 점의 위치
      */
     public Vector toProjectionCoord(@NonNull PointF screenPoint) {
-        float x = (screenPoint.x - left) * getWidth();
-        float y = (screenPoint.y - top) * getHeight();
-        return new Vector(x, y, 1.0f);
+        float x = 2.0f * ((screenPoint.x - left) / getWidth() - 0.5f);
+        float y = 2.0f * ((1.0f - (screenPoint.y - top) / getHeight() - 0.5f));
+        return new Vector(x, y, 0.0f);
     }
 }
