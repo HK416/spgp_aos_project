@@ -37,6 +37,10 @@ public final class Vector {
         x += rhs.x; y += rhs.y; z += rhs.z;
     }
 
+    public Vector neg() {
+        return new Vector(-x, -y, -z);
+    }
+
     public Vector prevSub(@NonNull Vector lhs) {
         return new Vector(lhs.x - x, lhs.y - y, lhs.z - z);
     }
@@ -99,6 +103,14 @@ public final class Vector {
 
     public float dot(@NonNull Vector rhs) {
         return x * rhs.x + y * rhs.y + z * rhs.z;
+    }
+
+    public Vector cross(@NonNull Vector rhs) {
+        return new Vector(
+                y * rhs.z - rhs.y * z,
+                z * rhs.x - rhs.z * x,
+                x * rhs.y - rhs.x * y
+        );
     }
 
     public float lengthSquare() {
