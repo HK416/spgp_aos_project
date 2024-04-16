@@ -25,12 +25,24 @@ public final class Vector {
         this.x = x; this.y = y; this.z = z;
     }
 
+    public Vector prevAdd(float lhs) {
+        return new Vector(lhs + x, lhs + y, lhs + z);
+    }
+
     public Vector prevAdd(@NonNull Vector lhs) {
         return new Vector(lhs.x + x, lhs.y + y, lhs.z + z);
     }
 
+    public Vector postAdd(float rhs) {
+        return new Vector(x + rhs, y + rhs, z + rhs);
+    }
+
     public Vector postAdd(@NonNull Vector rhs) {
         return new Vector(x + rhs.x, y + rhs.y, z + rhs.z);
+    }
+
+    public void postAddAssign(float rhs) {
+        x += rhs; y += rhs; z += rhs;
     }
 
     public void postAddAssign(@NonNull Vector rhs) {
@@ -41,12 +53,24 @@ public final class Vector {
         return new Vector(-x, -y, -z);
     }
 
+    public Vector prevSub(float lhs) {
+        return new Vector(lhs - x, lhs - y, lhs - z);
+    }
+
     public Vector prevSub(@NonNull Vector lhs) {
         return new Vector(lhs.x - x, lhs.y - y, lhs.z - z);
     }
 
+    public Vector postSub(float rhs) {
+        return new Vector(x - rhs, y - rhs, z - rhs);
+    }
+
     public Vector postSub(@NonNull Vector rhs) {
         return new Vector(x - rhs.x, y - rhs.y, z - rhs.z);
+    }
+
+    public void postSubAssign(float rhs) {
+        x -= rhs; y -= rhs; z -= rhs;
     }
 
     public void postSubAssign(@NonNull Vector rhs) {
