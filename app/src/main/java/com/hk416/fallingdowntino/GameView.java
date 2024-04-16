@@ -41,6 +41,9 @@ public class GameView extends View {
         // Context는 반드시 Activity라 가정한다.
         activity = (Activity)context;
 
+        // DrawPipeline을 설정한다.
+        DrawPipeline.getInstance().setRatio(9.0f, 16.0f);
+
         // 게임의 첫 번째 장면을 추가.
         SceneManager.getInstance().cmdPushScene(new InGameScene());
     }
@@ -80,6 +83,12 @@ public class GameView extends View {
             default:
                 return super.onTouchEvent(event);
         }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        DrawPipeline.getInstance().onResize(w, h);
     }
 
     private void onStartScheduling(long frameTimeNanos) {
