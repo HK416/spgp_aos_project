@@ -8,7 +8,7 @@ public final class GameTimer {
     private long previousTimePoint = 0;
     private long currentTimePoint = 0;
 
-    private float[] sampleTimes = new float[MAX_SAMPLES];
+    private final float[] sampleTimes = new float[MAX_SAMPLES];
     private int numSampleTimes = 0;
     private float elapsedTimeSec = 0.0f;
     private float fpsElapsedTimeSec = 0.0f;

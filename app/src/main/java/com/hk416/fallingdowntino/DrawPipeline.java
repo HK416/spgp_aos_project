@@ -1,7 +1,6 @@
 package com.hk416.fallingdowntino;
 
 import android.util.Log;
-import android.view.View;
 
 public final class DrawPipeline {
     private static final String TAG = DrawPipeline.class.getSimpleName();

@@ -1,5 +1,6 @@
 package com.hk416.fallingdowntino;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -70,6 +71,7 @@ public class GameView extends View {
         SceneManager.getInstance().onDraw(canvas);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
