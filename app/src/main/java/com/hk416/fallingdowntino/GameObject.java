@@ -1,5 +1,6 @@
 package com.hk416.fallingdowntino;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class GameObject {
@@ -11,6 +12,14 @@ public class GameObject {
 
     public GameObject() {
         /* empty */
+    }
+
+    public void setChild(@NonNull GameObject child) {
+        this.child = child;
+    }
+
+    public void setSibling(@NonNull GameObject sibling) {
+        this.sibling = sibling;
     }
 
     public void setLayerLevel(float level) {
