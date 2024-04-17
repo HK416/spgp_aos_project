@@ -1,13 +1,22 @@
 package com.hk416.fallingdowntino;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 public class GameCamera extends GameObject {
+    private static final String TAG = GameCamera.class.getSimpleName();
+
+    protected Projection projection = null;
     protected Transform cameraTransform = Transform.IDENTITY;
     protected Transform inverseCameraTransform = Transform.IDENTITY;
 
     public GameCamera() {
         /* empty */
+    }
+
+    public void setProjection(@NonNull Projection projection) {
+        this.projection = projection;
     }
 
     public void generateCameraTransform() {
@@ -30,11 +39,23 @@ public class GameCamera extends GameObject {
         inverseCameraTransform = cameraTransform.inverse();
     }
 
-    public Vector toCameraCoord(@NonNull Vector worldPoint) {
-        return cameraTransform.transform(worldPoint);
+    public Vector toProjectionCoord(@NonNull Vector worldPoint) {
+        if (projection == null) {
+            Log.w(TAG, "::toProjectionCoord >> 카메라에 projection이 설정되지 않았습니다.");
+            return null;
+        }
+
+        Vector cameraPoint = cameraTransform.transform(worldPoint);
+        return projection.toProjectionCoord(cameraPoint);
     }
 
-    public Vector toWorldCoord(@NonNull Vector cameraPoint) {
+    public Vector toWorldCoord(@NonNull Vector projectionPoint) {
+        if (projection == null) {
+            Log.w(TAG, "::toWorldCoord >> 카메라에 projection이 설정되지 않았습니다.");
+            return null;
+        }
+
+        Vector cameraPoint = projection.toCameraCoord(projectionPoint);
         return inverseCameraTransform.transform(cameraPoint);
     }
 }

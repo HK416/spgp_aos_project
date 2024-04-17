@@ -1,5 +1,7 @@
 package com.hk416.fallingdowntino;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 /**
@@ -17,7 +19,11 @@ public final class Projection {
     private float zNear = 0.0f;
     private float zFar = 0.0f;
 
-    Projection(float top, float left, float bottom, float right, float zNear, float zFar) {
+    public Projection() {
+        /* empty */
+    }
+
+    public Projection(float top, float left, float bottom, float right, float zNear, float zFar) {
         this.top = top;
         this.left = left;
         this.bottom = bottom;

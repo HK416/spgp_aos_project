@@ -233,7 +233,7 @@
     - GameTimer 구현.
     - GameScene 구현.
     - GameLoop와 GameEvent 처리.
-- [ ] 게임에서 사용되는 Renderer 구현.
+- [x] 게임에서 사용되는 Renderer 구현.
     - Transform 구현.
     - GameCamera 구현.
     - DrawPipeline 구현.

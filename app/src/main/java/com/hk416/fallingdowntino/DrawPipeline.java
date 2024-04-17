@@ -1,9 +1,13 @@
 package com.hk416.fallingdowntino;
 
+import android.graphics.PointF;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 public final class DrawPipeline {
     private static final String TAG = DrawPipeline.class.getSimpleName();
+
     private static final DrawPipeline instance = new DrawPipeline();
     private static final int DEF_SCREEN_WIDTH = 720;
     private static final int DEF_SCREEN_HEIGHT = 1280;
@@ -12,6 +16,7 @@ public final class DrawPipeline {
     private float ratio = DEF_RATIO;
     private int screenWidth = DEF_SCREEN_WIDTH;
     private int screenHeight = DEF_SCREEN_HEIGHT;
+    private GameCamera mainCamera = null;
     private final Viewport viewport = new Viewport();
 
     public static DrawPipeline getInstance() {
@@ -20,6 +25,10 @@ public final class DrawPipeline {
 
     public void setRatio(float w, float h) {
         ratio = w / h;
+    }
+
+    public void setMainCamera(@NonNull GameCamera camera) {
+        this.mainCamera = camera;
     }
 
     public void setViewport(float top, float left, float bottom, float right) {
@@ -51,17 +60,45 @@ public final class DrawPipeline {
                 centerY + halfViewHeight,
                 centerX + halfViewWidth
         );
-
-        Log.d(TAG, "::setAutoViewport >> top:" + viewport.top
-                + ", left:" + viewport.left
-                + ", bottom:" + viewport.bottom
-                + ", right:" + viewport.right
-        );
     }
 
     public void onResize(int w, int h) {
         screenWidth = w;
         screenHeight = h;
         setAutoViewport();
+    }
+
+    /**
+     * 게임 월드 좌표계상의 한 점의 위치를 스크린 좌표계상의 한 점의 위치로 변환합니다.
+     * 만약 mainCamera를 DrawPipeline에 설정하지 않았을 경우 null을 반환합니다.
+     *
+     * @param worldPoint 게임 월드 좌표계상의 한 점
+     * @return 스크린 좌표계상의 한 점의 위치 또는 null
+     */
+    public PointF toScreenCoord(@NonNull Vector worldPoint) {
+        if (mainCamera == null) {
+            Log.w(TAG, "::toScreenCoord >> mainCamera가 설정되지 않았습니다.");
+            return null;
+        }
+
+        Vector projctionPoint = mainCamera.toProjectionCoord(worldPoint);
+        return viewport.toScreenCoord(projctionPoint);
+    }
+
+    /**
+     * 스크린 좌표계상의 한 점의 위치를 월드 좌표계상의 한 점의 위치로 변환합니다.
+     * 만약 mainCamera를 DrawPipeline에 설정하지 않았을 경우 null을 반환합니다.
+     *
+     * @param screenPoint 스크린 좌표계상의 한 점
+     * @return 월드 좌표계상의 한 점의 위치 또는 null
+     */
+    public Vector toWorldCoord(@NonNull PointF screenPoint) {
+        if (mainCamera == null) {
+            Log.w(TAG, "::toWorldCoord >> mainCamera가 설정되지 않았습니다.");
+            return null;
+        }
+
+        Vector projectionPoint = viewport.toProjectionCoord(screenPoint);
+        return mainCamera.toWorldCoord(projectionPoint);
     }
 }

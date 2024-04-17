@@ -202,9 +202,9 @@ public final class Transform {
 
     public Vector transform(@NonNull Vector vector) {
         return new Vector(
-                xAxis.x * vector.x + xAxis.y * vector.y + xAxis.z * vector.z,
-                yAxis.x * vector.x + yAxis.y * vector.y + yAxis.z * vector.z,
-                zAxis.x * vector.x + zAxis.y * vector.y + zAxis.z * vector.z
+                xAxis.x * vector.x + yAxis.x * vector.y + zAxis.x * vector.z,
+                xAxis.y * vector.x + yAxis.y * vector.y + zAxis.y * vector.z,
+                xAxis.z * vector.x + yAxis.z * vector.y + zAxis.z * vector.z
         );
     }
 }

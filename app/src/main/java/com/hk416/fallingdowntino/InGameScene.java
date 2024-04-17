@@ -1,6 +1,7 @@
 package com.hk416.fallingdowntino;
 
 import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -12,6 +13,23 @@ public final class InGameScene implements IGameScene {
     @Override
     public void onEnter() {
         Log.d(TAG, "::onEnter >> 장면에 진입함.");
+
+        // MainCamera를 생성한다.
+        GameCamera mainCamera = new MainCamera(0.0f, 8.0f);
+        mainCamera.setProjection(new Projection(
+                16.0f,
+                -4.5f,
+                0.0f,
+                4.5f,
+                0.0f,
+                100.0f
+        ));
+        mainCamera.generateCameraTransform();
+
+        // DrawPipeline을 설정한다.
+        DrawPipeline pipeline = DrawPipeline.getInstance();
+        pipeline.setRatio(9.0f, 16.0f);
+        pipeline.setMainCamera(mainCamera);
     }
 
     @Override
@@ -31,7 +49,12 @@ public final class InGameScene implements IGameScene {
 
     @Override
     public void handleEvent(@NonNull MotionEvent e) {
-        Log.d(TAG, "::handleEvent >> 전달 받은 이벤트:" + e);
+        Vector worldPoint = DrawPipeline.getInstance().toWorldCoord(new PointF(e.getX(), e.getY()));
+        Log.d(TAG, "::handleEvent >> 입력받은 마우스의 월드 좌표계 (x:" + worldPoint.x
+                + ", y:" + worldPoint.y
+                + ", z:" + worldPoint.z
+                + ")"
+        );
     }
 
     @Override
