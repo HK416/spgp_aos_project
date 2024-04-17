@@ -13,6 +13,14 @@ public final class Transform {
         /* empty */
     }
 
+    public Transform(float angleRadian) {
+        float sin = (float)Math.sin(angleRadian);
+        float cos = (float)Math.cos(angleRadian);
+        this.xAxis = new Vector(cos, -sin, 0.0f);
+        this.yAxis = new Vector(sin, cos, 0.0f);
+        this.zAxis = Vector.Z;
+    }
+
     public Transform(@NonNull Vector xAxis, @NonNull Vector yAxis, @NonNull Vector zAxis) {
         this.xAxis = xAxis; this.yAxis = yAxis; this.zAxis = zAxis;
     }

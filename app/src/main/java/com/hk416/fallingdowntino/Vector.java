@@ -137,6 +137,16 @@ public final class Vector {
         );
     }
 
+    public float angleBetweenVector(@NonNull Vector other) {
+        Vector a = this.normalize();
+        Vector b = other.normalize();
+        Vector n = a.cross(b);
+
+        float angleTheta = (float)Math.acos(a.dot(b) / (a.length() * b.length()));
+
+        return n.z < 0.0f ? 2.0f * (float)Math.PI - angleTheta : angleTheta;
+    }
+
     public float lengthSquare() {
         return x * x + y * y + z * z;
     }
