@@ -1,4 +1,4 @@
-package com.hk416.fallingdowntino;
+package com.hk416.framework.timer;
 
 public final class GameTimer {
     private static final String TAG = GameTimer.class.getSimpleName();

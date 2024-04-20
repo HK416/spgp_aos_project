@@ -1,4 +1,6 @@
-package com.hk416.fallingdowntino;
+package com.hk416.fallingdowntino.object;
+
+import com.hk416.framework.render.GameCamera;
 
 public final class MainCamera extends GameCamera {
     public MainCamera(float x, float y) {

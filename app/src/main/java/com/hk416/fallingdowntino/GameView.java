@@ -12,6 +12,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.scene.InGameScene;
+import com.hk416.framework.render.DrawPipeline;
+import com.hk416.framework.timer.GameTimer;
+import com.hk416.framework.scene.SceneManager;
+
 public class GameView extends View {
     public static final String TAG = GameView.class.getSimpleName();
 

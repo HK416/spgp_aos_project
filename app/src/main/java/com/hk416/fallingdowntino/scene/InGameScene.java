@@ -1,4 +1,4 @@
-package com.hk416.fallingdowntino;
+package com.hk416.fallingdowntino.scene;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
@@ -6,6 +6,13 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
+
+import com.hk416.fallingdowntino.object.MainCamera;
+import com.hk416.framework.render.DrawPipeline;
+import com.hk416.framework.render.GameCamera;
+import com.hk416.framework.scene.IGameScene;
+import com.hk416.framework.transform.Projection;
+import com.hk416.framework.transform.Vector;
 
 public final class InGameScene implements IGameScene {
     private static final String TAG = InGameScene.class.getSimpleName();

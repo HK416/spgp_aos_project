@@ -1,6 +1,4 @@
-package com.hk416.fallingdowntino;
-
-import android.util.Log;
+package com.hk416.framework.transform;
 
 import androidx.annotation.NonNull;
 
@@ -50,7 +48,7 @@ public final class Projection {
      * @param cameraPoint 카메라 좌표계상의 한 점의 위치
      * @return 투영 좌표계상의 한 점의 위치
      */
-    Vector toProjectionCoord(@NonNull Vector cameraPoint) {
+    public Vector toProjectionCoord(@NonNull Vector cameraPoint) {
         float x = 2.0f * ((cameraPoint.x - left) / getWidth() - 0.5f); // -1.0f ~ 1.0f
         float y = 2.0f * ((cameraPoint.y - bottom) / getHeight() - 0.5f); // -1.0f ~ 1.0f
         float z = (cameraPoint.z - zNear) / getDepth(); // 0.0f ~ 1.0f
@@ -63,7 +61,7 @@ public final class Projection {
      * @param projectionPoint -1.0f ~ 1.0f 사이의 값을 가지는 투영 좌표계상의 한 점의 위치
      * @return 카메라 좌표계 상의 한 점의 위치
      */
-    Vector toCameraCoord(@NonNull Vector projectionPoint) {
+    public Vector toCameraCoord(@NonNull Vector projectionPoint) {
         float x = left + ((projectionPoint.x * 0.5f) + 0.5f) * getWidth();
         float y = bottom + ((projectionPoint.y * 0.5f) + 0.5f) * getHeight();
         float z = zNear + projectionPoint.z * getDepth();
