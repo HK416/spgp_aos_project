@@ -10,8 +10,7 @@ import java.util.ArrayDeque;
 import java.util.Stack;
 
 public final class SceneManager {
-    public static final String TAG = SceneManager.class.getSimpleName();
-
+    private static final String TAG = SceneManager.class.getSimpleName();
     private static final SceneManager instance = new SceneManager();
 
     private static final int CMD_NONE = 0;
@@ -20,8 +19,8 @@ public final class SceneManager {
     public static final int CMD_CHANGE = 3;
 
     private final ArrayDeque<MotionEvent> eventQueue = new ArrayDeque<>();
-    private final Stack<IGameScene> sceneStack = new Stack<>();
-    private IGameScene nextScene = null;
+    private final Stack<GameScene> sceneStack = new Stack<>();
+    private GameScene nextScene = null;
     private int commands = CMD_NONE;
 
     public static SceneManager getInstance() {
@@ -36,14 +35,14 @@ public final class SceneManager {
         // 이전에 추가된 이벤트들을 제거합니다.
         eventQueue.clear();
 
-        IGameScene currentScene = getCurrentScene();
+        GameScene currentScene = getCurrentScene();
         if (currentScene != null) {
             currentScene.onPause();
         }
     }
 
     public void onResume() {
-        IGameScene currentScene = getCurrentScene();
+        GameScene currentScene = getCurrentScene();
         if (currentScene != null) {
             currentScene.onResume();
         }
@@ -54,7 +53,7 @@ public final class SceneManager {
         processCommands();
 
         // 현재 장면을 갱신합니다.
-        IGameScene currentScene = getCurrentScene();
+        GameScene currentScene = getCurrentScene();
         if (currentScene != null) {
             while (true) {
                 MotionEvent e = eventQueue.poll();
@@ -72,7 +71,7 @@ public final class SceneManager {
     }
 
     public void onDraw(@NonNull Canvas canvas) {
-        IGameScene currentScene = getCurrentScene();
+        GameScene currentScene = getCurrentScene();
         if (currentScene != null) {
             currentScene.onDraw(canvas);
         }
@@ -98,12 +97,12 @@ public final class SceneManager {
         cmdReset();
     }
 
-    private IGameScene getCurrentScene() {
+    private GameScene getCurrentScene() {
         return sceneStack.isEmpty() ? null : sceneStack.peek();
     }
 
     private void processChangeScene() {
-        IGameScene currentScene = getCurrentScene();
+        GameScene currentScene = getCurrentScene();
         if (currentScene != null) {
             currentScene.onExit();
             sceneStack.pop();
@@ -114,7 +113,7 @@ public final class SceneManager {
     }
 
     private void processPushScene() {
-        IGameScene currentScene = getCurrentScene();
+        GameScene currentScene = getCurrentScene();
         if (currentScene != null) {
             currentScene.onPause();
         }
@@ -124,13 +123,13 @@ public final class SceneManager {
     }
 
     private void processPopScene() {
-        IGameScene currentScene = getCurrentScene();
+        GameScene currentScene = getCurrentScene();
         if (currentScene != null) {
             currentScene.onExit();
             sceneStack.pop();
         }
 
-        IGameScene previousScene = getCurrentScene();
+        GameScene previousScene = getCurrentScene();
         if (previousScene != null) {
             previousScene.onResume();
         }
@@ -141,12 +140,12 @@ public final class SceneManager {
         commands = CMD_NONE;
     }
 
-    public void cmdChangeScene(@NonNull IGameScene scene) {
+    public void cmdChangeScene(@NonNull GameScene scene) {
         nextScene = scene;
         commands = CMD_CHANGE;
     }
 
-    public void cmdPushScene(@NonNull IGameScene scene) {
+    public void cmdPushScene(@NonNull GameScene scene) {
         nextScene = scene;
         commands = CMD_PUSH;
     }

@@ -1,7 +1,6 @@
 package com.hk416.fallingdowntino.scene;
 
 import android.graphics.Canvas;
-import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -10,11 +9,9 @@ import androidx.annotation.NonNull;
 import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
-import com.hk416.framework.scene.IGameScene;
-import com.hk416.framework.transform.Projection;
-import com.hk416.framework.transform.Vector;
+import com.hk416.framework.scene.GameScene;
 
-public final class InGameScene implements IGameScene {
+public final class InGameScene extends GameScene {
     private static final String TAG = InGameScene.class.getSimpleName();
 
     @Override
@@ -22,16 +19,7 @@ public final class InGameScene implements IGameScene {
         Log.d(TAG, "::onEnter >> 장면에 진입함.");
 
         // MainCamera를 생성한다.
-        GameCamera mainCamera = new MainCamera(0.0f, 8.0f);
-        mainCamera.setProjection(new Projection(
-                16.0f,
-                -4.5f,
-                0.0f,
-                4.5f,
-                0.0f,
-                100.0f
-        ));
-        mainCamera.generateCameraTransform();
+        GameCamera mainCamera = new MainCamera();
 
         // DrawPipeline을 설정한다.
         DrawPipeline pipeline = DrawPipeline.getInstance();
@@ -56,21 +44,16 @@ public final class InGameScene implements IGameScene {
 
     @Override
     public void handleEvent(@NonNull MotionEvent e) {
-        Vector worldPoint = DrawPipeline.getInstance().toWorldCoord(new PointF(e.getX(), e.getY()));
-        Log.d(TAG, "::handleEvent >> 입력받은 마우스의 월드 좌표계 (x:" + worldPoint.x
-                + ", y:" + worldPoint.y
-                + ", z:" + worldPoint.z
-                + ")"
-        );
+        super.handleEvent(e);
     }
 
     @Override
     public void onUpdate(float elapsedTimeSec, long frameRate) {
-
+        super.onUpdate(elapsedTimeSec, frameRate);
     }
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
-
+        super.onDraw(canvas);
     }
 }

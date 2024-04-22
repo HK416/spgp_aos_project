@@ -1,5 +1,8 @@
 package com.hk416.framework.object;
 
+import android.graphics.Canvas;
+import android.view.MotionEvent;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -11,10 +14,19 @@ public class GameObject {
     protected GameObject sibling = null;
 
     protected Transform transform = Transform.IDENTITY;
-    protected float layerLevel = 0.0f;
+    protected final Vector size = new Vector();
 
     public GameObject() {
         /* empty */
+    }
+
+    public GameObject(float x, float y) {
+        setPosition(x, y);
+    }
+
+    public GameObject(float x, float y, float w, float h) {
+        setPosition(x, y);
+        setSize(w, h);
     }
 
     public void setChild(@NonNull GameObject child) {
@@ -25,19 +37,15 @@ public class GameObject {
         this.sibling = sibling;
     }
 
-    public void setLayerLevel(float level) {
-        layerLevel = level;
-        updateTransform(null);
-    }
-
-    public float getLayerLevel() {
-        return layerLevel;
-    }
-
     public void setPosition(float x, float y) {
         transform.zAxis.x = x;
         transform.zAxis.y = y;
         updateTransform(null);
+    }
+
+    public void setSize(float width, float height) {
+        size.x = width;
+        size.y = height;
     }
 
     public Vector getPosition() {
@@ -50,6 +58,10 @@ public class GameObject {
 
     public Vector getUpVector() {
         return transform.yAxis.normalize();
+    }
+
+    public Vector getSize() {
+        return size;
     }
 
     public float getRotationAngle() {
@@ -85,5 +97,17 @@ public class GameObject {
         if (child != null) {
             child.updateTransform(transform);
         }
+    }
+
+    public void onTouchEvent(@NonNull MotionEvent e) {
+        /* empty */
+    }
+
+    public void onUpdate(float elapsedTimeSec) {
+        /* empty */
+    }
+
+    public void onDraw(@NonNull Canvas canvas) {
+        /* empty */
     }
 }

@@ -20,6 +20,10 @@ public class GameCamera extends GameObject {
         /* empty */
     }
 
+    public GameCamera(float x, float y) {
+        super(x, y);
+    }
+
     public void setProjection(@NonNull Projection projection) {
         this.projection = projection;
     }
