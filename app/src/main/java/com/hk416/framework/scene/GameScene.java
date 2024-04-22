@@ -48,16 +48,16 @@ public class GameScene {
     }
 
     public void onUpdate(float elapsedTimeSec, long frameRate) {
-        for (GameObject object : insertObjects) {
-            gameObjects.push(object);
+        while (!insertObjects.isEmpty()) {
+            gameObjects.push(insertObjects.pop());
         }
 
         for (GameObject object : gameObjects) {
             object.onUpdate(elapsedTimeSec);
         }
 
-        for (GameObject object : removeObjects) {
-            gameObjects.remove(object);
+        while (!removeObjects.isEmpty()) {
+            gameObjects.remove(removeObjects.pop());
         }
     }
 

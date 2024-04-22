@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.object.MainCamera;
+import com.hk416.fallingdowntino.object.Tino;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.scene.GameScene;
@@ -25,6 +26,9 @@ public final class InGameScene extends GameScene {
         DrawPipeline pipeline = DrawPipeline.getInstance();
         pipeline.setRatio(9.0f, 16.0f);
         pipeline.setMainCamera(mainCamera);
+
+        // 게임 오브젝트들을 추가한다.
+        super.insertObject(new Tino());
     }
 
     @Override

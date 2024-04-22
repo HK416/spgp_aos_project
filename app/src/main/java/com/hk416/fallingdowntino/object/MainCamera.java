@@ -10,9 +10,9 @@ public final class MainCamera extends GameCamera {
     public MainCamera() {
         super(X_POS, Y_POS);
         setProjection(new Projection(
-                16.0f,
+                8.0f,
                 -4.5f,
-                0.0f,
+                -8.0f,
                 4.5f,
                 0.0f,
                 100.0f

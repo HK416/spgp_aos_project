@@ -111,6 +111,8 @@ public class GameView extends View {
         if (!isRunning) {
             activity.finish();
         }
+
+        invalidate();
     }
 
     private void onStopScheduling(long frameTimeNanos) {
