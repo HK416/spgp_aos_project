@@ -3,6 +3,7 @@ package com.hk416.fallingdowntino;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.Choreographer;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.scene.InGameScene;
 import com.hk416.framework.render.DrawPipeline;
+import com.hk416.framework.texture.BitmapPool;
 import com.hk416.framework.timer.GameTimer;
 import com.hk416.framework.scene.SceneManager;
 
@@ -46,6 +48,9 @@ public class GameView extends View {
 
         // Context는 반드시 Activity라 가정한다.
         activity = (Activity)context;
+
+        // Resources를 가져오고, BitmapPool을 초기화 한다.
+        BitmapPool.init(getResources());
 
         // 게임의 첫 번째 장면을 추가.
         SceneManager.getInstance().cmdPushScene(new InGameScene());
