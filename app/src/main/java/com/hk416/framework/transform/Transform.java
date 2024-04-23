@@ -3,14 +3,14 @@ package com.hk416.framework.transform;
 import androidx.annotation.NonNull;
 
 public final class Transform {
-    public static final Transform IDENTITY = new Transform();
-
-    public Vector xAxis = Vector.X;
-    public Vector yAxis = Vector.Y;
-    public Vector zAxis = Vector.Z;
+    public Vector xAxis;
+    public Vector yAxis;
+    public Vector zAxis;
 
     public Transform() {
-        /* empty */
+        xAxis = new Vector(1.0f, 0.0f, 0.0f);
+        yAxis = new Vector(0.0f, 1.0f, 0.0f);
+        zAxis = new Vector(0.0f, 0.0f, 1.0f);
     }
 
     public Transform(float angleRadian) {
@@ -18,7 +18,7 @@ public final class Transform {
         float cos = (float)Math.cos(angleRadian);
         this.xAxis = new Vector(cos, -sin, 0.0f);
         this.yAxis = new Vector(sin, cos, 0.0f);
-        this.zAxis = Vector.Z;
+        this.zAxis = new Vector(0.0f, 0.0f, 1.0f);
     }
 
     public Transform(@NonNull Vector xAxis, @NonNull Vector yAxis, @NonNull Vector zAxis) {

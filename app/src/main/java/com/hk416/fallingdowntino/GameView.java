@@ -71,6 +71,10 @@ public class GameView extends View {
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         SceneManager.getInstance().onDraw(canvas);
+        if (BuildConfig.DEBUG) {
+            DrawPipeline.getInstance().drawDebugArea(canvas);
+            timer.drawDebugFps(canvas);
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")

@@ -3,20 +3,20 @@ package com.hk416.fallingdowntino.object;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.BuildConfig;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.transform.Vector;
 
 public class Tino extends GameObject {
     private static final String TAG = Tino.class.getSimpleName();
-    private static final float WIDTH = 1.6f;
+    private static final float WIDTH = 2.0f;
     private static final float HEIGHT = 2.0f;
     private static final float X_POS = 0.0f;
-    private static final float Y_POS = 11.2f;
+    private static final float Y_POS = 12.0f;
 
     private final Paint debugColor;
 
@@ -40,15 +40,16 @@ public class Tino extends GameObject {
         PointF topRight = pipeline.toScreenCoord(max);
         PointF bottomLeft = pipeline.toScreenCoord(min);
 
-        Log.d(TAG, "pos:" + topRight + ", size:" + bottomLeft);
         if (topRight != null && bottomLeft != null) {
-            canvas.drawRect(
-                    bottomLeft.x,
-                    topRight.y,
-                    topRight.x,
-                    bottomLeft.y,
-                    debugColor
-            );
+            if (BuildConfig.DEBUG) {
+                canvas.drawRect(
+                        bottomLeft.x,
+                        topRight.y,
+                        topRight.x,
+                        bottomLeft.y,
+                        debugColor
+                );
+            }
         }
     }
 }

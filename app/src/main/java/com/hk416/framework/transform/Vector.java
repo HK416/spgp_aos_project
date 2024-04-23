@@ -5,10 +5,6 @@ import androidx.annotation.NonNull;
 public final class Vector {
     private static final float EPSLION = 1.401298E-45f;
 
-    public static final Vector X = new Vector(1.0f, 0.0f, 0.0f);
-    public static final Vector Y = new Vector(0.0f, 1.0f, 0.0f);
-    public static final Vector Z = new Vector(0.0f, 0.0f, 1.0f);
-
     public float x = 0.0f;
     public float y = 0.0f;
     public float z = 0.0f;

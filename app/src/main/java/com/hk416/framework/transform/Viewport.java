@@ -1,10 +1,12 @@
 package com.hk416.framework.transform;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PointF;
 
 import androidx.annotation.NonNull;
 
-import com.hk416.framework.transform.Vector;
+import com.hk416.fallingdowntino.BuildConfig;
 
 /**
  *  게임이 화면에 투영되는 영역을 나타내는 클래스 입니다.
@@ -14,10 +16,21 @@ import com.hk416.framework.transform.Vector;
  * @version 1.0
  */
 public final class Viewport {
+    private static Paint debugPaint;
+
     public float top = 0.0f;
     public float left = 0.0f;
     public float bottom = 0.0f;
     public float right = 0.0f;
+
+    public Viewport() {
+        if (BuildConfig.DEBUG && debugPaint == null) {
+            debugPaint = new Paint();
+            debugPaint.setARGB(255, 51, 204, 51);
+            debugPaint.setStyle(Paint.Style.STROKE);
+            debugPaint.setStrokeWidth(5.0f);
+        }
+    }
 
     public float getWidth() {
         return right - left;
@@ -36,7 +49,7 @@ public final class Viewport {
     public PointF toScreenCoord(@NonNull Vector projectionPoint) {
         // 주어진 투영 좌표계(-1.0f ~ 1.0f)를 정규화(0.0f ~ 1.0f) 한다.
         float x = (0.5f * projectionPoint.x) + 0.5f;
-        float y = 1.0f - (0.5f * projectionPoint.y) + 0.5f;
+        float y = 1.0f - ((0.5f * projectionPoint.y) + 0.5f);
         return new PointF(
                 left + x * getWidth(),
                 top + y * getHeight()
@@ -53,5 +66,11 @@ public final class Viewport {
         float x = 2.0f * ((screenPoint.x - left) / getWidth() - 0.5f);
         float y = 2.0f * ((1.0f - (screenPoint.y - top) / getHeight() - 0.5f));
         return new Vector(x, y, 0.0f);
+    }
+
+    public void drawDebugArea(@NonNull Canvas canvas) {
+        if (BuildConfig.DEBUG && debugPaint != null) {
+            canvas.drawRect(left, top, right, bottom, debugPaint);
+        }
     }
 }

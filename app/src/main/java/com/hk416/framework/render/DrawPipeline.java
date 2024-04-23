@@ -1,5 +1,6 @@
 package com.hk416.framework.render;
 
+import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.util.Log;
 
@@ -63,6 +64,10 @@ public final class DrawPipeline {
                 centerY + halfViewHeight,
                 centerX + halfViewWidth
         );
+    }
+
+    public void drawDebugArea(@NonNull Canvas canvas) {
+        viewport.drawDebugArea(canvas);
     }
 
     public void onResize(int w, int h) {

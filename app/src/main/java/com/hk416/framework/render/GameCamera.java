@@ -13,8 +13,8 @@ public class GameCamera extends GameObject {
     private static final String TAG = GameCamera.class.getSimpleName();
 
     protected Projection projection = null;
-    protected Transform cameraTransform = Transform.IDENTITY;
-    protected Transform inverseCameraTransform = Transform.IDENTITY;
+    protected Transform cameraTransform = new Transform();
+    protected Transform inverseCameraTransform = new Transform();
 
     public GameCamera() {
         /* empty */

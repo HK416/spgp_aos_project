@@ -13,7 +13,7 @@ public class GameObject {
     protected GameObject child = null;
     protected GameObject sibling = null;
 
-    protected Transform transform = Transform.IDENTITY;
+    protected Transform transform = new Transform();
     protected final Vector size = new Vector();
 
     public GameObject() {
@@ -66,7 +66,7 @@ public class GameObject {
 
     public float getRotationAngle() {
         Vector right = getRightVector();
-        return Vector.X.angleBetweenVector(right);
+        return new Vector(1.0f, 0.0f, 0.0f).angleBetweenVector(right);
     }
 
     public void translateLocal(float dx, float dy) {

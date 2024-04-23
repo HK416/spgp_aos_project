@@ -1,9 +1,17 @@
 package com.hk416.framework.timer;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
+
+import androidx.annotation.NonNull;
+
+import com.hk416.fallingdowntino.BuildConfig;
+
 public final class GameTimer {
-    private static final String TAG = GameTimer.class.getSimpleName();
     private static final int MAX_SAMPLES = 50;
     private static final float SECONDS_PER_NANO = 1.0f / 1e+9f;
+
+    private static Paint debugPaint;
 
     private long previousTimePoint = 0;
     private long currentTimePoint = 0;
@@ -14,6 +22,14 @@ public final class GameTimer {
     private float fpsElapsedTimeSec = 0.0f;
     private long framePerSeconds = 0;
     private long frameRate = 0;
+
+    public GameTimer() {
+        if (BuildConfig.DEBUG && debugPaint == null) {
+            debugPaint = new Paint();
+            debugPaint.setARGB(255, 51, 204, 51);
+            debugPaint.setTextSize(64.0f);
+        }
+    }
 
     private static float toSeconds(long nanoTimes) {
         return nanoTimes * SECONDS_PER_NANO;
@@ -69,5 +85,16 @@ public final class GameTimer {
 
     public long getFrameRate() {
         return frameRate;
+    }
+
+    public void drawDebugFps(@NonNull Canvas canvas) {
+        if (BuildConfig.DEBUG && debugPaint != null) {
+            canvas.drawText(
+                    String.format("FPS: %d", getFrameRate()),
+                    0.0f,
+                    64.0f,
+                    debugPaint
+            );
+        }
     }
 }
