@@ -14,7 +14,6 @@ public class GameObject {
     protected GameObject sibling = null;
 
     protected Transform transform = new Transform();
-    protected final Vector size = new Vector();
 
     public GameObject() {
         /* empty */
@@ -22,11 +21,6 @@ public class GameObject {
 
     public GameObject(float x, float y) {
         setPosition(x, y);
-    }
-
-    public GameObject(float x, float y, float w, float h) {
-        setPosition(x, y);
-        setSize(w, h);
     }
 
     public void setChild(@NonNull GameObject child) {
@@ -43,11 +37,6 @@ public class GameObject {
         updateTransform(null);
     }
 
-    public void setSize(float width, float height) {
-        size.x = width;
-        size.y = height;
-    }
-
     public Vector getPosition() {
         return transform.zAxis;
     }
@@ -58,10 +47,6 @@ public class GameObject {
 
     public Vector getUpVector() {
         return transform.yAxis.normalize();
-    }
-
-    public Vector getSize() {
-        return size;
     }
 
     public float getRotationAngle() {
