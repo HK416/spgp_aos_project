@@ -71,7 +71,7 @@ public class GameObject {
         updateTransform(null);
     }
 
-    private void updateTransform(@Nullable Transform parent) {
+    protected void updateTransform(@Nullable Transform parent) {
         if (parent != null) {
             transform.postMulAssign(parent);
         }
@@ -85,14 +85,32 @@ public class GameObject {
     }
 
     public void onTouchEvent(@NonNull MotionEvent e) {
-        /* empty */
+        if (sibling != null) {
+            sibling.onTouchEvent(e);
+        }
+
+        if (child != null) {
+            child.onTouchEvent(e);
+        }
     }
 
     public void onUpdate(float elapsedTimeSec) {
-        /* empty */
+        if (sibling != null) {
+            sibling.onUpdate(elapsedTimeSec);
+        }
+
+        if (child != null) {
+            child.onUpdate(elapsedTimeSec);
+        }
     }
 
     public void onDraw(@NonNull Canvas canvas) {
-        /* empty */
+        if (sibling != null) {
+            sibling.onDraw(canvas);
+        }
+
+        if (child != null) {
+            child.onDraw(canvas);
+        }
     }
 }

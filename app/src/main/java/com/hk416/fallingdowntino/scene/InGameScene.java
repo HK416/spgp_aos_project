@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.object.MainCamera;
-import com.hk416.fallingdowntino.object.Tino;
+import com.hk416.fallingdowntino.object.tino.Tino;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.scene.GameScene;
