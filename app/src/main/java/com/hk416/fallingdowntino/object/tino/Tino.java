@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Tino extends GameObject {
-    public enum Behavior { Default, }
+    public enum Behavior { LeftDefault, RightDefault, }
 
     protected static final String TAG = Tino.class.getSimpleName();
     public static final float WIDTH = 2.0f;
@@ -35,8 +35,9 @@ public class Tino extends GameObject {
     }
 
     private void createBehaviors() {
-        behaviors.put(Behavior.Default, new DefaultBehavior());
-        child = behaviors.get(Behavior.Default);
+        behaviors.put(Behavior.LeftDefault, new LeftDefaultBehavior());
+        behaviors.put(Behavior.RightDefault, new RightDefaultBehavior());
+        child = behaviors.get(Behavior.RightDefault);
         updateTransform(null);
     }
 

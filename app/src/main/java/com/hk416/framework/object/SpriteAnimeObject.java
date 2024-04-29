@@ -2,12 +2,11 @@ package com.hk416.framework.object;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.texture.BitmapPool;
@@ -29,7 +28,9 @@ public class SpriteAnimeObject extends GameObject {
             int[] bitmapResIds,
             float width,
             float height,
-            float animationSpeed
+            float animationSpeed,
+            boolean flipX,
+            boolean flipY
     ) {
         super();
         if (bitmapResIds == null || bitmapResIds.length == 0) {
@@ -39,9 +40,7 @@ public class SpriteAnimeObject extends GameObject {
         this.size = new Vector(width, height, 0.0f);
         this.animationSpeed = animationSpeed;
         this.bitmaps = new Bitmap[bitmapResIds.length];
-        for (int i = 0; i < bitmapResIds.length; i++) {
-            this.bitmaps[i] = BitmapPool.getInstance().get(bitmapResIds[i]);
-        }
+        setBitmaps(bitmapResIds, flipX, flipY);
     }
 
     public SpriteAnimeObject(
@@ -50,7 +49,9 @@ public class SpriteAnimeObject extends GameObject {
             float y,
             float width,
             float height,
-            float animationSpeed
+            float animationSpeed,
+            boolean flipX,
+            boolean flipY
     ) {
         super(x, y);
         if (bitmapResIds == null || bitmapResIds.length == 0) {
@@ -60,8 +61,24 @@ public class SpriteAnimeObject extends GameObject {
         this.size = new Vector(width, height, 0.0f);
         this.animationSpeed = animationSpeed;
         this.bitmaps = new Bitmap[bitmapResIds.length];
+        setBitmaps(bitmapResIds, flipX, flipY);
+    }
+
+    private void setBitmaps(int[] bitmapResIds, boolean flipX, boolean flipY) {
+        float scaleX = flipX ? -1.0f : 1.0f;
+        float scaleY = flipY ? -1.0f : 1.0f;
+        Matrix matrix = new Matrix();
+        matrix.setScale(scaleX, scaleY);
+
         for (int i = 0; i < bitmapResIds.length; i++) {
-            this.bitmaps[i] = BitmapPool.getInstance().get(bitmapResIds[i]);
+            Bitmap bitmap = BitmapPool.getInstance().get(bitmapResIds[i]);
+            this.bitmaps[i] = Bitmap.createBitmap(
+                    bitmap,
+                    0, 0,
+                    bitmap.getWidth(), bitmap.getHeight(),
+                    matrix,
+                    false
+            );
         }
     }
 

@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Parachute extends GameObject {
-    public enum Behavior { Default, Scratched }
+    public enum Behavior { LeftDefault, RightDefault, }
 
     private static final String TAG = Parachute.class.getSimpleName();
     public static final float WIDTH = 2.5f;
     public static final float HEIGHT = 2.5f;
-    public static final float X_POS = -0.05f;
+    public static final float X_POS = 0.0f;
     public static final float Y_POS = 0.5f;
 
     public static Paint debugColor = null;
@@ -28,8 +28,9 @@ public class Parachute extends GameObject {
     }
 
     private void createBehaviors() {
-        behaviors.put(Behavior.Default, new DefaultBehavior());
-        child = behaviors.get(Behavior.Default);
+        behaviors.put(Behavior.LeftDefault, new LeftDefaultBehavior());
+        behaviors.put(Behavior.RightDefault, new RightDefaultBehavior());
+        child = behaviors.get(Behavior.RightDefault);
         updateTransform(null);
     }
 
