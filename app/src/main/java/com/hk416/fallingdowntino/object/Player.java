@@ -1,5 +1,9 @@
 package com.hk416.fallingdowntino.object;
 
+import android.view.MotionEvent;
+
+import androidx.annotation.NonNull;
+
 import com.hk416.fallingdowntino.object.parachute.Parachute;
 import com.hk416.fallingdowntino.object.tino.Tino;
 import com.hk416.framework.object.GameObject;
@@ -31,5 +35,13 @@ public final class Player extends GameObject {
     public void turnBehavior() {
         tino.turnBehavior();
         parachute.turnBehavior();
+    }
+
+    @Override
+    public void onTouchEvent(@NonNull MotionEvent e) {
+        super.onTouchEvent(e);
+        if (e.getAction() == MotionEvent.ACTION_DOWN) {
+            turnBehavior();
+        }
     }
 }
