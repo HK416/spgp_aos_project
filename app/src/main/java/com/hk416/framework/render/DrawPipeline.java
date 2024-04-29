@@ -1,10 +1,10 @@
 package com.hk416.framework.render;
 
-import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.hk416.framework.transform.Vector;
 import com.hk416.framework.transform.Viewport;
@@ -29,6 +29,11 @@ public final class DrawPipeline {
 
     public void setRatio(float w, float h) {
         ratio = w / h;
+    }
+
+    @Nullable
+    public GameCamera getMainCamera() {
+        return mainCamera;
     }
 
     public void setMainCamera(@NonNull GameCamera camera) {

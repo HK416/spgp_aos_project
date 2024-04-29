@@ -15,11 +15,17 @@ public class Parachute extends GameObject {
     public static final float WIDTH = 2.5f;
     public static final float HEIGHT = 2.5f;
     public static final float X_POS = 0.0f;
-    public static final float Y_POS = 0.5f;
+    public static final float Y_POS = 1.0f;
+    public static final float DEF_DURABILITY = 100.0f;
+    public static final float DEF_DURABILITY_PER_SECONDS = 20.0f;
 
     public static Paint debugColor = null;
 
+    private float maxDurability = DEF_DURABILITY;
+    private float currDurability = maxDurability;
+    private float durabilityPerSeconds = DEF_DURABILITY_PER_SECONDS;
     private final Map<Behavior, GameObject> behaviors = new HashMap<>();
+    private Behavior currBehavior = Behavior.RightDefault;
 
     public Parachute() {
         super(X_POS, Y_POS);
@@ -30,7 +36,7 @@ public class Parachute extends GameObject {
     private void createBehaviors() {
         behaviors.put(Behavior.LeftDefault, new LeftDefaultBehavior());
         behaviors.put(Behavior.RightDefault, new RightDefaultBehavior());
-        child = behaviors.get(Behavior.RightDefault);
+        child = behaviors.get(currBehavior);
         updateTransform(null);
     }
 
@@ -41,5 +47,19 @@ public class Parachute extends GameObject {
             debugColor.setStyle(Paint.Style.STROKE);
             debugColor.setARGB(255, 204, 51, 51);
         }
+    }
+
+    public void turnBehavior() {
+        switch (currBehavior) {
+            case LeftDefault:
+                child = behaviors.get(Behavior.RightDefault);
+                currBehavior = Behavior.RightDefault;
+                break;
+            case RightDefault:
+                child = behaviors.get(Behavior.LeftDefault);
+                currBehavior = Behavior.LeftDefault;
+                break;
+        }
+        updateTransform(null);
     }
 }

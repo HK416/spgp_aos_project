@@ -14,6 +14,7 @@ public class GameObject {
     protected GameObject sibling = null;
 
     protected Transform transform = new Transform();
+    protected Transform worldTransform = new Transform();
 
     public GameObject() {
         /* empty */
@@ -21,6 +22,7 @@ public class GameObject {
 
     public GameObject(float x, float y) {
         setPosition(x, y);
+        updateTransform(null);
     }
 
     public void setChild(@NonNull GameObject child) {
@@ -41,16 +43,33 @@ public class GameObject {
         return transform.zAxis;
     }
 
+    public Vector getWorldPosition() {
+        return worldTransform.zAxis;
+    }
+
     public Vector getRightVector() {
         return transform.xAxis.normalize();
+    }
+
+    public Vector getWorldRightVector() {
+        return worldTransform.xAxis.normalize();
     }
 
     public Vector getUpVector() {
         return transform.yAxis.normalize();
     }
 
+    public Vector getWorldUpVector() {
+        return worldTransform.yAxis.normalize();
+    }
+
     public float getRotationAngle() {
         Vector right = getRightVector();
+        return new Vector(1.0f, 0.0f, 0.0f).angleBetweenVector(right);
+    }
+
+    public float getWorldRotationAngle() {
+        Vector right = getWorldRightVector();
         return new Vector(1.0f, 0.0f, 0.0f).angleBetweenVector(right);
     }
 
@@ -72,15 +91,15 @@ public class GameObject {
     }
 
     public void updateTransform(@Nullable Transform parent) {
-        if (parent != null) {
-            transform.postMulAssign(parent);
-        }
+        worldTransform = transform.postMul(
+                parent != null ? parent : new Transform()
+        );
 
         if (sibling != null) {
             sibling.updateTransform(parent);
         }
         if (child != null) {
-            child.updateTransform(transform);
+            child.updateTransform(worldTransform);
         }
     }
 

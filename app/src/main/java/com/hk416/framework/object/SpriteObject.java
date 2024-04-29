@@ -40,8 +40,8 @@ public class SpriteObject extends GameObject {
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
-        Vector minimum = getPosition().postSub(getSize().postMul(0.5f));
-        Vector maximum = getPosition().postAdd(getSize().postMul(0.5f));
+        Vector minimum = getWorldPosition().postSub(getSize().postMul(0.5f));
+        Vector maximum = getWorldPosition().postAdd(getSize().postMul(0.5f));
 
         PointF minPos = DrawPipeline.getInstance().toScreenCoord(minimum);
         PointF maxPos = DrawPipeline.getInstance().toScreenCoord(maximum);

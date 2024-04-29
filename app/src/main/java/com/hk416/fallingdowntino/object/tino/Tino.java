@@ -1,15 +1,12 @@
 package com.hk416.fallingdowntino.object.tino;
 
-import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.hk416.fallingdowntino.BuildConfig;
-import com.hk416.fallingdowntino.object.parachute.Parachute;
+import com.hk416.fallingdowntino.object.Player;
 import com.hk416.framework.object.GameObject;
-import com.hk416.framework.transform.Transform;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,24 +17,22 @@ public class Tino extends GameObject {
     protected static final String TAG = Tino.class.getSimpleName();
     public static final float WIDTH = 2.0f;
     public static final float HEIGHT = 2.0f;
-    public static final float X_POS = 0.0f;
-    public static final float Y_POS = 12.5f;
 
     public static Paint debugColor = null;
 
     private final Map<Behavior, GameObject> behaviors = new HashMap<>();
-    private final Parachute parachute = new Parachute();
+    private Behavior currBehavior = Behavior.RightDefault;
 
-    public Tino() {
-        super(X_POS, Y_POS);
-        createBehaviors();
+    public Tino(@NonNull Player player) {
+        super();
+        createBehaviors(player);
         createDebugPaint();
     }
 
-    private void createBehaviors() {
-        behaviors.put(Behavior.LeftDefault, new LeftDefaultBehavior());
-        behaviors.put(Behavior.RightDefault, new RightDefaultBehavior());
-        child = behaviors.get(Behavior.RightDefault);
+    private void createBehaviors(@NonNull Player player) {
+        behaviors.put(Behavior.LeftDefault, new LeftDefaultBehavior(player));
+        behaviors.put(Behavior.RightDefault, new RightDefaultBehavior(player));
+        child = behaviors.get(currBehavior);
         updateTransform(null);
     }
 
@@ -50,23 +45,17 @@ public class Tino extends GameObject {
         }
     }
 
-    @Override
-    public void updateTransform(@Nullable Transform parent) {
-        super.updateTransform(parent);
-        if (parachute != null) {
-            parachute.updateTransform(transform);
+    public void turnBehavior() {
+        switch (currBehavior) {
+            case LeftDefault:
+                child = behaviors.get(Behavior.RightDefault);
+                currBehavior = Behavior.RightDefault;
+                break;
+            case RightDefault:
+                child = behaviors.get(Behavior.LeftDefault);
+                currBehavior = Behavior.LeftDefault;
+                break;
         }
-    }
-
-    @Override
-    public void onUpdate(float elapsedTimeSec) {
-        super.onUpdate(elapsedTimeSec);
-        parachute.onUpdate(elapsedTimeSec);
-    }
-
-    @Override
-    public void onDraw(@NonNull Canvas canvas) {
-        super.onDraw(canvas);
-        parachute.onDraw(canvas);
+        updateTransform(null);
     }
 }

@@ -3,6 +3,7 @@ package com.hk416.framework.render;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.transform.Projection;
@@ -26,6 +27,11 @@ public class GameCamera extends GameObject {
 
     public void setProjection(@NonNull Projection projection) {
         this.projection = projection;
+    }
+
+    @Nullable
+    public  Projection getProjection() {
+        return projection;
     }
 
     public void generateCameraTransform() {

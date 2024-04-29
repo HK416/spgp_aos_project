@@ -10,12 +10,12 @@ import androidx.annotation.NonNull;
  * @version 1.0
  */
 public final class Projection {
-    private float top = 0.0f;
-    private float left = 0.0f;
-    private float bottom = 0.0f;
-    private float right = 0.0f;
-    private float zNear = 0.0f;
-    private float zFar = 0.0f;
+    public float top = 0.0f;
+    public float left = 0.0f;
+    public float bottom = 0.0f;
+    public float right = 0.0f;
+    public float zNear = 0.0f;
+    public float zFar = 0.0f;
 
     public Projection() {
         /* empty */
