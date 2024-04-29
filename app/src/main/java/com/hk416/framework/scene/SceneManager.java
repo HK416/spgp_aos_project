@@ -6,6 +6,9 @@ import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.framework.render.DrawPipeline;
+import com.hk416.framework.transform.Viewport;
+
 import java.util.ArrayDeque;
 import java.util.Stack;
 
@@ -71,6 +74,9 @@ public final class SceneManager {
     }
 
     public void onDraw(@NonNull Canvas canvas) {
+        Viewport viewport = DrawPipeline.getInstance().getViewport();
+        canvas.clipRect(viewport.left, viewport.top, viewport.right, viewport.bottom);
+
         GameScene currentScene = getCurrentScene();
         if (currentScene != null) {
             currentScene.onDraw(canvas);

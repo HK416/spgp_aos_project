@@ -35,6 +35,10 @@ public final class DrawPipeline {
         this.mainCamera = camera;
     }
 
+    public Viewport getViewport() {
+        return viewport;
+    }
+
     public void setViewport(float top, float left, float bottom, float right) {
         viewport.top = top;
         viewport.left = left;
@@ -64,10 +68,6 @@ public final class DrawPipeline {
                 centerY + halfViewHeight,
                 centerX + halfViewWidth
         );
-    }
-
-    public void drawDebugArea(@NonNull Canvas canvas) {
-        viewport.drawDebugArea(canvas);
     }
 
     public void onResize(int w, int h) {

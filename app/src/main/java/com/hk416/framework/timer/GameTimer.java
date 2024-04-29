@@ -1,5 +1,6 @@
 package com.hk416.framework.timer;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
@@ -10,6 +11,7 @@ import com.hk416.fallingdowntino.BuildConfig;
 public final class GameTimer {
     private static final int MAX_SAMPLES = 50;
     private static final float SECONDS_PER_NANO = 1.0f / 1e+9f;
+    public static final float DEBUG_TEXT_SIZE = 64.0f;
 
     private static Paint debugPaint;
 
@@ -27,7 +29,7 @@ public final class GameTimer {
         if (BuildConfig.DEBUG && debugPaint == null) {
             debugPaint = new Paint();
             debugPaint.setARGB(255, 51, 204, 51);
-            debugPaint.setTextSize(64.0f);
+            debugPaint.setTextSize(DEBUG_TEXT_SIZE);
         }
     }
 
@@ -87,12 +89,12 @@ public final class GameTimer {
         return frameRate;
     }
 
-    public void drawDebugFps(@NonNull Canvas canvas) {
+    @SuppressLint("DefaultLocale")
+    public void drawDebugFps(@NonNull Canvas canvas, float x, float y) {
         if (BuildConfig.DEBUG && debugPaint != null) {
             canvas.drawText(
                     String.format("FPS: %d", getFrameRate()),
-                    0.0f,
-                    64.0f,
+                    x, y,
                     debugPaint
             );
         }

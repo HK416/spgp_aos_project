@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.Choreographer;
 import android.view.Choreographer.FrameCallback;
@@ -18,6 +19,7 @@ import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.texture.BitmapPool;
 import com.hk416.framework.timer.GameTimer;
 import com.hk416.framework.scene.SceneManager;
+import com.hk416.framework.transform.Viewport;
 
 public class GameView extends View {
     public static final String TAG = GameView.class.getSimpleName();
@@ -77,8 +79,9 @@ public class GameView extends View {
         super.onDraw(canvas);
         SceneManager.getInstance().onDraw(canvas);
         if (BuildConfig.DEBUG) {
-            DrawPipeline.getInstance().drawDebugArea(canvas);
-            timer.drawDebugFps(canvas);
+            Viewport viewport = DrawPipeline.getInstance().getViewport();
+            viewport.drawDebugArea(canvas);
+            timer.drawDebugFps(canvas, viewport.left, viewport.top + GameTimer.DEBUG_TEXT_SIZE);
         }
     }
 
