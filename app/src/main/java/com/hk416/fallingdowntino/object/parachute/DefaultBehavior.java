@@ -1,4 +1,4 @@
-package com.hk416.fallingdowntino.object.tino;
+package com.hk416.fallingdowntino.object.parachute;
 
 import android.graphics.Canvas;
 
@@ -11,19 +11,19 @@ import com.hk416.framework.object.SpriteAnimeObject;
 public class DefaultBehavior extends SpriteAnimeObject {
     private static final float ANIMATION_SPEED = 0.8f;
     private static final int[] BITMAP_RES_IDS = new int[] {
-            R.mipmap.tino_default_0, R.mipmap.tino_default_1,
-            R.mipmap.tino_default_2, R.mipmap.tino_default_1,
+            R.mipmap.parachute_default_0, R.mipmap.parachute_default_1,
+            R.mipmap.parachute_default_2, R.mipmap.parachute_default_1,
     };
 
     public DefaultBehavior() {
-        super(BITMAP_RES_IDS, Tino.WIDTH, Tino.HEIGHT, ANIMATION_SPEED);
+        super(BITMAP_RES_IDS, Parachute.WIDTH, Parachute.HEIGHT, ANIMATION_SPEED);
     }
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         if (BuildConfig.DEBUG) {
-            canvas.drawRect(drawScreenArea, Tino.debugColor);
+            canvas.drawRect(drawScreenArea, Parachute.debugColor);
         }
     }
 }

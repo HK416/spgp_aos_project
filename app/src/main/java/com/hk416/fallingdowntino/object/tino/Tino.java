@@ -4,9 +4,12 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.hk416.fallingdowntino.BuildConfig;
+import com.hk416.fallingdowntino.object.parachute.Parachute;
 import com.hk416.framework.object.GameObject;
+import com.hk416.framework.transform.Transform;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +26,7 @@ public class Tino extends GameObject {
     public static Paint debugColor = null;
 
     private final Map<Behavior, GameObject> behaviors = new HashMap<>();
+    private final Parachute parachute = new Parachute();
 
     public Tino() {
         super(X_POS, Y_POS);
@@ -46,12 +50,22 @@ public class Tino extends GameObject {
     }
 
     @Override
+    public void updateTransform(@Nullable Transform parent) {
+        super.updateTransform(parent);
+        if (parachute != null) {
+            parachute.updateTransform(transform);
+        }
+    }
+
+    @Override
     public void onUpdate(float elapsedTimeSec) {
         super.onUpdate(elapsedTimeSec);
+        parachute.onUpdate(elapsedTimeSec);
     }
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
+        parachute.onDraw(canvas);
     }
 }

@@ -71,7 +71,7 @@ public class GameObject {
         updateTransform(null);
     }
 
-    protected void updateTransform(@Nullable Transform parent) {
+    public void updateTransform(@Nullable Transform parent) {
         if (parent != null) {
             transform.postMulAssign(parent);
         }
