@@ -9,11 +9,31 @@ import com.hk416.framework.transform.Anchor;
 import com.hk416.framework.transform.Margin;
 
 public class UiObject {
-    protected final Anchor anchor = new Anchor();
-    protected final Margin margin = new Margin();
+    protected final Anchor anchor;
+    protected final Margin margin;
 
     protected UiObject child = null;
     protected UiObject sibling = null;
+
+    public UiObject() {
+        anchor = new Anchor();
+        margin = new Margin();
+    }
+
+    public UiObject(@NonNull Anchor anchor) {
+        this.anchor = anchor;
+        margin = new Margin();
+    }
+
+    public UiObject(@NonNull Margin margin) {
+        anchor = new Anchor();
+        this.margin = margin;
+    }
+
+    public UiObject(@NonNull Anchor anchor, @NonNull Margin margin) {
+        this.anchor = anchor;
+        this.margin = margin;
+    }
 
     public Anchor getAnchor() {
         return anchor;
