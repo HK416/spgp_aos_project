@@ -62,4 +62,15 @@ public class Parachute extends GameObject {
         }
         updateTransform(null);
     }
+
+    public float getDurabilityPercent() {
+        return currDurability / maxDurability;
+    }
+
+    @Override
+    public void onUpdate(float elapsedTimeSec) {
+        super.onUpdate(elapsedTimeSec);
+        float nextDurability = currDurability - durabilityPerSeconds * elapsedTimeSec;
+        currDurability = Math.max(0.0f, nextDurability);
+    }
 }

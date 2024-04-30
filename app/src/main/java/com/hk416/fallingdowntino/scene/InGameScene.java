@@ -8,12 +8,17 @@ import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.fallingdowntino.object.Player;
+import com.hk416.fallingdowntino.object.ScoreUi;
+import com.hk416.framework.object.UiObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.scene.GameScene;
 
 public final class InGameScene extends GameScene {
     private static final String TAG = InGameScene.class.getSimpleName();
+
+    private Player player;
+    private UiObject ui;
 
     @Override
     public void onEnter() {
@@ -28,7 +33,11 @@ public final class InGameScene extends GameScene {
         pipeline.setMainCamera(mainCamera);
 
         // 게임 오브젝트들을 추가한다.
-        super.insertObject(new Player());
+        player = new Player();
+        super.insertObject(player);
+
+        // UI 오브젝트들을 추가한다.
+        ui = new ScoreUi(player);
     }
 
     @Override
@@ -54,10 +63,12 @@ public final class InGameScene extends GameScene {
     @Override
     public void onUpdate(float elapsedTimeSec, long frameRate) {
         super.onUpdate(elapsedTimeSec, frameRate);
+        ui.onUpdate(elapsedTimeSec);
     }
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
+        ui.onDraw(canvas);
     }
 }

@@ -2,6 +2,7 @@ package com.hk416.framework.object;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 import androidx.annotation.NonNull;
@@ -51,8 +52,17 @@ public class UiTextObject extends UiObject {
         paint.setColor(color);
     }
 
-    public void setTextSize(float textSize) {
-        paint.setTextSize(textSize);
+    private void setTextSizeForWidth(float desiredWidth) {
+        if (text != null) {
+            Rect bounds = new Rect();
+            final float testTextSize = 48.0f;
+
+            paint.setTextSize(testTextSize);
+            paint.getTextBounds(text.trim(), 0, text.trim().length(), bounds);
+            float desiredTextSize = testTextSize * desiredWidth / bounds.width();
+
+            paint.setTextSize(desiredTextSize);
+        }
     }
 
     @Override
@@ -63,9 +73,9 @@ public class UiTextObject extends UiObject {
         drawArea.bottom = viewport.top + anchor.bottom * viewport.getHeight() + margin.bottom;
         drawArea.right = viewport.left + anchor.right * viewport.getWidth() + margin.right;
 
-        canvas.save();
-        canvas.clipRect(drawArea);
-        canvas.drawText(text, 0.0f, 0.0f, paint);
-        canvas.restore();
+        if (text != null) {
+            setTextSizeForWidth(drawArea.width());
+            canvas.drawText(text, drawArea.left, drawArea.top + paint.getTextSize(), paint);
+        }
     }
 }

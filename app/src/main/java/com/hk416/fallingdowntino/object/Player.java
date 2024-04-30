@@ -17,6 +17,7 @@ public final class Player extends GameObject {
     public static final float MAX_DOWN_SPEED = 18.0f;
 
     private float downSpeed = MIN_DOWN_SPEED;
+    private float distance = 0.0f;
 
     private final Parachute parachute;
     private final Tino tino;
@@ -37,11 +38,23 @@ public final class Player extends GameObject {
         parachute.turnBehavior();
     }
 
+    public float getDistance() {
+        return distance;
+    }
+
     @Override
     public void onTouchEvent(@NonNull MotionEvent e) {
         super.onTouchEvent(e);
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
             turnBehavior();
         }
+    }
+
+    @Override
+    public void onUpdate(float elapsedTimeSec) {
+        super.onUpdate(elapsedTimeSec);
+        float durability = parachute.getDurabilityPercent();
+        downSpeed = MIN_DOWN_SPEED + (MAX_DOWN_SPEED - MIN_DOWN_SPEED) * durability;
+        distance += downSpeed * elapsedTimeSec;
     }
 }
