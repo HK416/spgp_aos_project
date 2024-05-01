@@ -33,9 +33,20 @@ public final class Player extends GameObject {
         updateTransform(null);
     }
 
+    public void upcastBehavior() {
+        tino.upcastBehavior();
+        updateTransform(null);
+    }
+
+    public void downcastBehavior() {
+        tino.downcastBehavior();
+        updateTransform(null);
+    }
+
     public void turnBehavior() {
         tino.turnBehavior();
         parachute.turnBehavior();
+        updateTransform(null);
     }
 
     public float getDistance() {
@@ -53,8 +64,15 @@ public final class Player extends GameObject {
     @Override
     public void onUpdate(float elapsedTimeSec) {
         super.onUpdate(elapsedTimeSec);
-        float durability = parachute.getDurabilityPercent();
-        downSpeed = MIN_DOWN_SPEED + (MAX_DOWN_SPEED - MIN_DOWN_SPEED) * durability;
+        float percent = parachute.getDurabilityPercent();
+        downSpeed = MIN_DOWN_SPEED + (MAX_DOWN_SPEED - MIN_DOWN_SPEED) * percent;
         distance += downSpeed * elapsedTimeSec;
+
+        float durability = parachute.getCurrDurability();
+        if (durability <= 30.0) {
+            downcastBehavior();
+        } else {
+            upcastBehavior();
+        }
     }
 }

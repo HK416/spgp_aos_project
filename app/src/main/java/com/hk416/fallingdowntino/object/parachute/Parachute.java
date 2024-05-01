@@ -67,6 +67,10 @@ public class Parachute extends GameObject {
         return currDurability / maxDurability;
     }
 
+    public float getCurrDurability() {
+        return currDurability;
+    }
+
     @Override
     public void onUpdate(float elapsedTimeSec) {
         super.onUpdate(elapsedTimeSec);

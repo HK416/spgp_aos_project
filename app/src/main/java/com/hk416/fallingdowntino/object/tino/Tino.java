@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Tino extends GameObject {
-    public enum Behavior { LeftDefault, RightDefault, }
+    public enum Behavior { LeftDefault, RightDefault, LeftScared, RightScared }
 
     protected static final String TAG = Tino.class.getSimpleName();
     public static final float WIDTH = 2.0f;
@@ -32,6 +32,8 @@ public class Tino extends GameObject {
     private void createBehaviors(@NonNull Player player) {
         behaviors.put(Behavior.LeftDefault, new LeftDefaultBehavior(player));
         behaviors.put(Behavior.RightDefault, new RightDefaultBehavior(player));
+        behaviors.put(Behavior.LeftScared, new LeftScaredBehavior(player));
+        behaviors.put(Behavior.RightScared, new RightScaredBehavior(player));
         child = behaviors.get(currBehavior);
         updateTransform(null);
     }
@@ -45,6 +47,56 @@ public class Tino extends GameObject {
         }
     }
 
+    public void setBehavior(Tino.Behavior behavior) {
+        child = behaviors.get(behavior);
+        currBehavior = behavior;
+        updateTransform(null);
+    }
+
+    public Tino.Behavior getCurrentBehavior() {
+        return currBehavior;
+    }
+
+    public void upcastBehavior() {
+        switch (currBehavior) {
+            case LeftDefault:
+                /* empty */
+                break;
+            case RightDefault:
+                /* empty */
+                break;
+            case LeftScared:
+                child = behaviors.get(Behavior.LeftDefault);
+                currBehavior = Behavior.LeftDefault;
+                break;
+            case RightScared:
+                child = behaviors.get(Behavior.RightDefault);
+                currBehavior = Behavior.RightDefault;
+                break;
+        }
+        updateTransform(null);
+    }
+
+    public void downcastBehavior() {
+        switch (currBehavior) {
+            case LeftDefault:
+                child = behaviors.get(Behavior.LeftScared);
+                currBehavior = Behavior.LeftScared;
+                break;
+            case RightDefault:
+                child = behaviors.get(Behavior.RightScared);
+                currBehavior = Behavior.RightScared;
+                break;
+            case LeftScared:
+                /* empty */
+                break;
+            case RightScared:
+                /* empty */
+                break;
+        }
+        updateTransform(null);
+    }
+
     public void turnBehavior() {
         switch (currBehavior) {
             case LeftDefault:
@@ -54,6 +106,14 @@ public class Tino extends GameObject {
             case RightDefault:
                 child = behaviors.get(Behavior.LeftDefault);
                 currBehavior = Behavior.LeftDefault;
+                break;
+            case LeftScared:
+                child = behaviors.get(Behavior.RightScared);
+                currBehavior = Behavior.RightScared;
+                break;
+            case RightScared:
+                child = behaviors.get(Behavior.LeftScared);
+                currBehavior = Behavior.LeftScared;
                 break;
         }
         updateTransform(null);
