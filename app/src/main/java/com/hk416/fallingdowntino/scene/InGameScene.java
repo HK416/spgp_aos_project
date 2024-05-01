@@ -17,8 +17,13 @@ import com.hk416.framework.scene.GameScene;
 public final class InGameScene extends GameScene {
     private static final String TAG = InGameScene.class.getSimpleName();
 
+    public enum Tags { Object, Ui }
+
     private Player player;
-    private UiObject ui;
+
+    public InGameScene() {
+        super(Tags.values().length);
+    }
 
     @Override
     public void onEnter() {
@@ -34,10 +39,10 @@ public final class InGameScene extends GameScene {
 
         // 게임 오브젝트들을 추가한다.
         player = new Player();
-        super.insertObject(player);
+        super.insertObject(Tags.Object, player);
 
-        // UI 오브젝트들을 추가한다.
-        ui = new ScoreUi(player);
+        // Ui 오브젝트들을 추가한다.
+        super.insertObject(Tags.Ui, new ScoreUi(player));
     }
 
     @Override
@@ -63,12 +68,10 @@ public final class InGameScene extends GameScene {
     @Override
     public void onUpdate(float elapsedTimeSec, long frameRate) {
         super.onUpdate(elapsedTimeSec, frameRate);
-        ui.onUpdate(elapsedTimeSec);
     }
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
-        ui.onDraw(canvas);
     }
 }

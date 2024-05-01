@@ -67,6 +67,7 @@ public class UiTextObject extends UiObject {
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
+        super.onDraw(canvas);
         Viewport viewport = DrawPipeline.getInstance().getViewport();
         drawArea.top = viewport.top + anchor.top * viewport.getHeight() + margin.top;
         drawArea.left = viewport.left + anchor.left * viewport.getWidth() + margin.left;

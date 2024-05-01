@@ -8,12 +8,9 @@ import androidx.annotation.NonNull;
 import com.hk416.framework.transform.Anchor;
 import com.hk416.framework.transform.Margin;
 
-public class UiObject {
+public class UiObject extends GameObject {
     protected final Anchor anchor;
     protected final Margin margin;
-
-    protected UiObject child = null;
-    protected UiObject sibling = null;
 
     public UiObject() {
         anchor = new Anchor();
@@ -58,14 +55,14 @@ public class UiObject {
     }
 
     public void onTouchEvent(@NonNull MotionEvent e) {
-        /* empty */
+        super.onTouchEvent(e);
     }
 
     public void onUpdate(float elapsedTime) {
-        /* empty */
+        super.onUpdate(elapsedTime);
     }
 
     public void onDraw(@NonNull Canvas canvas) {
-        /* empty */
+        super.onDraw(canvas);
     }
 }

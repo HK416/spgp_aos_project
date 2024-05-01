@@ -8,22 +8,37 @@ import androidx.annotation.NonNull;
 import com.hk416.framework.object.GameObject;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public class GameScene {
     private static final String TAG = GameScene.class.getSimpleName();
 
-    protected final ArrayDeque<GameObject> gameObjects = new ArrayDeque<>();
-    private final ArrayDeque<GameObject> insertObjects = new ArrayDeque<>();
-    private final ArrayDeque<GameObject> removeObjects = new ArrayDeque<>();
+    protected final ArrayList<ArrayDeque<GameObject>> gameObjects;
+    private final ArrayList<ArrayDeque<GameObject>> insertObjects;
+    private final ArrayList<ArrayDeque<GameObject>> removeObjects;
+    private final int numTags;
 
-    protected void insertObject(@NonNull GameObject object) {
-        insertObjects.push(object);
+    public GameScene(int numTags) {
+        gameObjects = new ArrayList<>();
+        insertObjects = new ArrayList<>();
+        removeObjects = new ArrayList<>();
+        for (int i = 0; i < numTags; i++) {
+            gameObjects.add(new ArrayDeque<>());
+            insertObjects.add(new ArrayDeque<>());
+            removeObjects.add(new ArrayDeque<>());
+        }
+        this.numTags = numTags;
     }
 
-    protected void removeObject(@NonNull GameObject object) {
-        removeObjects.push(object);
+    protected <E extends Enum<E>>void insertObject(E tag, @NonNull GameObject object) {
+        ArrayDeque<GameObject> queue = insertObjects.get(tag.ordinal());
+        queue.push(object);
     }
 
+    protected <E extends Enum<E>>void removeObject(E tag, @NonNull GameObject object) {
+        ArrayDeque<GameObject> queue = removeObjects.get(tag.ordinal());
+        queue.push(object);
+    }
 
     public void onEnter() {
         /* empty */
@@ -42,28 +57,42 @@ public class GameScene {
     }
 
     public void handleEvent(@NonNull MotionEvent e) {
-        for (GameObject object : gameObjects) {
-            object.onTouchEvent(e);
+        for (ArrayDeque<GameObject> objects : gameObjects) {
+            for (GameObject object : objects) {
+                object.onTouchEvent(e);
+            }
         }
     }
 
     public void onUpdate(float elapsedTimeSec, long frameRate) {
-        while (!insertObjects.isEmpty()) {
-            gameObjects.push(insertObjects.pop());
+        for (int i = 0; i < numTags; i++) {
+            ArrayDeque<GameObject> objects = gameObjects.get(i);
+            ArrayDeque<GameObject> queue = insertObjects.get(i);
+            while (!queue.isEmpty()) {
+                objects.push(queue.pop());
+            }
         }
 
-        for (GameObject object : gameObjects) {
-            object.onUpdate(elapsedTimeSec);
+        for (ArrayDeque<GameObject> objects : gameObjects) {
+            for (GameObject object : objects) {
+                object.onUpdate(elapsedTimeSec);
+            }
         }
 
-        while (!removeObjects.isEmpty()) {
-            gameObjects.remove(removeObjects.pop());
+        for (int i = 0; i < numTags; i++) {
+            ArrayDeque<GameObject> objects = gameObjects.get(i);
+            ArrayDeque<GameObject> queue = removeObjects.get(i);
+            while (!queue.isEmpty()) {
+                objects.remove(queue.pop());
+            }
         }
     }
 
     public void onDraw(@NonNull Canvas canvas) {
-        for (GameObject object : gameObjects) {
-            object.onDraw(canvas);
+        for (ArrayDeque<GameObject> objects : gameObjects) {
+            for (GameObject object : objects) {
+                object.onDraw(canvas);
+            }
         }
     }
 }
