@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Parachute extends GameObject {
-    public enum Behavior { LeftDefault, RightDefault, }
+    public enum Behavior { LeftDefault, RightDefault, LeftScratched, RightScratched }
 
     private static final String TAG = Parachute.class.getSimpleName();
     public static final float WIDTH = 2.5f;
@@ -36,6 +36,8 @@ public class Parachute extends GameObject {
     private void createBehaviors() {
         behaviors.put(Behavior.LeftDefault, new LeftDefaultBehavior());
         behaviors.put(Behavior.RightDefault, new RightDefaultBehavior());
+        behaviors.put(Behavior.LeftScratched, new LeftScratchedBehavior());
+        behaviors.put(Behavior.RightScratched, new RightScratchedBehavior());
         child = behaviors.get(currBehavior);
         updateTransform(null);
     }
@@ -49,6 +51,46 @@ public class Parachute extends GameObject {
         }
     }
 
+    public void downcastBehavior() {
+        switch (currBehavior) {
+            case LeftDefault:
+                child = behaviors.get(Behavior.LeftScratched);
+                currBehavior = Behavior.LeftScratched;
+                break;
+            case RightDefault:
+                child = behaviors.get(Behavior.RightScratched);
+                currBehavior = Behavior.RightScratched;
+                break;
+            case LeftScratched:
+                /* empty */
+                break;
+            case RightScratched:
+                /* empty */
+                break;
+        }
+        updateTransform(null);
+    }
+
+    public void upcastBehavior() {
+        switch (currBehavior) {
+            case LeftDefault:
+                /* empty */
+                break;
+            case RightDefault:
+                /* empty */
+                break;
+            case LeftScratched:
+                child = behaviors.get(Behavior.LeftDefault);
+                currBehavior = Behavior.LeftDefault;
+                break;
+            case RightScratched:
+                child = behaviors.get(Behavior.RightDefault);
+                currBehavior = Behavior.RightDefault;
+                break;
+        }
+        updateTransform(null);
+    }
+
     public void turnBehavior() {
         switch (currBehavior) {
             case LeftDefault:
@@ -58,6 +100,14 @@ public class Parachute extends GameObject {
             case RightDefault:
                 child = behaviors.get(Behavior.LeftDefault);
                 currBehavior = Behavior.LeftDefault;
+                break;
+            case LeftScratched:
+                child = behaviors.get(Behavior.RightScratched);
+                currBehavior = Behavior.RightScratched;
+                break;
+            case RightScratched:
+                child = behaviors.get(Behavior.LeftScratched);
+                currBehavior = Behavior.LeftScratched;
                 break;
         }
         updateTransform(null);

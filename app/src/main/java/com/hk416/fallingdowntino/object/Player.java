@@ -35,11 +35,13 @@ public final class Player extends GameObject {
 
     public void upcastBehavior() {
         tino.upcastBehavior();
+        parachute.upcastBehavior();
         updateTransform(null);
     }
 
     public void downcastBehavior() {
         tino.downcastBehavior();
+        parachute.downcastBehavior();
         updateTransform(null);
     }
 
