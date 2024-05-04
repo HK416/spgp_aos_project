@@ -1,6 +1,8 @@
 package com.hk416.fallingdowntino.object.tino;
 
 import android.graphics.Canvas;
+import android.util.Log;
+import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
@@ -11,9 +13,9 @@ import com.hk416.framework.object.SpriteAnimeObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.transform.Projection;
-import com.hk416.framework.transform.Vector;
 
 public class LeftScaredBehavior extends SpriteAnimeObject {
+    private static final String TAG = LeftScaredBehavior.class.getSimpleName();
     private static final float ANIMATION_SPEED = 0.6f;
     private static final int[] BITMAP_RES_IDS = new int[] {
             R.mipmap.tino_scared_0, R.mipmap.tino_scared_1,
@@ -34,29 +36,62 @@ public class LeftScaredBehavior extends SpriteAnimeObject {
         this.player = player;
     }
 
-    private void updatePlayerPosition(float elapsedTimeSec) {
+    private float moveLeft(float elapsedTimeSec) {
+        float oldX = player.getPositionX();
         GameCamera mainCamera = DrawPipeline.getInstance().getMainCamera();
+        if (mainCamera == null) {
+            Log.w(TAG, "::moveLeft >> DrawPipeline에 카메라가 설정되어 있지 않습니다!");
+            return oldX;
+        }
+
         Projection projection = mainCamera.getProjection();
         if (projection == null) {
-            return;
+            Log.w(TAG, "::moveLeft >> 카메라에 Projection이 설정되어 있지 않습니다!");
+            return oldX;
         }
 
-        Vector newPosition = player.getPosition();
-        newPosition.x -= Player.SPEED * elapsedTimeSec;
-
-        float left = newPosition.x - 0.5f * Tino.WIDTH;
-        if (left <= projection.left) {
-            float diff = projection.left - left;
-            newPosition.x = projection.left + Tino.WIDTH + diff;
+        float newX = oldX;
+        newX = newX - Player.SPEED * elapsedTimeSec;
+        float halfTinoWidth = 0.5f * Tino.WIDTH;
+        float leftSide = newX - halfTinoWidth;
+        if (leftSide <= projection.left) {
+            float diff = projection.left - leftSide;
+            newX = projection.left + halfTinoWidth + diff;
             player.turnBehavior();
         }
-        player.setPosition(newPosition.x, newPosition.y);
+
+        return newX;
+    }
+
+    private float falldown(float elapsedTimeSec) {
+        float oldDistance = player.getDistance();
+        float maxDurability = player.getMaxParachuteDurability();
+        float currDurability = player.getCurrParachuteDurability();
+        if (currDurability <= 0.0f) {
+            player.setCurrDownSpeed(Player.MAX_DOWN_SPEED);
+            player.downcastBehavior();
+        }
+
+        float percent = 1.0f - currDurability / maxDurability;
+        float speed = Player.MIN_DOWN_SPEED + (Player.MAX_DOWN_SPEED - Player.MIN_DOWN_SPEED) * percent;
+        Log.d(TAG, "::falldown >> 현재 낙하 속도:" + speed);
+        return oldDistance + speed * elapsedTimeSec;
+    }
+
+    @Override
+    public void onTouchEvent(@NonNull MotionEvent e) {
+        super.onTouchEvent(e);
+        if (e.getAction() == MotionEvent.ACTION_DOWN) {
+            player.turnBehavior();
+        }
     }
 
     @Override
     public void onUpdate(float elapsedTimeSec) {
         super.onUpdate(elapsedTimeSec);
-        updatePlayerPosition(elapsedTimeSec);
+        float newX = moveLeft(elapsedTimeSec);
+        float newDistance = falldown(elapsedTimeSec);
+        player.updatePlayer(newX, newDistance);
     }
 
     @Override

@@ -1,9 +1,5 @@
 package com.hk416.fallingdowntino.object;
 
-import android.view.MotionEvent;
-
-import androidx.annotation.NonNull;
-
 import com.hk416.fallingdowntino.object.parachute.Parachute;
 import com.hk416.fallingdowntino.object.tino.Tino;
 import com.hk416.framework.object.GameObject;
@@ -14,9 +10,10 @@ public final class Player extends GameObject {
     public static final float Y_POS = 12.5f;
     public static final float SPEED = 3.25f;
     public static final float MIN_DOWN_SPEED = 9.0f;
-    public static final float MAX_DOWN_SPEED = 18.0f;
+    public static final float MAX_DOWN_SPEED = 12.0f;
+    public static final float MAX_DIVE_DOWN_SPEED = 36.0f;
 
-    private float downSpeed = MIN_DOWN_SPEED;
+    private float currDownSpeed = 0.0f;
     private float distance = 0.0f;
 
     private final Parachute parachute;
@@ -51,30 +48,32 @@ public final class Player extends GameObject {
         updateTransform(null);
     }
 
+    public float getCurrParachuteDurability() {
+        return parachute.getCurrDurability();
+    }
+
+    public float getMaxParachuteDurability() {
+        return parachute.getMaxDurability();
+    }
+
+    public float getCurrDownSpeed() {
+        return currDownSpeed;
+    }
+
+    public void setCurrDownSpeed(float downSpeed) {
+        currDownSpeed = downSpeed;
+    }
+
+    public float getPositionX() {
+        return getPosition().x;
+    }
+
     public float getDistance() {
         return distance;
     }
 
-    @Override
-    public void onTouchEvent(@NonNull MotionEvent e) {
-        super.onTouchEvent(e);
-        if (e.getAction() == MotionEvent.ACTION_DOWN) {
-            turnBehavior();
-        }
-    }
-
-    @Override
-    public void onUpdate(float elapsedTimeSec) {
-        super.onUpdate(elapsedTimeSec);
-        float percent = parachute.getDurabilityPercent();
-        downSpeed = MIN_DOWN_SPEED + (MAX_DOWN_SPEED - MIN_DOWN_SPEED) * percent;
-        distance += downSpeed * elapsedTimeSec;
-
-        float durability = parachute.getCurrDurability();
-        if (durability <= 30.0) {
-            downcastBehavior();
-        } else {
-            upcastBehavior();
-        }
+    public void updatePlayer(float newX, float newDistance) {
+        setPosition(newX, transform.zAxis.y);
+        distance = newDistance;
     }
 }

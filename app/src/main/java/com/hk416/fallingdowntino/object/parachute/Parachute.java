@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Parachute extends GameObject {
-    public enum Behavior { LeftDefault, RightDefault, LeftScratched, RightScratched }
+    public enum Behavior { Empty, LeftDefault, RightDefault, LeftScratched, RightScratched }
 
     private static final String TAG = Parachute.class.getSimpleName();
     public static final float WIDTH = 2.5f;
@@ -62,23 +62,19 @@ public class Parachute extends GameObject {
                 currBehavior = Behavior.RightScratched;
                 break;
             case LeftScratched:
-                /* empty */
-                break;
             case RightScratched:
-                /* empty */
+                child = null;
+                currBehavior = Behavior.Empty;
                 break;
+            default:
+                /* empty */
+                return;
         }
         updateTransform(null);
     }
 
     public void upcastBehavior() {
         switch (currBehavior) {
-            case LeftDefault:
-                /* empty */
-                break;
-            case RightDefault:
-                /* empty */
-                break;
             case LeftScratched:
                 child = behaviors.get(Behavior.LeftDefault);
                 currBehavior = Behavior.LeftDefault;
@@ -87,6 +83,9 @@ public class Parachute extends GameObject {
                 child = behaviors.get(Behavior.RightDefault);
                 currBehavior = Behavior.RightDefault;
                 break;
+            default:
+                /* empty */
+                return;
         }
         updateTransform(null);
     }
@@ -109,16 +108,19 @@ public class Parachute extends GameObject {
                 child = behaviors.get(Behavior.LeftScratched);
                 currBehavior = Behavior.LeftScratched;
                 break;
+            default:
+                /* empty */
+                return;
         }
         updateTransform(null);
     }
 
-    public float getDurabilityPercent() {
-        return currDurability / maxDurability;
+    public final float getCurrDurability() {
+        return currDurability;
     }
 
-    public float getCurrDurability() {
-        return currDurability;
+    public final float getMaxDurability() {
+        return maxDurability;
     }
 
     @Override
