@@ -64,7 +64,11 @@ public class SpriteAnimeObject extends GameObject {
         setBitmaps(bitmapResIds, flipX, flipY);
     }
 
-    private void setBitmaps(int[] bitmapResIds, boolean flipX, boolean flipY) {
+    protected final void setBitmaps(
+            @NonNull int[] bitmapResIds,
+            boolean flipX,
+            boolean flipY
+    ) {
         float scaleX = flipX ? -1.0f : 1.0f;
         float scaleY = flipY ? -1.0f : 1.0f;
         Matrix matrix = new Matrix();
