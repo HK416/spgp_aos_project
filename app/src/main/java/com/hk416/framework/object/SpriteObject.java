@@ -76,6 +76,7 @@ public class SpriteObject extends GameObject {
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
+        super.onDraw(canvas);
         Vector minimum = getWorldPosition().postSub(getSize().postMul(0.5f));
         Vector maximum = getWorldPosition().postAdd(getSize().postMul(0.5f));
 

@@ -10,7 +10,7 @@ import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.fallingdowntino.object.ScoreUi;
 import com.hk416.fallingdowntino.object.land.Land;
-import com.hk416.framework.object.UiObject;
+import com.hk416.fallingdowntino.object.land.StaticLand;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.scene.GameScene;
@@ -41,7 +41,7 @@ public final class InGameScene extends GameScene {
         // 게임 오브젝트들을 추가한다.
         player = new Player();
         super.insertObject(Tags.Player, player);
-        super.insertObject(Tags.Object, new Land(0.0f, 0.0f, 12.0f, 2.0f, player));
+        super.insertObject(Tags.Object, new StaticLand(2.0f, -32.0f, 4.0f, 4.0f, Land.TILE_HEIGHT, player));
 
         // Ui 오브젝트들을 추가한다.
         super.insertObject(Tags.Ui, new ScoreUi(player));

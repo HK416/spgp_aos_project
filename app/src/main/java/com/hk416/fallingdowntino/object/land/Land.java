@@ -1,27 +1,23 @@
 package com.hk416.fallingdowntino.object.land;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.BuildConfig;
 import com.hk416.fallingdowntino.R;
-import com.hk416.fallingdowntino.object.Player;
 import com.hk416.framework.object.TileObject;
-import com.hk416.framework.transform.Vector;
 
 public class Land extends TileObject {
     public static final int BITMAP_RES_ID = R.mipmap.land;
-    public static final float TILE_WIDTH = 2.0f;
-    public static final float TILE_HEIGHT = 2.0f;
+    public static final float TILE_WIDTH = 1.5f;
+    public static final float TILE_HEIGHT = 1.5f;
 
-    protected final Player player;
-    protected float oldDistance;
+    private static Paint debugColor = null;
 
-    public Land(
-            float x,
-            float y,
-            float width,
-            float height,
-            @NonNull Player player
-            ) {
+    public Land(float x, float y, float width, float height) {
         super(
                 BITMAP_RES_ID,
                 x,
@@ -34,22 +30,23 @@ public class Land extends TileObject {
                 false,
                 Align.TopMid
         );
-        this.player = player;
-        this.oldDistance = player.getDistance();
+        createDebugColor();
     }
 
-    private void moveUp(float elapsedTimeSec) {
-        Vector newPosition = getWorldPosition();
-        float currDistance = player.getDistance();
-        float delta = currDistance - oldDistance;
-        oldDistance = currDistance;
-        newPosition.y = newPosition.y + delta;
-        setPosition(newPosition.x, newPosition.y);
+    private void createDebugColor() {
+        if (BuildConfig.DEBUG && debugColor == null) {
+            debugColor = new Paint();
+            debugColor.setColor(Color.rgb(51, 51, 204));
+            debugColor.setStrokeWidth(5.0f);
+            debugColor.setStyle(Paint.Style.STROKE);
+        }
     }
 
     @Override
-    public void onUpdate(float elapsedTimeSec) {
-        super.onUpdate(elapsedTimeSec);
-        moveUp(elapsedTimeSec);
+    public void onDraw(@NonNull Canvas canvas) {
+        super.onDraw(canvas);
+        if (BuildConfig.DEBUG) {
+            canvas.drawRect(drawScreenArea, debugColor);
+        }
     }
 }

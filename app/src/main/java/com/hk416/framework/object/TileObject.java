@@ -6,6 +6,7 @@ import android.util.Pair;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.BuildConfig;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.transform.Vector;
 
@@ -103,6 +104,7 @@ public class TileObject extends SpriteObject {
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
+        super.onDraw(canvas);
         Vector minimum = getWorldPosition().postSub(getSize().postMul(0.5f));
         Vector maximum = getWorldPosition().postAdd(getSize().postMul(0.5f));
 
@@ -129,6 +131,13 @@ public class TileObject extends SpriteObject {
                 }
             }
             canvas.restore();
+
+            if (BuildConfig.DEBUG) {
+                drawScreenArea.top = maxPos.y;
+                drawScreenArea.left = minPos.x;
+                drawScreenArea.bottom = minPos.y;
+                drawScreenArea.right = maxPos.x;
+            }
         }
     }
 }
