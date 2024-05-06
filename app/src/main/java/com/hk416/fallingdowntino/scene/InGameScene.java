@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.fallingdowntino.object.ScoreUi;
+import com.hk416.fallingdowntino.object.land.DynamicLand;
 import com.hk416.fallingdowntino.object.land.Land;
 import com.hk416.fallingdowntino.object.land.StaticLand;
 import com.hk416.framework.render.DrawPipeline;
@@ -42,6 +43,7 @@ public final class InGameScene extends GameScene {
         player = new Player();
         super.insertObject(Tags.Player, player);
         super.insertObject(Tags.Object, new StaticLand(2.0f, -32.0f, 4.0f, 4.0f, Land.TILE_HEIGHT, player));
+        super.insertObject(Tags.Object, new DynamicLand(0.0f, -64.0f, 3.0f, Land.TILE_HEIGHT, 2.0f, -4.5f, 4.5f, player));
 
         // Ui 오브젝트들을 추가한다.
         super.insertObject(Tags.Ui, new ScoreUi(player));
