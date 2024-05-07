@@ -9,11 +9,8 @@ import androidx.annotation.NonNull;
 import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.fallingdowntino.object.ScoreUi;
-import com.hk416.fallingdowntino.object.land.DynamicLand;
-import com.hk416.fallingdowntino.object.land.Land;
-import com.hk416.fallingdowntino.object.land.StaticLand;
+import com.hk416.fallingdowntino.object.land.BlockPool;
 import com.hk416.framework.render.DrawPipeline;
-import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.scene.GameScene;
 
 public final class InGameScene extends GameScene {
@@ -27,26 +24,28 @@ public final class InGameScene extends GameScene {
         super(Tags.values().length);
     }
 
+    private void setupDrawPipeline() {
+        DrawPipeline pipeline = DrawPipeline.getInstance();
+        pipeline.setRatio(9.0f, 16.0f);
+        pipeline.setMainCamera(new MainCamera());
+    }
+
+    private void setupObjects() {
+        player = new Player();
+        insertObject(Tags.Player, player);
+        insertObject(Tags.Object, new BlockPool(player));
+    }
+
+    private void setupUserInterface() {
+        insertObject(Tags.Ui, new ScoreUi(player));
+    }
+
     @Override
     public void onEnter() {
         Log.d(TAG, "::onEnter >> 장면에 진입함.");
-
-        // MainCamera를 생성한다.
-        GameCamera mainCamera = new MainCamera();
-
-        // DrawPipeline을 설정한다.
-        DrawPipeline pipeline = DrawPipeline.getInstance();
-        pipeline.setRatio(9.0f, 16.0f);
-        pipeline.setMainCamera(mainCamera);
-
-        // 게임 오브젝트들을 추가한다.
-        player = new Player();
-        super.insertObject(Tags.Player, player);
-        super.insertObject(Tags.Object, new StaticLand(2.0f, -32.0f, 4.0f, 4.0f, Land.TILE_HEIGHT, player));
-        super.insertObject(Tags.Object, new DynamicLand(0.0f, -64.0f, 3.0f, Land.TILE_HEIGHT, 2.0f, -4.5f, 4.5f, player));
-
-        // Ui 오브젝트들을 추가한다.
-        super.insertObject(Tags.Ui, new ScoreUi(player));
+        setupDrawPipeline();
+        setupObjects();
+        setupUserInterface();
     }
 
     @Override

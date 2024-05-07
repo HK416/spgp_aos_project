@@ -10,12 +10,19 @@ import androidx.annotation.NonNull;
  * @version 1.0
  */
 public final class Projection {
-    public float top = 0.0f;
-    public float left = 0.0f;
-    public float bottom = 0.0f;
-    public float right = 0.0f;
-    public float zNear = 0.0f;
-    public float zFar = 0.0f;
+    public static final float DEF_LEFT = -4.5f;
+    public static final float DEF_RIGHT = 4.5f;
+    public static final float DEF_TOP = 8.0f;
+    public static final float DEF_BOTTOM = -8.0f;
+    public static final float DEF_NEAR = 0.0f;
+    public static final float DEF_FAR = 100.0f;
+
+    public float top = DEF_TOP;
+    public float left = DEF_LEFT;
+    public float bottom = DEF_BOTTOM;
+    public float right = DEF_RIGHT;
+    public float zNear = DEF_NEAR;
+    public float zFar = DEF_FAR;
 
     public Projection() {
         /* empty */
