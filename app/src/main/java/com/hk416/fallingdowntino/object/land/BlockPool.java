@@ -10,12 +10,13 @@ import androidx.annotation.NonNull;
 import com.hk416.fallingdowntino.BuildConfig;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.framework.object.GameObject;
-import com.hk416.framework.object.TileObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.transform.Projection;
+import com.hk416.framework.transform.Vector;
 import com.hk416.framework.transform.Viewport;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayDeque;
 
 public final class BlockPool extends GameObject {
@@ -26,10 +27,10 @@ public final class BlockPool extends GameObject {
     public static final float MIN_RANGE = -32.0f;
     public static final float MAX_RANGE = 32.0f;
     public static final float SPAWN_INTERVAL = 24.0f;
-    public static final float STATIC_INTERVAL = 4.2f;
+    public static final float STATIC_INTERVAL = 3.2f;
     public static final float HALF_STATIC_INTERVAL = 0.5f * STATIC_INTERVAL;
-    public static final float MIN_DYNAMIC_WIDTH = Tile.TILE_WIDTH;
-    public static final float MAX_DYNAMIC_WIDTH = Tile.TILE_WIDTH * 3;
+    public static final float MIN_DYNAMIC_WIDTH = 2.2f;
+    public static final float MAX_DYNAMIC_WIDTH = 6.6f;
 
     private static Paint debugPaint = null;
 
@@ -72,64 +73,81 @@ public final class BlockPool extends GameObject {
         return projection;
     }
 
+    @NonNull
+    private Block getBlockObject() {
+        if (inactiveBlocks.isEmpty()) {
+            return new Block(player, getCurrProjection());
+        } else {
+            Block block = inactiveBlocks.pop();
+            block.reset();
+            block.setRange(getCurrProjection());
+            return block;
+        }
+    }
+
+    private float getRandomRange(float min, float max) {
+        final float EPSLION = 1.401298E-45f;
+        if (min >= max) {
+            throw new InvalidParameterException("max는 min보다 커야합니다.");
+        }
+
+        float t = (float)Math.random();
+        t = (t <= EPSLION) ? 0.1f : t;
+        return min + t * (max - min);
+    }
+
     private void spawnBlock() {
         float currDistance = player.getDistance();
         if (prevSpawnDistance + SPAWN_INTERVAL <= currDistance) {
             float diff = currDistance - (prevSpawnDistance + SPAWN_INTERVAL);
             prevSpawnDistance += SPAWN_INTERVAL;
-            Projection projection = getCurrProjection();
-            Block block = null;
-            if (inactiveBlocks.isEmpty()) {
-                block = new Block(player, projection);
-            } else {
-                block = inactiveBlocks.pop();
-                block.setRange(projection);
-                block.reset();
-            }
 
-            float posX = 0.0f;
-            float posY = MIN_RANGE + diff;
+            Projection projection = getCurrProjection();
+            Block block = getBlockObject();
+
             int type = (int)Math.round(Math.random());
-            if (type == Types.Static.ordinal()) {
-                posX = projection.left + HALF_STATIC_INTERVAL
-                        + (projection.getWidth() - STATIC_INTERVAL) * (float)Math.random();
+            if (type == Types.Static.ordinal() && false) {
+                float posX = getRandomRange(
+                        projection.left + HALF_STATIC_INTERVAL,
+                        projection.right - HALF_STATIC_INTERVAL
+                );
+                float posY = MIN_RANGE + diff;
+
+                float leftWidth = (posX - HALF_STATIC_INTERVAL) - projection.left;
+                Tile leftTile = new Tile(
+                        -HALF_STATIC_INTERVAL - 0.5f * leftWidth, 0.0f,
+                        leftWidth, Tile.TILE_HEIGHT
+                );
+
+                float rightWidth = projection.right - (posX + HALF_STATIC_INTERVAL);
+                Tile rightTile = new Tile(
+                        HALF_STATIC_INTERVAL + 0.5f * rightWidth, 0.0f,
+                        rightWidth, Tile.TILE_HEIGHT
+                );
+
+                rightTile.setSibling(leftTile);
+                block.setChild(rightTile);
                 block.setPosition(posX, posY);
                 block.setVelocityX(0.0f);
 
-                float leftWidth = (posX - HALF_STATIC_INTERVAL) - projection.left;
-                float rightWidth = projection.right - (posX + HALF_STATIC_INTERVAL);
-
-                Tile left = new Tile(
-                        -HALF_STATIC_INTERVAL - 0.5f * leftWidth,
-                        0.0f,
-                        leftWidth,
-                        Tile.TILE_HEIGHT
+                Log.d(TAG, "::spawnBlock >> 고정된 블록 추가 left:" + leftWidth
+                        + ", right:" + rightWidth
+                        + ", posX:" + posX
                 );
-                Tile right = new Tile(
-                        HALF_STATIC_INTERVAL + 0.5f * rightWidth,
-                        0.0f,
-                        rightWidth,
-                        Tile.TILE_HEIGHT
-                );
-
-                left.setSibling(right);
-                block.setChild(left);
-                block.updateTransform(null);
-                Log.d(TAG, "::spawnBlock >> 고정된 블록 추가 left:" + leftWidth + ", right:" + rightWidth);
             } else {
-                float width = MIN_DYNAMIC_WIDTH
-                        + (MAX_DYNAMIC_WIDTH - MIN_DYNAMIC_WIDTH)
-                        * (float)Math.random();
-                posX = projection.left + 0.5f * width
-                        + (projection.getWidth() - width) * (float)Math.random();
+                float posX = 0.0f;
+                float posY = MIN_RANGE + diff;
+
+                float width = getRandomRange(MIN_DYNAMIC_WIDTH, MAX_DYNAMIC_WIDTH - MIN_DYNAMIC_WIDTH);
+                float speed = getRandomRange(Block.MIN_SPEED, Block.MAX_SPEED - Block.MIN_SPEED);
+
+                Tile tile = new Tile(0.0f, 0.0f, width, Tile.TILE_HEIGHT);
+                block.setChild(tile);
                 block.setPosition(posX, posY);
-                block.setVelocityX(Block.MIN_SPEED
-                        + (Block.MAX_SPEED - Block.MIN_SPEED)
-                        * (float)Math.random());
-                Tile child = new Tile(0.0f, 0.0f, width, Tile.TILE_HEIGHT);
-                block.setChild(child);
-                block.updateTransform(null);
-                Log.d(TAG, "::spawnBlock >> 움직이는 블록 추가 width:" + width);
+                block.setVelocityX(speed);
+                Log.d(TAG, "::spawnBlock >> 움직이는 블록 추가 width:" + width
+                        + ", posX" + posX
+                );
             }
             activeBlocks.add(block);
         }
@@ -145,6 +163,7 @@ public final class BlockPool extends GameObject {
             if (firstBlock.getWorldPosition().y >= MAX_RANGE) {
                 Log.d(TAG, "::retainBlocks >> 블록 제거 (Block:" + firstBlock + ")");
                 firstBlock = activeBlocks.pop();
+                firstBlock.setChild(null);
                 inactiveBlocks.add(firstBlock);
             } else {
                 break;
@@ -158,9 +177,19 @@ public final class BlockPool extends GameObject {
         }
     }
 
+    private void checkCollision() {
+        for (Block block : activeBlocks) {
+            if (block.intersects(player)) {
+                player.onCollide(block);
+                break;
+            }
+        }
+    }
+
     @Override
     public void onUpdate(float elapsedTimeSec) {
         updateAcitveBlocks(elapsedTimeSec);
+        checkCollision();
         spawnBlock();
         retainBlocks();
     }

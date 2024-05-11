@@ -1,20 +1,28 @@
 package com.hk416.framework.object;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.hk416.fallingdowntino.BuildConfig;
+import com.hk416.framework.collide.BoundingBox;
+import com.hk416.framework.collide.IGameCollider;
 import com.hk416.framework.transform.Transform;
 import com.hk416.framework.transform.Vector;
 
-public class GameObject {
+public class GameObject implements IGameCollider<GameObject> {
+    private static final String TAG = GameObject.class.getSimpleName();
+
     protected GameObject child = null;
     protected GameObject sibling = null;
 
     protected Transform transform = new Transform();
     protected Transform worldTransform = new Transform();
+
+    protected BoundingBox aabb = null;
 
     public GameObject() {
         /* empty */
@@ -22,7 +30,6 @@ public class GameObject {
 
     public GameObject(float x, float y) {
         setPosition(x, y);
-        updateTransform(null);
     }
 
     public void setChild(@NonNull GameObject child) {
@@ -90,10 +97,11 @@ public class GameObject {
         updateTransform(null);
     }
 
-    public void updateTransform(@Nullable Transform parent) {
-        worldTransform = transform.postMul(
-                parent != null ? parent : new Transform()
-        );
+    public final void updateTransform(@Nullable Transform parent) {
+        worldTransform = transform.postMul(parent != null ? parent : new Transform());
+        if (aabb != null) {
+            aabb.updateTransform(worldTransform);
+        }
 
         if (sibling != null) {
             sibling.updateTransform(parent);
@@ -131,5 +139,22 @@ public class GameObject {
         if (child != null) {
             child.onDraw(canvas);
         }
+
+        if (BuildConfig.DEBUG && aabb != null) {
+            aabb.onDraw(canvas);
+        }
+    }
+
+    @Override
+    public boolean intersects(@NonNull GameObject other) {
+        if (aabb != null && other.aabb != null && aabb.intersects(other.aabb)) {
+            return true;
+        }
+
+        if (sibling != null && sibling.intersects(other)) {
+            return true;
+        }
+
+        return child != null && child.intersects(other);
     }
 }

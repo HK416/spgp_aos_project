@@ -10,8 +10,10 @@ import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.fallingdowntino.object.ScoreUi;
 import com.hk416.fallingdowntino.object.land.BlockPool;
+import com.hk416.framework.object.GameObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.scene.GameScene;
+import com.hk416.framework.transform.Vector;
 
 public final class InGameScene extends GameScene {
     private static final String TAG = InGameScene.class.getSimpleName();

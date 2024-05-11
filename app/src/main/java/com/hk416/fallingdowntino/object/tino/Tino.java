@@ -22,6 +22,11 @@ public class Tino extends GameObject {
     public static final float WIDTH = 2.0f;
     public static final float HEIGHT = 2.0f;
 
+    public static final float BOX_X = 0.0f;
+    public static final float BOX_Y = -0.2f;
+    public static final float BOX_WIDTH = 1.2f;
+    public static final float BOX_HEIGHT = 1.6f;
+
     public static Paint debugColor = null;
 
     private final Map<Behavior, GameObject> behaviors = new HashMap<>();

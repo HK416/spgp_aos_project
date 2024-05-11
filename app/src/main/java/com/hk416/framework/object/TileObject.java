@@ -11,14 +11,8 @@ import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.transform.Vector;
 
 public class TileObject extends SpriteObject {
-    public enum Align {
-        TopLeft, TopMid, TopRight,
-        MidLeft, Center, MidRight,
-        BottomLeft, BottomMid, BottomRight,
-    }
 
     protected final Vector tileSize;
-    protected final Align align;
 
     public TileObject(
             int bitmapResId,
@@ -27,12 +21,10 @@ public class TileObject extends SpriteObject {
             float tileWidth,
             float tileHeight,
             boolean flipX,
-            boolean flipY,
-            Align align
+            boolean flipY
     ) {
         super(bitmapResId, width, height, flipX, flipY);
         this.tileSize = new Vector(tileWidth, tileHeight, 0.0f);
-        this.align = (align == null) ? Align.TopLeft : align;
     }
 
     public TileObject (
@@ -44,67 +36,42 @@ public class TileObject extends SpriteObject {
             float tileWidth,
             float tileHeight,
             boolean flipX,
-            boolean flipY,
-            Align align
+            boolean flipY
     ) {
         super(bitmapResId, x, y, width, height, flipX, flipY);
         this.tileSize = new Vector(tileWidth, tileHeight, 0.0f);
-        this.align = (align == null) ? Align.TopLeft : align;
     }
 
-    private Pair<Float, Float> getStartX(@NonNull PointF minPos, @NonNull PointF maxPos) {
-        float ratioWidth = size.x / tileSize.x;
-        float tileWidth = (maxPos.x - minPos.x) / ratioWidth;
-        switch (align) {
-            case TopLeft:
-            case MidLeft:
-            case BottomLeft:
-                return Pair.create(minPos.x, tileWidth);
-            case TopMid:
-            case Center:
-            case BottomMid:
-                return Pair.create(
-                        0.5f * (minPos.x + maxPos.x)
-                        - tileWidth * (int)Math.ceil(0.5f * ratioWidth),
-                        tileWidth
-                );
-            case TopRight:
-            case MidRight:
-            case BottomRight:
-                return Pair.create(maxPos.x, -tileWidth);
-            default:
-                return Pair.create(0.0f, 0.0f);
-        }
+    private Pair<Pair<Float, Float>, Integer> getStartX(float minPosX, float maxPosX) {
+        float width = maxPosX - minPosX;
+        float centerX = minPosX + 0.5f * width;
+        int numTiles = (int)Math.ceil(size.x / tileSize.x);
+        float tileWidth = (width / size.x) * tileSize.x;
+        return Pair.create(Pair.create(centerX - 0.5f * tileWidth * numTiles, tileWidth), numTiles);
     }
 
-    private Pair<Float, Float> getStartY(@NonNull PointF minPos, @NonNull PointF maxPos) {
-        float ratioHeight = size.y / tileSize.y;
-        float tileHeight = (maxPos.y - minPos.y) / ratioHeight;
-        switch (align) {
-            case TopLeft:
-            case TopMid:
-            case TopRight:
-                return Pair.create(maxPos.y, -tileHeight);
-            case MidLeft:
-            case Center:
-            case MidRight:
-                return Pair.create(
-                        0.5f * (minPos.y + maxPos.y)
-                        - tileHeight * (int)Math.ceil(0.5f * ratioHeight),
-                        tileHeight
-                );
-            case BottomLeft:
-            case BottomMid:
-            case BottomRight:
-                return Pair.create(minPos.y, tileHeight);
-            default:
-                return Pair.create(0.0f, 0.0f);
-        }
+    private Pair<Pair<Float, Float>, Integer> getStartY(float minPosY, float maxPosY) {
+        float height = maxPosY - minPosY;
+        float centerY = minPosY + 0.5f * height;
+        int numTiles = (int)Math.ceil(size.y / tileSize.y);
+        float tileHeight = (height / size.y) * tileSize.y;
+        return Pair.create(Pair.create(centerY - 0.5f * tileHeight * numTiles, tileHeight), numTiles);
     }
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
-        super.onDraw(canvas);
+        if (sibling != null) {
+            sibling.onDraw(canvas);
+        }
+
+        if (child != null) {
+            child.onDraw(canvas);
+        }
+
+        if (BuildConfig.DEBUG && aabb != null) {
+            aabb.onDraw(canvas);
+        }
+
         Vector minimum = getWorldPosition().postSub(getSize().postMul(0.5f));
         Vector maximum = getWorldPosition().postAdd(getSize().postMul(0.5f));
 
@@ -112,17 +79,25 @@ public class TileObject extends SpriteObject {
         PointF maxPos = DrawPipeline.getInstance().toScreenCoord(maximum);
 
         if (minPos != null && maxPos != null) {
-            Pair<Float, Float> v = getStartX(minPos, maxPos);
-            Pair<Float, Float> h = getStartY(minPos, maxPos);
-            float x = v.first;
-            float sx = v.second;
-            float y = h.first;
-            float sy = h.second;
+            float top = Math.min(minPos.y, maxPos.y);
+            float left = Math.min(minPos.x, maxPos.x);
+            float bottom = Math.max(minPos.y, maxPos.y);
+            float right = Math.max(minPos.x, maxPos.x);
+
+            Pair<Pair<Float, Float>, Integer> horizontal = getStartX(left, right);
+            Pair<Pair<Float, Float>, Integer> vertical = getStartY(top, bottom);
+
+            float x = horizontal.first.first;
+            float sx = horizontal.first.second;
+            int cntX = horizontal.second;
+            float y = vertical.first.first;
+            float sy = vertical.first.second;
+            int cntY = vertical.second;
 
             canvas.save();
-            canvas.clipRect(minPos.x, maxPos.y, maxPos.x, minPos.y);
-            for (int i = 0 ; i < (int)Math.ceil(size.y / tileSize.y); i++) {
-                for (int j = 0; j < (int)Math.ceil(size.x / tileSize.x); j++) {
+            canvas.clipRect(left, top, right, bottom);
+            for (int i = 0 ; i < cntY; i++) {
+                for (int j = 0; j < cntX; j++) {
                     drawScreenArea.top = Math.min(y + sy * i, y + sy * (i + 1));
                     drawScreenArea.left = Math.min(x + sx * j, x + sx * (j + 1));
                     drawScreenArea.bottom = Math.max(y + sy * i, y + sy * (i + 1));
@@ -133,10 +108,10 @@ public class TileObject extends SpriteObject {
             canvas.restore();
 
             if (BuildConfig.DEBUG) {
-                drawScreenArea.top = maxPos.y;
-                drawScreenArea.left = minPos.x;
-                drawScreenArea.bottom = minPos.y;
-                drawScreenArea.right = maxPos.x;
+                drawScreenArea.top = top;
+                drawScreenArea.left = left;
+                drawScreenArea.bottom = bottom;
+                drawScreenArea.right = right;
             }
         }
     }

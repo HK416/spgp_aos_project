@@ -43,6 +43,7 @@ public final class Block extends GameObject {
         oldDistance = player.getDistance();
         child = null;
         sibling = null;
+        setPosition(0.0f, 0.0f);
     }
 
     private float moveHorizon(float elapsedTimeSec, float oldX) {

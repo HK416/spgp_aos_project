@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.BuildConfig;
 import com.hk416.fallingdowntino.R;
+import com.hk416.framework.collide.BoundingBox;
 import com.hk416.framework.object.TileObject;
 
 public class Tile extends TileObject {
@@ -27,10 +28,12 @@ public class Tile extends TileObject {
                 TILE_WIDTH,
                 TILE_HEIGHT,
                 false,
-                false,
-                Align.TopMid
+                false
         );
         createDebugColor();
+
+        aabb = new BoundingBox(0.0f, 0.0f, width, height);
+        updateTransform(null);
     }
 
     private void createDebugColor() {

@@ -1,73 +1,107 @@
 package com.hk416.framework.collide;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.RectF;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.hk416.fallingdowntino.BuildConfig;
+import com.hk416.framework.render.DrawPipeline;
+import com.hk416.framework.transform.Transform;
 import com.hk416.framework.transform.Vector;
 
 public final class BoundingBox implements IGameCollider<BoundingBox> {
-    public float centerX = 0.0f;
-    public float centerY = 0.0f;
-    public float sizeX = 0.0f;
-    public float sizeY = 0.0f;
+    private static Paint debugPaint = null;
+
+    private RectF drawScreenArea = null;
+    private Transform worldTransform = new Transform();
+    private Transform transform = new Transform();
+    private Vector size = new Vector();
 
     public BoundingBox() {
-        /* empty */
+        setPosition(0.0f, 0.0f);
+        setSize(0.0f, 0.0f);
+        createDebugPaint();
     }
 
     public BoundingBox(float x, float y, float sx, float sy) {
-        centerX = x;
-        centerY = y;
-        sizeX = sx;
-        sizeY = sy;
+        setPosition(x, y);
+        setSize(sx, sy);
+        createDebugPaint();
+    }
+
+    private void createDebugPaint() {
+        if (BuildConfig.DEBUG) {
+            drawScreenArea = new RectF();
+            if (debugPaint == null) {
+                debugPaint = new Paint();
+                debugPaint.setStyle(Paint.Style.STROKE);
+                debugPaint.setColor(Color.rgb(51, 204, 204));
+                debugPaint.setStrokeWidth(10.0f);
+            }
+        }
+    }
+
+    public void setPosition(float x, float y) {
+        transform.zAxis.x = x;
+        transform.zAxis.y = y;
+        transform.zAxis.z = 1.0f;
+        updateTransform(null);
+    }
+
+    public void setSize(float sx, float sy) {
+        size.x = sx;
+        size.y = sy;
+    }
+
+    public void updateTransform(@Nullable Transform parent) {
+        worldTransform = transform.postMul((parent != null) ? parent : new Transform());
+    }
+
+    @NonNull
+    public Vector getWorldPosition() {
+        return worldTransform.zAxis;
     }
 
     @Override
-    public boolean intersects(@NonNull BoundingBox other, @Nullable Vector depth) {
-        float leftSideA = centerX - 0.5f * sizeX;
-        float rightSideA = centerX + 0.5f * sizeX;
-        float bottomSideA = centerY - 0.5f * sizeY;
-        float topSideA = centerY + 0.5f * sizeY;
+    public boolean intersects(@NonNull BoundingBox other) {
+        Vector center = getWorldPosition();
+        Vector otherCenter = other.getWorldPosition();
 
-        float leftSideB = other.centerX - 0.5f * other.sizeX;
-        float rightSideB = other.centerX + 0.5f * other.sizeX;
-        float bottomSideB = other.centerY - 0.5f * other.sizeY;
-        float topSideB = other.centerY + 0.5f * other.sizeY;
+        float leftSideA = center.x - 0.5f * size.x;
+        float rightSideA = center.x + 0.5f * size.x;
+        float bottomSideA = center.y - 0.5f * size.y;
+        float topSideA = center.y + 0.5f * size.y;
 
-        if (leftSideA <= rightSideB) { // other가 +x 방향으로
-            if (bottomSideA <= topSideB) { // other가 +y 방향으로
-                if (depth != null) {
-                    depth.x = rightSideB - leftSideA;
-                    depth.y = topSideB - bottomSideA;
-                    depth.z = 0.0f;
-                }
-                return true;
-            } else if (topSideA >= bottomSideB) { // other가 -y 방향으로
-                if (depth != null) {
-                    depth.x = rightSideB - leftSideA;
-                    depth.y = bottomSideB - topSideA;
-                    depth.z = 0.0f;
-                }
-                return true;
-            }
-        } else if  (rightSideA >= leftSideB) { // other가 -x 방향으로
-            if (bottomSideA <= topSideB) { // other가 +y 방향으로
-                if (depth != null) {
-                    depth.x = leftSideB - rightSideA;
-                    depth.y = topSideB - bottomSideA;
-                    depth.z = 0.0f;
-                }
-                return true;
-            } else if (topSideA >= bottomSideB) { // other가 -y 방향으로
-                if (depth != null) {
-                    depth.x = leftSideB - rightSideA;
-                    depth.y = bottomSideB - topSideA;
-                    depth.z = 0.0f;
-                }
-                return true;
+        float leftSideB = otherCenter.x - 0.5f * other.size.x;
+        float rightSideB = otherCenter.x + 0.5f * other.size.x;
+        float bottomSideB = otherCenter.y - 0.5f * other.size.y;
+        float topSideB = otherCenter.y + 0.5f * other.size.y;
+
+        return leftSideA <= rightSideB && rightSideA >= leftSideB
+        && bottomSideA <= topSideB && topSideA >= bottomSideB;
+    }
+
+    public void onDraw(@NonNull Canvas canvas) {
+        if (BuildConfig.DEBUG) {
+            Vector center = getWorldPosition();
+            Vector minimum = center.postSub(size.postMul(0.5f));
+            Vector maximum = center.postAdd(size.postMul(0.5f));
+
+            PointF minPos = DrawPipeline.getInstance().toScreenCoord(minimum);
+            PointF maxPos = DrawPipeline.getInstance().toScreenCoord(maximum);
+
+            if (minPos != null && maxPos != null) {
+                drawScreenArea.top = maxPos.y;
+                drawScreenArea.left = minPos.x;
+                drawScreenArea.bottom = minPos.y;
+                drawScreenArea.right = maxPos.x;
+                canvas.drawRect(drawScreenArea, debugPaint);
             }
         }
-
-        return false;
     }
 }

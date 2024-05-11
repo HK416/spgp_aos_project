@@ -1,8 +1,14 @@
 package com.hk416.fallingdowntino.object;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.hk416.fallingdowntino.object.parachute.Parachute;
 import com.hk416.fallingdowntino.object.tino.Tino;
+import com.hk416.framework.collide.BoundingBox;
 import com.hk416.framework.object.GameObject;
+import com.hk416.framework.transform.Vector;
 
 public final class Player extends GameObject {
     private static final String TAG = GameObject.class.getSimpleName();
@@ -25,8 +31,9 @@ public final class Player extends GameObject {
         parachute = new Parachute();
         tino = new Tino(this);
         tino.setSibling(parachute);
-
         setChild(tino);
+
+        aabb = new BoundingBox(Tino.BOX_X, Tino.BOX_Y, Tino.BOX_WIDTH, Tino.BOX_HEIGHT);
         updateTransform(null);
     }
 
@@ -75,5 +82,9 @@ public final class Player extends GameObject {
     public void updatePlayer(float newX, float newDistance) {
         setPosition(newX, transform.zAxis.y);
         distance = newDistance;
+    }
+
+    public void onCollide(@NonNull GameObject object) {
+        Log.d(TAG, "::onCollide >> object(" + object + ")와 플레이어가 충돌함.");
     }
 }
