@@ -9,16 +9,18 @@ import androidx.annotation.NonNull;
 import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.fallingdowntino.object.ScoreUi;
+import com.hk416.fallingdowntino.object.items.ItemPool;
 import com.hk416.fallingdowntino.object.land.BlockPool;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.scene.GameScene;
+import com.hk416.framework.transform.Projection;
 import com.hk416.framework.transform.Vector;
 
 public final class InGameScene extends GameScene {
     private static final String TAG = InGameScene.class.getSimpleName();
 
-    public enum Tags { Object, Player, Ui }
+    public enum Tags { Object, Item, Player, Ui }
 
     private Player player;
 
@@ -36,6 +38,12 @@ public final class InGameScene extends GameScene {
         player = new Player();
         insertObject(Tags.Player, player);
         insertObject(Tags.Object, new BlockPool(player));
+        insertObject(Tags.Item, new ItemPool(
+                MainCamera.PROJ_LEFT,
+                MainCamera.PROJ_RIGHT,
+                -12.0f,
+                player
+        ));
     }
 
     private void setupUserInterface() {

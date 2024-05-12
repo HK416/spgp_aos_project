@@ -106,7 +106,7 @@ public final class BlockPool extends GameObject {
             Block block = getBlockObject();
 
             int type = (int)Math.round(Math.random());
-            if (type == Types.Static.ordinal() && false) {
+            if (type == Types.Static.ordinal()) {
                 float posX = getRandomRange(
                         projection.left + HALF_STATIC_INTERVAL,
                         projection.right - HALF_STATIC_INTERVAL
