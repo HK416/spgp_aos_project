@@ -70,6 +70,10 @@ public class SpriteObject extends GameObject {
     }
 
     public void setSize(float width, float height) {
+        if (aabb != null) {
+            aabb.setSize(width, height);
+        }
+
         size.x = width;
         size.y = height;
     }

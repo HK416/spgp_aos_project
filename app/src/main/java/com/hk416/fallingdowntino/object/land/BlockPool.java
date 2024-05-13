@@ -1,168 +1,216 @@
 package com.hk416.fallingdowntino.object.land;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.hk416.fallingdowntino.BuildConfig;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.framework.object.GameObject;
-import com.hk416.framework.render.DrawPipeline;
-import com.hk416.framework.render.GameCamera;
-import com.hk416.framework.transform.Projection;
-import com.hk416.framework.transform.Vector;
-import com.hk416.framework.transform.Viewport;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayDeque;
 
 public final class BlockPool extends GameObject {
-    public enum Types { Static, Dynamic };
-
     private static final String TAG = BlockPool.class.getSimpleName();
+
     public static final int CAPACITY = 16;
-    public static final float MIN_RANGE = -32.0f;
-    public static final float MAX_RANGE = 32.0f;
+    public static final float SPAWN_POS = -32.0f;
+    public static final float RETAIN_POS = 32.0f;
     public static final float SPAWN_INTERVAL = 24.0f;
-    public static final float STATIC_INTERVAL = 3.2f;
-    public static final float HALF_STATIC_INTERVAL = 0.5f * STATIC_INTERVAL;
-    public static final float MIN_DYNAMIC_WIDTH = 2.2f;
-    public static final float MAX_DYNAMIC_WIDTH = 6.6f;
 
-    private static Paint debugPaint = null;
+    private final float minPosX;
+    private final float maxPosX;
 
-    private final Player player;
-    private float prevSpawnDistance;
     private final ArrayDeque<Block> activeBlocks;
     private final ArrayDeque<Block> inactiveBlocks;
 
-    public BlockPool(@NonNull Player player) {
-        createDebugPaint();
-        this.player = player;
-        this.prevSpawnDistance = -SPAWN_INTERVAL;
-        activeBlocks = new ArrayDeque<>(CAPACITY);
-        inactiveBlocks = new ArrayDeque<>(CAPACITY);
+    private final ArrayDeque<Tile> activeTiles;
+    private final ArrayDeque<Tile> inactiveTiles;
+
+    private final Player player;
+    private float prevSpawnDistance;
+
+    public BlockPool(
+            float minPosX,
+            float maxPosX,
+            float initSpawnDistance,
+            @NonNull Player player
+    ) {
+        checkParameters(minPosX, maxPosX, initSpawnDistance, player);
+
+        this.minPosX = minPosX;
+        this.maxPosX = maxPosX;
+
+        this.activeBlocks = new ArrayDeque<>(CAPACITY);
+        this.inactiveBlocks = new ArrayDeque<>(CAPACITY);
         for (int i = 0; i < CAPACITY; i++) {
-            inactiveBlocks.add(new Block(player, getCurrProjection()));
+            inactiveBlocks.add(new Block(minPosX, maxPosX, player));
         }
+
+        this.activeTiles = new ArrayDeque<>(CAPACITY);
+        this.inactiveTiles = new ArrayDeque<>(CAPACITY);
+        for (int i = 0; i < CAPACITY; i++) {
+            inactiveTiles.add(new Tile(0.0f, 0.0f, 0.0f, 0.0f));
+        }
+
+        this.player = player;
+        this.prevSpawnDistance = initSpawnDistance;
     }
 
-    private void createDebugPaint() {
-        if (BuildConfig.DEBUG && debugPaint == null) {
-            debugPaint = new Paint();
-            debugPaint.setColor(Color.rgb(51, 204, 51));
-            debugPaint.setTextSize(48.0f);
-        }
-    }
-
-    @NonNull
-    private Projection getCurrProjection() {
-        GameCamera mainCamera = DrawPipeline.getInstance().getMainCamera();
-        if (mainCamera == null) {
-            throw new NullPointerException("mainCamere가 설정되어 있지 않습니다!");
+    private void checkParameters(
+            float minPosX,
+            float maxPosX,
+            float _initSpawnDistance,
+            Player player
+    ) {
+        if (maxPosX <= minPosX) {
+            throw new InvalidParameterException("주어진 maxSpawnX는 minSpawnX 보다 커야 합니다!");
         }
 
-        Projection projection = mainCamera.getProjection();
-        if (projection == null) {
-            throw new NullPointerException("mainCamera에 Projection이 설정되어 있지 않습니다!");
+        if (maxPosX - minPosX < Block.MIN_WIDTH) {
+            throw new InvalidParameterException("주어진 범위의 길이는 `Block.MIN_WIDTH`보다 커야 합니다!");
         }
 
-        return projection;
+        if (player == null) {
+            throw new InvalidParameterException("주어진 Player 객체는 null이 될 수 없습니다!");
+        }
     }
 
     @NonNull
     private Block getBlockObject() {
         if (inactiveBlocks.isEmpty()) {
-            return new Block(player, getCurrProjection());
+            return new Block(minPosX, maxPosX, player);
         } else {
             Block block = inactiveBlocks.pop();
             block.reset();
-            block.setRange(getCurrProjection());
             return block;
         }
     }
 
-    private float getRandomRange(float min, float max) {
-        final float EPSLION = 1.401298E-45f;
-        if (min >= max) {
-            throw new InvalidParameterException("max는 min보다 커야합니다.");
+    private Tile getTileObject(float x, float width) {
+        if (inactiveTiles.isEmpty()) {
+            return new Tile(x, 0.0f, width, Tile.TILE_HEIGHT);
+        } else {
+            Tile tile = inactiveTiles.pop();
+            activeTiles.add(tile);
+            tile.setPosition(x, 0.0f);
+            tile.setSize(width, Tile.TILE_HEIGHT);
+            return tile;
         }
-
-        float t = (float)Math.random();
-        t = (t <= EPSLION) ? 0.1f : t;
-        return min + t * (max - min);
     }
 
-    private void spawnBlock() {
+    private Block.Type getRandomBlockType() {
+        Block.Type[] types = Block.Type.values();
+        return types[(int)Math.floor(Math.random() * types.length)];
+    }
+
+    private float getRandomPositionX(float minBlockWidth) {
+        final float halfBlockWidth = 0.5f * minBlockWidth;
+        float begX = minPosX + halfBlockWidth;
+        float endX = maxPosX - halfBlockWidth;
+        return begX + (float)Math.random() * (endX - begX);
+    }
+
+    private void onSpawnRandomBlock() {
         float currDistance = player.getDistance();
-        if (prevSpawnDistance + SPAWN_INTERVAL <= currDistance) {
-            float diff = currDistance - (prevSpawnDistance + SPAWN_INTERVAL);
-            prevSpawnDistance += SPAWN_INTERVAL;
-
-            Projection projection = getCurrProjection();
-            Block block = getBlockObject();
-
-            int type = (int)Math.round(Math.random());
-            if (type == Types.Static.ordinal()) {
-                float posX = getRandomRange(
-                        projection.left + HALF_STATIC_INTERVAL,
-                        projection.right - HALF_STATIC_INTERVAL
-                );
-                float posY = MIN_RANGE + diff;
-
-                float leftWidth = (posX - HALF_STATIC_INTERVAL) - projection.left;
-                Tile leftTile = new Tile(
-                        -HALF_STATIC_INTERVAL - 0.5f * leftWidth, 0.0f,
-                        leftWidth, Tile.TILE_HEIGHT
-                );
-
-                float rightWidth = projection.right - (posX + HALF_STATIC_INTERVAL);
-                Tile rightTile = new Tile(
-                        HALF_STATIC_INTERVAL + 0.5f * rightWidth, 0.0f,
-                        rightWidth, Tile.TILE_HEIGHT
-                );
-
-                rightTile.setSibling(leftTile);
-                block.setChild(rightTile);
-                block.setPosition(posX, posY);
-                block.setVelocityX(0.0f);
-
-                Log.d(TAG, "::spawnBlock >> 고정된 블록 추가 left:" + leftWidth
-                        + ", right:" + rightWidth
-                        + ", posX:" + posX
-                );
-            } else {
-                float posX = 0.0f;
-                float posY = MIN_RANGE + diff;
-
-                float width = getRandomRange(MIN_DYNAMIC_WIDTH, MAX_DYNAMIC_WIDTH - MIN_DYNAMIC_WIDTH);
-                float speed = getRandomRange(Block.MIN_SPEED, Block.MAX_SPEED - Block.MIN_SPEED);
-
-                Tile tile = new Tile(0.0f, 0.0f, width, Tile.TILE_HEIGHT);
-                block.setChild(tile);
-                block.setPosition(posX, posY);
-                block.setVelocityX(speed);
-                Log.d(TAG, "::spawnBlock >> 움직이는 블록 추가 width:" + width
-                        + ", posX" + posX
-                );
-            }
-            activeBlocks.add(block);
+        if (prevSpawnDistance + SPAWN_INTERVAL > currDistance) {
+            return;
         }
+
+        float offsetY = currDistance - (prevSpawnDistance + SPAWN_INTERVAL);
+        prevSpawnDistance += SPAWN_INTERVAL;
+
+        Block block = getBlockObject();
+        Block.Type type = getRandomBlockType();
+        switch (type) {
+            case Static: onInitStaticBlock(block, offsetY);
+                break;
+            case Dynamic: onInitDynamicBlock(block, offsetY);
+                break;
+            default:
+                throw new RuntimeException("해당 유형의 Block 오브젝트가 존재하지 않습니다! (type:" + type + ")");
+        }
+
+        activeBlocks.add(block);
+        Log.d(TAG, "::onSpawnRandomBlock >> 장애물 블록 추가 (type:" + type + ")");
     }
 
-    private void retainBlocks() {
+    private void onInitStaticBlock(@NonNull Block block, float offsetY) {
+        float posX = getRandomPositionX(Block.STATIC_INTERVAL);
+        float posY = SPAWN_POS + offsetY;
+
+        float leftBlockWidth = (posX - Block.HALF_STATIC_INTERVAL) - minPosX;
+        float leftBlockCenterX = (posX - Block.HALF_STATIC_INTERVAL) - 0.5f * leftBlockWidth;
+        Tile leftBlockTile = getTileObject(leftBlockCenterX, leftBlockWidth);
+
+        float rightBlockWidth = maxPosX - (posX + Block.HALF_STATIC_INTERVAL);
+        float rightBlockCenterX = (posX + Block.HALF_STATIC_INTERVAL) + 0.5f * rightBlockWidth;
+        Tile rightBlockTile = getTileObject(rightBlockCenterX, rightBlockWidth);
+
+        leftBlockTile.setSibling(rightBlockTile);
+        block.setChild(leftBlockTile);
+        block.setPosition(0.0f, posY);
+        block.setVelocityX(0.0f);
+        block.setBlockType(Block.Type.Static);
+    }
+
+    private void onInitDynamicBlock(@NonNull Block block, float offsetY) {
+        float posX = getRandomPositionX(Block.MIN_DYNAMIC_WIDTH);
+        float posY = SPAWN_POS + offsetY;
+
+        float blockWidth = Block.getRandomDynamicBlockWidth();
+        float blockVelocityX = Block.getRandomDynamicBlockVelocityX();
+        Tile tile = getTileObject(0.0f, blockWidth);
+
+        block.setChild(tile);
+        block.setPosition(posX, posY);
+        block.setVelocityX(blockVelocityX);
+        block.setBlockType(Block.Type.Dynamic);
+    }
+
+    private void onRetainBlocks() {
         while (!activeBlocks.isEmpty()) {
             Block firstBlock = activeBlocks.peek();
             if (firstBlock == null) {
                 break;
             }
 
-            if (firstBlock.getWorldPosition().y >= MAX_RANGE) {
-                Log.d(TAG, "::retainBlocks >> 블록 제거 (Block:" + firstBlock + ")");
+            if (firstBlock.getWorldPosition().y >= RETAIN_POS) {
+                Log.d(TAG, "::onRetainBlocks >> 블록 제거");
                 firstBlock = activeBlocks.pop();
+                Block.Type type = firstBlock.getBlockType();
+                if (type == null) {
+                    throw new NullPointerException("활성화 상태 블럭의 유형은 null이 될 수 없습니다!");
+                }
+
+                switch (type) {
+                    case Static:
+                        Tile rightTile = (Tile)firstBlock.getChild();
+                        if (rightTile == null) {
+                            throw new NullPointerException("활성화 상태 Static 블럭의 오른쪽은 null이 될 수 없습니다!");
+                        }
+
+                        Tile leftTile = (Tile)rightTile.getSibling();
+                        if (leftTile == null) {
+                            throw new NullPointerException("활성화 상태 Static 블럭의 왼쪽은 null이 될 수 없습니다!");
+                        }
+
+                        onRetainTile(rightTile);
+                        onRetainTile(leftTile);
+                        break;
+                    case Dynamic:
+                        Tile tile = (Tile)firstBlock.getChild();
+                        if (tile == null) {
+                            throw new NullPointerException("활성화 상태 Dynamic 블럭의 타일은 null이 될 수 없습니다!");
+                        }
+
+                        onRetainTile(tile);
+                        break;
+                    default:
+                        throw new RuntimeException("해당 유형의 Block 오브젝트가 존재하지 않습니다! (type:" + type + ")");
+                }
+
                 firstBlock.setChild(null);
                 inactiveBlocks.add(firstBlock);
             } else {
@@ -171,13 +219,33 @@ public final class BlockPool extends GameObject {
         }
     }
 
-    private void updateAcitveBlocks(float elapsedTimeSec) {
+    private void onRetainTile(@NonNull Tile tile) {
+        ArrayDeque<Tile> nextActiveTiles = new ArrayDeque<>(activeTiles.size());
+        while (!activeTiles.isEmpty()) {
+            Tile activeTile = activeTiles.pop();
+            if (activeTile == null) {
+                break;
+            }
+
+            if (activeTile == tile) {
+                Log.d(TAG, "::onRetainTile >> 타일 제거");
+                activeTile.setChild(null);
+                activeTile.setSibling(null);
+                inactiveTiles.add(activeTile);
+            } else {
+                nextActiveTiles.add(activeTile);
+            }
+        }
+        activeTiles.addAll(nextActiveTiles);
+    }
+
+    private void onUpdateAcitveBlocks(float elapsedTimeSec) {
         for (Block block: activeBlocks) {
             block.onUpdate(elapsedTimeSec);
         }
     }
 
-    private void checkCollision() {
+    private void onCheckCollision() {
         for (Block block : activeBlocks) {
             if (block.intersects(player)) {
                 player.onCollide(block);
@@ -186,28 +254,22 @@ public final class BlockPool extends GameObject {
         }
     }
 
+    public int getNumActiveBlocks() {
+        return activeBlocks.size();
+    }
+
     @Override
     public void onUpdate(float elapsedTimeSec) {
-        updateAcitveBlocks(elapsedTimeSec);
-        checkCollision();
-        spawnBlock();
-        retainBlocks();
+        onUpdateAcitveBlocks(elapsedTimeSec);
+        onCheckCollision();
+        onSpawnRandomBlock();
+        onRetainBlocks();
     }
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
         for (Block block : activeBlocks) {
             block.onDraw(canvas);
-        }
-
-        if (BuildConfig.DEBUG) {
-            Viewport viewport = DrawPipeline.getInstance().getViewport();
-            canvas.drawText(
-                    String.format("Active Blocks:%d", activeBlocks.size()),
-                    viewport.left,
-                    viewport.bottom,
-                    debugPaint
-            );
         }
     }
 }

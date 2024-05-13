@@ -8,7 +8,6 @@ import com.hk416.fallingdowntino.object.parachute.Parachute;
 import com.hk416.fallingdowntino.object.tino.Tino;
 import com.hk416.framework.collide.BoundingBox;
 import com.hk416.framework.object.GameObject;
-import com.hk416.framework.transform.Vector;
 
 public final class Player extends GameObject {
     private static final String TAG = GameObject.class.getSimpleName();

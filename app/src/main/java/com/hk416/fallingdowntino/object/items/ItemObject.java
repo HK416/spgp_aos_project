@@ -12,10 +12,7 @@ import com.hk416.framework.transform.Vector;
 import java.util.HashMap;
 
 public final class ItemObject extends GameObject {
-    public static enum Type { Energy, Like, Spanner }
-
-    public static final float WIDTH = 1.0f;
-    public static final float HEIGHT = 1.0f;
+    public enum Type { Energy, Like, Spanner }
 
     private final HashMap<Type, SpriteObject> SPRITES = new HashMap<Type, SpriteObject>() {{
         put(Type.Energy, new EnergyItem());
@@ -23,9 +20,13 @@ public final class ItemObject extends GameObject {
         put(Type.Spanner, new SpannerItem());
     }};
 
-    private Type type = null;
-    private float oldDistance;
+    public static final float WIDTH = 1.0f;
+    public static final float HEIGHT = 1.0f;
+
     private final Player player;
+    private float oldDistance;
+
+    private Type type = null;
 
     public ItemObject(@NonNull Player player) {
         super();
@@ -37,6 +38,7 @@ public final class ItemObject extends GameObject {
     public void reset() {
         type = null;
         child = null;
+        sibling = null;
         oldDistance = player.getDistance();
     }
 

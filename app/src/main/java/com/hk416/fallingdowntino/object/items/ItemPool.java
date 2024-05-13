@@ -6,8 +6,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.object.Player;
+import com.hk416.fallingdowntino.object.land.Block;
 import com.hk416.framework.object.GameObject;
-import com.hk416.framework.object.SpriteObject;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayDeque;
@@ -20,8 +20,8 @@ public final class ItemPool extends GameObject {
     public static final float RETAIN_POS = 32.0f;
     public static final float SPAWN_INTERVAL = 24.0f;
 
-    private final float minSpawnX;
-    private final float maxSpawnX;
+    private final float minPosX;
+    private final float maxPosX;
 
     private final ArrayDeque<ItemObject> activeItems;
     private final ArrayDeque<ItemObject> inactiveItems;
@@ -29,28 +29,42 @@ public final class ItemPool extends GameObject {
     private float prevSpawnDistance;
 
     public ItemPool(
-            float minSpawnX,
-            float maxSpawnX,
-            float startSpawnDistance,
+            float minPosX,
+            float maxPosX,
+            float initSpawnDistance,
             @NonNull Player player
     ) {
-        if (maxSpawnX <= minSpawnX) {
-            throw new InvalidParameterException("주어진 maxSpawnX는 minSpawnX 보다 커야 합니다!");
-        }
+        checkParameters(minPosX, maxPosX, initSpawnDistance, player);
 
-        if (maxSpawnX - minSpawnX < ItemObject.WIDTH) {
-            throw new InvalidParameterException("주어진 범위의 길이는 아이템 오브젝트의 길이보다 커야 합니다!");
-        }
-
-        this.minSpawnX = minSpawnX;
-        this.maxSpawnX = maxSpawnX;
+        this.minPosX = minPosX;
+        this.maxPosX = maxPosX;
 
         this.player = player;
-        this.prevSpawnDistance = startSpawnDistance;
+        this.prevSpawnDistance = initSpawnDistance;
+
         activeItems = new ArrayDeque<>(CAPACITY);
         inactiveItems = new ArrayDeque<>(CAPACITY);
         for (int i = 0; i < CAPACITY; i++) {
             inactiveItems.add(new ItemObject(player));
+        }
+    }
+
+    private void checkParameters(
+            float minPosX,
+            float maxPosX,
+            float _initSpawnDistance,
+            Player player
+    ) {
+        if (maxPosX <= minPosX) {
+            throw new InvalidParameterException("주어진 maxSpawnX는 minSpawnX 보다 커야 합니다!");
+        }
+
+        if (maxPosX - minPosX < Block.MIN_WIDTH) {
+            throw new InvalidParameterException("주어진 범위의 길이는 `Block.MIN_WIDTH`보다 커야 합니다!");
+        }
+
+        if (player == null) {
+            throw new InvalidParameterException("주어진 Player 객체는 null이 될 수 없습니다!");
         }
     }
 
@@ -72,8 +86,8 @@ public final class ItemPool extends GameObject {
 
     private float getRandomPositionX() {
         final float halfItemWidth = 0.5f * ItemObject.WIDTH;
-        float begX = minSpawnX + halfItemWidth;
-        float endX = maxSpawnX - halfItemWidth;
+        float begX = minPosX + halfItemWidth;
+        float endX = maxPosX - halfItemWidth;
         return begX + (float)Math.random() * (endX - begX);
     }
 

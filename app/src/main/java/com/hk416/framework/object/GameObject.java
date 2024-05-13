@@ -1,7 +1,6 @@
 package com.hk416.framework.object;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
@@ -32,12 +31,21 @@ public class GameObject implements IGameCollider<GameObject> {
         setPosition(x, y);
     }
 
-    public void setChild(@NonNull GameObject child) {
+    public void setChild(@Nullable GameObject child) {
         this.child = child;
     }
 
-    public void setSibling(@NonNull GameObject sibling) {
+    @Nullable
+    public GameObject getChild() {
+        return child;
+    }
+
+    public void setSibling(@Nullable GameObject sibling) {
         this.sibling = sibling;
+    }
+
+    public GameObject getSibling() {
+        return sibling;
     }
 
     public void setPosition(float x, float y) {
