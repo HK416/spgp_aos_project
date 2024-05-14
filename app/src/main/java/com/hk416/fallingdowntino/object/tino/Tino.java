@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.hk416.fallingdowntino.BuildConfig;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.framework.object.GameObject;
+import com.hk416.framework.object.SpriteAnimeObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +16,15 @@ public class Tino extends GameObject {
     public enum Behavior {
         LeftDefault, RightDefault,
         LeftScared, RightScared,
-        LeftDive, RightDive
+        LeftHappy, RightHappy,
+        LeftDive, RightDive,
     }
 
     protected static final String TAG = Tino.class.getSimpleName();
     public static final float WIDTH = 2.0f;
     public static final float HEIGHT = 2.0f;
+    public static final float SCARED_POINT = 30.0f;
+    public static final float HAPPY_DUARTION = 3.0f;
 
     public static final float BOX_X = 0.0f;
     public static final float BOX_Y = -0.2f;
@@ -43,6 +47,8 @@ public class Tino extends GameObject {
         behaviors.put(Behavior.RightDefault, new RightDefaultBehavior(player));
         behaviors.put(Behavior.LeftScared, new LeftScaredBehavior(player));
         behaviors.put(Behavior.RightScared, new RightScaredBehavior(player));
+        behaviors.put(Behavior.LeftHappy, new LeftHappyBehavior(player));
+        behaviors.put(Behavior.RightHappy, new RightHappyBehavior(player));
         behaviors.put(Behavior.LeftDive, new LeftDiveBehavior(player));
         behaviors.put(Behavior.RightDive, new RightDiveBehavior(player));
         child = behaviors.get(currBehavior);
@@ -58,15 +64,23 @@ public class Tino extends GameObject {
         }
     }
 
+    public void setBehavior(Behavior nextBehavior) {
+        currBehavior = nextBehavior;
+        GameObject object = behaviors.get(currBehavior);
+        if (object instanceof SpriteAnimeObject) {
+            SpriteAnimeObject animeObject = (SpriteAnimeObject)object;
+            animeObject.resetAnimationTimer();
+        }
+        child = object;
+    }
+
     public void upcastBehavior() {
         switch (currBehavior) {
             case LeftScared:
-                child = behaviors.get(Behavior.LeftDefault);
-                currBehavior = Behavior.LeftDefault;
+                setBehavior(Behavior.LeftDefault);
                 break;
             case RightScared:
-                child = behaviors.get(Behavior.RightDefault);
-                currBehavior = Behavior.RightDefault;
+                setBehavior(Behavior.RightDefault);
                 break;
             default:
                 /* empty */
@@ -78,20 +92,18 @@ public class Tino extends GameObject {
     public void downcastBehavior() {
         switch (currBehavior) {
             case LeftDefault:
-                child = behaviors.get(Behavior.LeftScared);
-                currBehavior = Behavior.LeftScared;
+            case LeftHappy:
+                setBehavior(Behavior.LeftScared);
                 break;
             case RightDefault:
-                child = behaviors.get(Behavior.RightScared);
-                currBehavior = Behavior.RightScared;
+            case RightHappy:
+                setBehavior(Behavior.RightScared);
                 break;
             case LeftScared:
-                child = behaviors.get(Behavior.LeftDive);
-                currBehavior = Behavior.LeftDive;
+                setBehavior(Behavior.LeftDive);
                 break;
             case RightScared:
-                child = behaviors.get(Behavior.RightDive);
-                currBehavior = Behavior.RightDive;
+                setBehavior(Behavior.RightDive);
                 break;
             default:
                 /* empty */
@@ -103,20 +115,22 @@ public class Tino extends GameObject {
     public void turnBehavior() {
         switch (currBehavior) {
             case LeftDefault:
-                child = behaviors.get(Behavior.RightDefault);
-                currBehavior = Behavior.RightDefault;
+                setBehavior(Behavior.RightDefault);
                 break;
             case RightDefault:
-                child = behaviors.get(Behavior.LeftDefault);
-                currBehavior = Behavior.LeftDefault;
+                setBehavior(Behavior.LeftDefault);
+                break;
+            case LeftHappy:
+                setBehavior(Behavior.RightHappy);
+                break;
+            case RightHappy:
+                setBehavior(Behavior.LeftHappy);
                 break;
             case LeftScared:
-                child = behaviors.get(Behavior.RightScared);
-                currBehavior = Behavior.RightScared;
+                setBehavior(Behavior.RightScared);
                 break;
             case RightScared:
-                child = behaviors.get(Behavior.LeftScared);
-                currBehavior = Behavior.LeftScared;
+                setBehavior(Behavior.LeftScared);
                 break;
             default:
                 /* empty */

@@ -6,6 +6,8 @@ import com.hk416.framework.object.SpriteObject;
 public final class SpannerItem extends SpriteObject {
     private static final int BITMAP_RES_ID = R.mipmap.item_spanner;
 
+    public static final float DURABILITY = 35.0f;
+
     public SpannerItem() {
         super(BITMAP_RES_ID, ItemObject.WIDTH, ItemObject.HEIGHT, false, false);
     }

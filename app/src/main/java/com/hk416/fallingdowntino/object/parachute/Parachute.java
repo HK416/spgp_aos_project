@@ -4,12 +4,13 @@ import android.graphics.Paint;
 
 import com.hk416.fallingdowntino.BuildConfig;
 import com.hk416.framework.object.GameObject;
+import com.hk416.framework.object.SpriteAnimeObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Parachute extends GameObject {
-    public enum Behavior { Empty, LeftDefault, RightDefault, LeftScratched, RightScratched }
+    public enum Behavior { LeftDefault, RightDefault, LeftScratched, RightScratched }
 
     private static final String TAG = Parachute.class.getSimpleName();
     public static final float WIDTH = 2.5f;
@@ -17,7 +18,7 @@ public class Parachute extends GameObject {
     public static final float X_POS = 0.0f;
     public static final float Y_POS = 1.0f;
     public static final float DEF_DURABILITY = 100.0f;
-    public static final float DEF_DURABILITY_PER_SECONDS = 20.0f;
+    public static final float DEF_DURABILITY_PER_SECONDS = 6.0f;
 
     public static Paint debugColor = null;
 
@@ -51,20 +52,27 @@ public class Parachute extends GameObject {
         }
     }
 
+    public void setBehavior(Behavior nextBehavior) {
+        currBehavior = nextBehavior;
+        GameObject object = behaviors.get(currBehavior);
+        if (object instanceof SpriteAnimeObject) {
+            SpriteAnimeObject animeObject = (SpriteAnimeObject)object;
+            animeObject.resetAnimationTimer();
+        }
+        child = object;
+    }
+
     public void downcastBehavior() {
         switch (currBehavior) {
             case LeftDefault:
-                child = behaviors.get(Behavior.LeftScratched);
-                currBehavior = Behavior.LeftScratched;
+                setBehavior(Behavior.LeftScratched);
                 break;
             case RightDefault:
-                child = behaviors.get(Behavior.RightScratched);
-                currBehavior = Behavior.RightScratched;
+                setBehavior(Behavior.RightScratched);
                 break;
             case LeftScratched:
             case RightScratched:
-                child = null;
-                currBehavior = Behavior.Empty;
+                setBehavior(null);
                 break;
             default:
                 /* empty */
@@ -76,12 +84,10 @@ public class Parachute extends GameObject {
     public void upcastBehavior() {
         switch (currBehavior) {
             case LeftScratched:
-                child = behaviors.get(Behavior.LeftDefault);
-                currBehavior = Behavior.LeftDefault;
+                setBehavior(Behavior.LeftDefault);
                 break;
             case RightScratched:
-                child = behaviors.get(Behavior.RightDefault);
-                currBehavior = Behavior.RightDefault;
+                setBehavior(Behavior.RightDefault);
                 break;
             default:
                 /* empty */
@@ -93,26 +99,27 @@ public class Parachute extends GameObject {
     public void turnBehavior() {
         switch (currBehavior) {
             case LeftDefault:
-                child = behaviors.get(Behavior.RightDefault);
-                currBehavior = Behavior.RightDefault;
+                setBehavior(Behavior.RightDefault);
                 break;
             case RightDefault:
-                child = behaviors.get(Behavior.LeftDefault);
-                currBehavior = Behavior.LeftDefault;
+                setBehavior(Behavior.LeftDefault);
                 break;
             case LeftScratched:
-                child = behaviors.get(Behavior.RightScratched);
-                currBehavior = Behavior.RightScratched;
+                setBehavior(Behavior.RightScratched);
                 break;
             case RightScratched:
-                child = behaviors.get(Behavior.LeftScratched);
-                currBehavior = Behavior.LeftScratched;
+                setBehavior(Behavior.LeftScratched);
                 break;
             default:
                 /* empty */
                 return;
         }
         updateTransform(null);
+    }
+
+    public final float addDurability(float durability) {
+        currDurability += durability;
+        return currDurability;
     }
 
     public final float getCurrDurability() {

@@ -9,6 +9,10 @@ import androidx.annotation.NonNull;
 import com.hk416.fallingdowntino.BuildConfig;
 import com.hk416.fallingdowntino.R;
 import com.hk416.fallingdowntino.object.Player;
+import com.hk416.fallingdowntino.object.items.ItemObject;
+import com.hk416.fallingdowntino.object.items.SpannerItem;
+import com.hk416.fallingdowntino.object.parachute.Parachute;
+import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteAnimeObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
@@ -67,7 +71,7 @@ public class LeftHappyBehavior extends SpriteAnimeObject {
         float oldDistance = player.getDistance();
         float maxDurability = player.getMaxParachuteDurability();
         float currDurability = player.getCurrParachuteDurability();
-        if (currDurability <= 30.0f) {
+        if (currDurability <= Tino.SCARED_POINT) {
             player.downcastBehavior();
         }
 
@@ -75,6 +79,15 @@ public class LeftHappyBehavior extends SpriteAnimeObject {
         float speed = Player.MIN_DOWN_SPEED + (Player.MAX_DOWN_SPEED - Player.MIN_DOWN_SPEED) * percent;
         Log.d(TAG, "::falldown >> 현재 낙하 속도:" + speed);
         return oldDistance + speed * elapsedTimeSec;
+    }
+
+    private void checkBehaviorTimer() {
+        if (player.getBehaviorTimer() <= 0.0f) {
+            player.setBehaviors(
+                    Tino.Behavior.LeftDefault,
+                    Parachute.Behavior.LeftDefault
+            );
+        }
     }
 
     @Override
@@ -89,7 +102,8 @@ public class LeftHappyBehavior extends SpriteAnimeObject {
     public void onUpdate(float elapsedTimeSec) {
         super.onUpdate(elapsedTimeSec);
         float newX = moveLeft(elapsedTimeSec);
-        float newDistance =falldown(elapsedTimeSec);
+        float newDistance = falldown(elapsedTimeSec);
+        checkBehaviorTimer();
         player.updatePlayer(newX, newDistance);
     }
 
@@ -98,6 +112,30 @@ public class LeftHappyBehavior extends SpriteAnimeObject {
         super.onDraw(canvas);
         if (BuildConfig.DEBUG) {
             canvas.drawRect(drawScreenArea, Tino.debugColor);
+        }
+    }
+
+    @Override
+    public void onCollide(@NonNull GameObject object) {
+        if (object instanceof ItemObject) {
+            ItemObject itemObject = (ItemObject)object;
+            ItemObject.Type type = itemObject.getItemType();
+            if (type == null) {
+                throw new NullPointerException("충돌이 발생한 아이템의 유형은 null이 될 수 없습니다!");
+            }
+
+            switch (type) {
+                case Energy:
+                    /* empty */
+                    break;
+                case Spanner:
+                    player.addParachuteDurability(SpannerItem.DURABILITY);
+                case Like:
+                    player.setBehaviorTimer(Tino.HAPPY_DUARTION);
+                    break;
+                default:
+                    throw new RuntimeException("해당 유형의 아이템에 대해 행동이 구현되어 있지 않습니다! (type:" + type + ")");
+            }
         }
     }
 }

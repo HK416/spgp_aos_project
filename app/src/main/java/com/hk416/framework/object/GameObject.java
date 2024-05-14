@@ -153,16 +153,26 @@ public class GameObject implements IGameCollider<GameObject> {
         }
     }
 
+    public void onCollide(@NonNull GameObject object) {
+        if (sibling != null) {
+            sibling.onCollide(object);
+        }
+
+        if (child != null) {
+            child.onCollide(object);
+        }
+    }
+
     @Override
-    public boolean intersects(@NonNull GameObject other) {
-        if (aabb != null && other.aabb != null && aabb.intersects(other.aabb)) {
+    public boolean intersects(@NonNull GameObject object) {
+        if (aabb != null && object.aabb != null && aabb.intersects(object.aabb)) {
             return true;
         }
 
-        if (sibling != null && sibling.intersects(other)) {
+        if (sibling != null && sibling.intersects(object)) {
             return true;
         }
 
-        return child != null && child.intersects(other);
+        return child != null && child.intersects(object);
     }
 }

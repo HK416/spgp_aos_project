@@ -104,6 +104,10 @@ public class SpriteAnimeObject extends GameObject {
         this.animationSpeed = animationSpeed;
     }
 
+    public void resetAnimationTimer() {
+        animationTimer = 0.0f;
+    }
+
     @Override
     public void onUpdate(float elapsedTimeSec) {
         final float EPSILON = 1.401298E-45f;
