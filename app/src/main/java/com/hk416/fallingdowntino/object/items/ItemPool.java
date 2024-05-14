@@ -11,6 +11,7 @@ import com.hk416.framework.object.GameObject;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayDeque;
+import java.util.Random;
 
 public final class ItemPool extends GameObject {
     private static final String TAG = ItemPool.class.getSimpleName();
@@ -20,6 +21,7 @@ public final class ItemPool extends GameObject {
     public static final float RETAIN_POS = 32.0f;
     public static final float SPAWN_INTERVAL = 24.0f;
 
+    private final Random random;
     private final float minPosX;
     private final float maxPosX;
 
@@ -36,6 +38,7 @@ public final class ItemPool extends GameObject {
     ) {
         checkParameters(minPosX, maxPosX, initSpawnDistance, player);
 
+        this.random = new Random();
         this.minPosX = minPosX;
         this.maxPosX = maxPosX;
 
@@ -81,7 +84,8 @@ public final class ItemPool extends GameObject {
 
     private ItemObject.Type getRandomItemType() {
         ItemObject.Type[] types = ItemObject.Type.values();
-        return types[(int)Math.floor(Math.random() * types.length)];
+        int index = (int)Math.round(random.nextGaussian() * 0.75 + 1.25);
+        return types[Math.max(Math.min(index, types.length - 1), 0)];
     }
 
     private float getRandomPositionX() {
