@@ -22,6 +22,7 @@ public final class Player extends GameObject {
     private float currDownSpeed = 0.0f;
     private float distance = 0.0f;
     private float behaviorTimer = 0.0f;
+    private float invincibleTimer = 0.0f;
 
     private final Parachute parachute;
     private final Tino tino;
@@ -93,6 +94,10 @@ public final class Player extends GameObject {
         this.behaviorTimer = behaviorTimer;
     }
 
+    public void setInvincibleTimer(float invincibleTimer) {
+        this.invincibleTimer = invincibleTimer;
+    }
+
     public float getPositionX() {
         return getPosition().x;
     }
@@ -105,6 +110,10 @@ public final class Player extends GameObject {
         return behaviorTimer;
     }
 
+    public float getInvincibleTimer() {
+        return invincibleTimer;
+    }
+
     public void updatePlayer(float newX, float newDistance) {
         setPosition(newX, transform.zAxis.y);
         distance = newDistance;
@@ -113,6 +122,7 @@ public final class Player extends GameObject {
     @Override
     public void onUpdate(float elapsedTimeSec) {
         behaviorTimer = Math.max(behaviorTimer - elapsedTimeSec, 0.0f);
+        invincibleTimer = Math.max(invincibleTimer - elapsedTimeSec, 0.0f);
         super.onUpdate(elapsedTimeSec);
     }
 
