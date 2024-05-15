@@ -116,6 +116,12 @@ public class RightDefaultBehavior  extends SpriteAnimeObject {
 
             switch (type) {
                 case Energy:
+                    player.setInvincibleTimer(Tino.INVINCIBLE_DURATION);
+                    player.setCurrDownSpeed(Player.MAX_DOWN_SPEED);
+                    player.setBehaviors(
+                            Tino.Behavior.RightInvincible,
+                            null
+                    );
                     break;
                 case Spanner:
                     player.addParachuteDurability(SpannerItem.DURABILITY);

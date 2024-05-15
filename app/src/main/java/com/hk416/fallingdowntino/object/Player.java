@@ -43,13 +43,8 @@ public final class Player extends GameObject {
             @Nullable Tino.Behavior tinoBehavior,
             @Nullable Parachute.Behavior parachuteBehavior
     ) {
-        if (tinoBehavior != null) {
-            tino.setBehavior(tinoBehavior);
-        }
-
-        if (parachuteBehavior != null) {
-            parachute.setBehavior(parachuteBehavior);
-        }
+        tino.setBehavior(tinoBehavior);
+        parachute.setBehavior(parachuteBehavior);
     }
 
     public void upcastBehavior() {

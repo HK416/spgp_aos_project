@@ -1,6 +1,7 @@
 package com.hk416.fallingdowntino.object.parachute;
 
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.hk416.fallingdowntino.BuildConfig;
 import com.hk416.framework.object.GameObject;
@@ -137,5 +138,6 @@ public class Parachute extends GameObject {
             float nextDurability = currDurability - durabilityPerSeconds * elapsedTimeSec;
             currDurability = Math.max(0.0f, nextDurability);
         }
+        Log.d(TAG, "::onUpdate >> 현재 낙하산의 내구도:" + currDurability + ", currBehavior:" + currBehavior);
     }
 }

@@ -17,6 +17,7 @@ public class Tino extends GameObject {
         LeftDefault, RightDefault,
         LeftScared, RightScared,
         LeftHappy, RightHappy,
+        LeftInvincible, RightInvincible,
         LeftDive, RightDive,
     }
 
@@ -25,6 +26,7 @@ public class Tino extends GameObject {
     public static final float HEIGHT = 2.0f;
     public static final float SCARED_POINT = 30.0f;
     public static final float HAPPY_DUARTION = 3.0f;
+    public static final float INVINCIBLE_DURATION = 6.0f;
 
     public static final float BOX_X = 0.0f;
     public static final float BOX_Y = -0.2f;
@@ -49,6 +51,8 @@ public class Tino extends GameObject {
         behaviors.put(Behavior.RightScared, new RightScaredBehavior(player));
         behaviors.put(Behavior.LeftHappy, new LeftHappyBehavior(player));
         behaviors.put(Behavior.RightHappy, new RightHappyBehavior(player));
+        behaviors.put(Behavior.LeftInvincible, new LeftInvincibleBehavior(player));
+        behaviors.put(Behavior.RightInvincible, new RightInvincibleBehavior(player));
         behaviors.put(Behavior.LeftDive, new LeftDiveBehavior(player));
         behaviors.put(Behavior.RightDive, new RightDiveBehavior(player));
         child = behaviors.get(currBehavior);

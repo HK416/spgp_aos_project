@@ -126,7 +126,12 @@ public class RightHappyBehavior extends SpriteAnimeObject {
 
             switch (type) {
                 case Energy:
-                    /* empty */
+                    player.setInvincibleTimer(Tino.INVINCIBLE_DURATION);
+                    player.setCurrDownSpeed(Player.MAX_DOWN_SPEED);
+                    player.setBehaviors(
+                            Tino.Behavior.RightInvincible,
+                            null
+                    );
                     break;
                 case Spanner:
                     player.addParachuteDurability(SpannerItem.DURABILITY);

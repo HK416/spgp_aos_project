@@ -47,6 +47,7 @@ public class LeftInvincibleBehavior extends SpriteAnimeObject {
 
     private void checkInvincibleTimer() {
         if (player.getInvincibleTimer() <= 0.0f) {
+            player.setCurrDownSpeed(0.0f);
             player.setBehaviors(
                     Tino.Behavior.LeftDefault,
                     Parachute.Behavior.LeftDefault

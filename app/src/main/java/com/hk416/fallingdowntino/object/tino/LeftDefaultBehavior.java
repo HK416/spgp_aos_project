@@ -115,7 +115,13 @@ public class LeftDefaultBehavior extends SpriteAnimeObject {
             }
 
             switch (type) {
-                case Energy: /* empty */
+                case Energy:
+                    player.setInvincibleTimer(Tino.INVINCIBLE_DURATION);
+                    player.setCurrDownSpeed(Player.MAX_DOWN_SPEED);
+                    player.setBehaviors(
+                            Tino.Behavior.LeftInvincible,
+                            null
+                    );
                     break;
                 case Spanner:
                     player.addParachuteDurability(SpannerItem.DURABILITY);
