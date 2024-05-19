@@ -23,6 +23,7 @@ public final class Player extends GameObject {
     private float distance = 0.0f;
     private float behaviorTimer = 0.0f;
     private float invincibleTimer = 0.0f;
+    private int likeCount = 0;
 
     private final Parachute parachute;
     private final Tino tino;
@@ -107,6 +108,14 @@ public final class Player extends GameObject {
 
     public float getInvincibleTimer() {
         return invincibleTimer;
+    }
+
+    public void addLikeCount() {
+        likeCount += 1;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
     }
 
     public void updatePlayer(float newX, float newDistance) {

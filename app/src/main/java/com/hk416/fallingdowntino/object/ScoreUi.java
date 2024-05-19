@@ -6,14 +6,15 @@ import android.graphics.Color;
 import androidx.annotation.NonNull;
 
 import com.hk416.framework.object.UiTextObject;
+import com.hk416.framework.transform.Anchor;
 
 public class ScoreUi extends UiTextObject {
+    private static final int MAX_DISTANCE = 9999;
     private final Player player;
 
     public ScoreUi(@NonNull Player player) {
-        super(null);
+        super(null, new Anchor(0.01f, 0.3f, 0.1f, 0.7f));
         this.player = player;
-        setAnchor(0.0f, 0.35f, 0.1f, 0.65f);
         setColor(Color.BLACK);
     }
 
@@ -21,7 +22,7 @@ public class ScoreUi extends UiTextObject {
     @Override
     public void onUpdate(float elapsedTime) {
         super.onUpdate(elapsedTime);
-        float distance = player.getDistance();
-        this.text = String.format("%05dm", (int)distance);
+        int distance = Math.min(MAX_DISTANCE, (int)(player.getDistance()));
+        this.text = String.format("%04dm", distance);
     }
 }

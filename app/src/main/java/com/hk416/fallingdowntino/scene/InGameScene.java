@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.object.LikeUi;
 import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.fallingdowntino.object.ScoreUi;
@@ -50,6 +51,7 @@ public final class InGameScene extends GameScene {
 
     private void setupUserInterface() {
         insertObject(Tags.Ui, new ScoreUi(player));
+        insertObject(Tags.Ui, new LikeUi(player));
     }
 
     @Override

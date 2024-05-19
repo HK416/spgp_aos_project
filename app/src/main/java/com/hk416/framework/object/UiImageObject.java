@@ -2,6 +2,7 @@ package com.hk416.framework.object;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 import androidx.annotation.NonNull;
@@ -50,15 +51,26 @@ public class UiImageObject extends UiObject {
         this.bitmap = BitmapPool.getInstance().get(bitmapResId);
     }
 
-    @Override
-    public void onDraw(@NonNull Canvas canvas) {
-        super.onDraw(canvas);
+    private void buildDrawArea() {
         Viewport viewport = DrawPipeline.getInstance().getViewport();
+
         drawArea.top = viewport.top + anchor.top * viewport.getHeight() + margin.top;
         drawArea.left = viewport.left + anchor.left * viewport.getWidth() + margin.left;
         drawArea.bottom = viewport.top + anchor.bottom * viewport.getHeight() + margin.bottom;
         drawArea.right = viewport.left + anchor.right * viewport.getWidth() + margin.right;
 
+        if (bitmap != null) {
+            float desiredBitmapSize = bitmap.getHeight() * drawArea.width() / bitmap.getWidth();
+            float centerY = drawArea.centerY();
+            drawArea.top = centerY - 0.5f * desiredBitmapSize;
+            drawArea.bottom = centerY + 0.5f * desiredBitmapSize;
+        }
+    }
+
+    @Override
+    public void onDraw(@NonNull Canvas canvas) {
+        super.onDraw(canvas);
+        buildDrawArea();
         if (bitmap != null) {
             canvas.drawBitmap(bitmap, null, drawArea,null);
         }

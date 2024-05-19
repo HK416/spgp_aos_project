@@ -134,7 +134,7 @@ public class RightScaredBehavior extends SpriteAnimeObject {
                     }
                     break;
                 case Like:
-                    /* empty */
+                    player.addLikeCount();
                     break;
                 default:
                     throw new RuntimeException("해당 유형의 아이템에 대해 행동이 구현되어 있지 않습니다! (type:" + type + ")");

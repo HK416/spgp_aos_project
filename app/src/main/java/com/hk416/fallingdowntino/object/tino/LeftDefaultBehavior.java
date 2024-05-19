@@ -125,7 +125,14 @@ public class LeftDefaultBehavior extends SpriteAnimeObject {
                     break;
                 case Spanner:
                     player.addParachuteDurability(SpannerItem.DURABILITY);
+                    player.setBehaviorTimer(Tino.HAPPY_DUARTION);
+                    player.setBehaviors(
+                            Tino.Behavior.LeftHappy,
+                            Parachute.Behavior.LeftDefault
+                    );
+                    break;
                 case Like:
+                    player.addLikeCount();
                     player.setBehaviorTimer(Tino.HAPPY_DUARTION);
                     player.setBehaviors(
                             Tino.Behavior.LeftHappy,

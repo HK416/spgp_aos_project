@@ -135,7 +135,10 @@ public class LeftHappyBehavior extends SpriteAnimeObject {
                     break;
                 case Spanner:
                     player.addParachuteDurability(SpannerItem.DURABILITY);
+                    player.setBehaviorTimer(Tino.HAPPY_DUARTION);
+                    break;
                 case Like:
+                    player.addLikeCount();
                     player.setBehaviorTimer(Tino.HAPPY_DUARTION);
                     break;
                 default:
