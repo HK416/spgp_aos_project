@@ -11,13 +11,15 @@ import com.hk416.framework.collide.BoundingBox;
 import com.hk416.framework.object.GameObject;
 
 public final class Player extends GameObject {
-    private static final String TAG = GameObject.class.getSimpleName();
+    private static final String TAG = Player.class.getSimpleName();
     public static final float X_POS = 0.0f;
     public static final float Y_POS = 12.5f;
     public static final float SPEED = 3.25f;
     public static final float MIN_DOWN_SPEED = 9.0f;
     public static final float MAX_DOWN_SPEED = 12.0f;
     public static final float MAX_DIVE_DOWN_SPEED = 36.0f;
+    public static final float PARACHUTE_DAMAGE = -10.0f;
+    public static final float DAMAGE_DURATION = 2.0f;
 
     private float currDownSpeed = 0.0f;
     private float distance = 0.0f;

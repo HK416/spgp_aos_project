@@ -48,6 +48,10 @@ public class GameObject implements IGameCollider<GameObject> {
         return sibling;
     }
 
+    public BoundingBox getBoundingBox() {
+        return aabb;
+    }
+
     public void setPosition(float x, float y) {
         transform.zAxis.x = x;
         transform.zAxis.y = y;
@@ -174,5 +178,22 @@ public class GameObject implements IGameCollider<GameObject> {
         }
 
         return child != null && child.intersects(object);
+    }
+
+    @Override
+    public IGameCollider<GameObject> getIntersectsCollider(@NonNull GameObject object) {
+        if (aabb != null && object.aabb != null && aabb.intersects(object.aabb)) {
+            return this;
+        }
+
+        if (sibling != null && sibling.intersects(object)) {
+            return sibling.getIntersectsCollider(object);
+        }
+
+        if (child != null && child.intersects(object)) {
+            return child.getIntersectsCollider(object);
+        }
+
+        return null;
     }
 }

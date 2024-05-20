@@ -11,12 +11,15 @@ import com.hk416.fallingdowntino.R;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.fallingdowntino.object.items.ItemObject;
 import com.hk416.fallingdowntino.object.items.SpannerItem;
+import com.hk416.fallingdowntino.object.land.Tile;
 import com.hk416.fallingdowntino.object.parachute.Parachute;
+import com.hk416.framework.collide.BoundingBox;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteAnimeObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.transform.Projection;
+import com.hk416.framework.transform.Vector;
 
 public class RightDefaultBehavior  extends SpriteAnimeObject {
     private static final String TAG = RightDefaultBehavior.class.getSimpleName();
@@ -105,43 +108,74 @@ public class RightDefaultBehavior  extends SpriteAnimeObject {
         }
     }
 
+    private void handleItemCollision(@NonNull ItemObject itemObject) {
+        ItemObject.Type type = itemObject.getItemType();
+        if (type == null) {
+            throw new NullPointerException("충돌이 발생한 아이템의 유형은 null이 될 수 없습니다!");
+        }
+
+        switch (type) {
+            case Energy:
+                player.setInvincibleTimer(Tino.INVINCIBLE_DURATION);
+                player.setCurrDownSpeed(Player.MAX_DOWN_SPEED);
+                player.setBehaviors(
+                        Tino.Behavior.RightInvincible,
+                        null
+                );
+                break;
+            case Spanner:
+                player.addParachuteDurability(SpannerItem.DURABILITY);
+                player.setBehaviorTimer(Tino.HAPPY_DUARTION);
+                player.setBehaviors(
+                        Tino.Behavior.RightHappy,
+                        Parachute.Behavior.RightDefault
+                );
+                break;
+            case Like:
+                player.addLikeCount();
+                player.setBehaviorTimer(Tino.HAPPY_DUARTION);
+                player.setBehaviors(
+                        Tino.Behavior.RightHappy,
+                        Parachute.Behavior.RightDefault
+                );
+                break;
+            default:
+                throw new RuntimeException("해당 유형의 아이템에 대해 행동이 구현되어 있지 않습니다! (type:" + type + ")");
+        }
+    }
+
+    private void handleBlockCollision(@NonNull Tile tile) {
+        BoundingBox tileBox = tile.getBoundingBox();
+        Vector tileCenter = tileBox.getWorldPosition();
+        Vector tileSize = tileBox.getSize();
+        float tileLeftSide = tileCenter.x - 0.5f * tileSize.x;
+        float tileRightSide = tileCenter.x + 0.5f * tileSize.x;
+
+        BoundingBox thisBox = player.getBoundingBox();
+        Vector thisCenter = thisBox.getWorldPosition();
+        Vector thisSize = thisBox.getSize();
+        float thisLeftSide = thisCenter.x - 0.5f * thisSize.x;
+        float thisRightSide = thisCenter.x + 0.5f * thisSize.x;
+        float thisLowerSide = thisCenter.y - 0.5f * thisSize.y;
+
+        if (tileCenter.y < thisLowerSide && (tileLeftSide <= thisLeftSide && thisRightSide <= tileRightSide)) {
+            Log.d(TAG, "::handleBlockCollision >> 게임 종료!");
+        } else {
+            player.addParachuteDurability(Player.PARACHUTE_DAMAGE);
+            player.setInvincibleTimer(Player.DAMAGE_DURATION);
+            player.setBehaviors(
+                    Tino.Behavior.RightDamaged,
+                    Parachute.Behavior.RightScratched
+            );
+        }
+    }
+
     @Override
     public void onCollide(@NonNull GameObject object) {
         if (object instanceof ItemObject) {
-            ItemObject itemObject = (ItemObject)object;
-            ItemObject.Type type = itemObject.getItemType();
-            if (type == null) {
-                throw new NullPointerException("충돌이 발생한 아이템의 유형은 null이 될 수 없습니다!");
-            }
-
-            switch (type) {
-                case Energy:
-                    player.setInvincibleTimer(Tino.INVINCIBLE_DURATION);
-                    player.setCurrDownSpeed(Player.MAX_DOWN_SPEED);
-                    player.setBehaviors(
-                            Tino.Behavior.RightInvincible,
-                            null
-                    );
-                    break;
-                case Spanner:
-                    player.addParachuteDurability(SpannerItem.DURABILITY);
-                    player.setBehaviorTimer(Tino.HAPPY_DUARTION);
-                    player.setBehaviors(
-                            Tino.Behavior.RightHappy,
-                            Parachute.Behavior.RightDefault
-                    );
-                    break;
-                case Like:
-                    player.addLikeCount();
-                    player.setBehaviorTimer(Tino.HAPPY_DUARTION);
-                    player.setBehaviors(
-                            Tino.Behavior.RightHappy,
-                            Parachute.Behavior.RightDefault
-                    );
-                    break;
-                default:
-                    throw new RuntimeException("해당 유형의 아이템에 대해 행동이 구현되어 있지 않습니다! (type:" + type + ")");
-            }
+            handleItemCollision((ItemObject)object);
+        } else if (object instanceof Tile) {
+            handleBlockCollision((Tile)object);
         }
     }
 }

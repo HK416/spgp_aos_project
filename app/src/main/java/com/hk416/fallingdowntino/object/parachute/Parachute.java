@@ -119,7 +119,7 @@ public class Parachute extends GameObject {
     }
 
     public final float addDurability(float durability) {
-        currDurability = Math.min(currDurability + durability, maxDurability);
+        currDurability = Math.max(Math.min(currDurability + durability, maxDurability), 0.0f);
         return currDurability;
     }
 

@@ -4,4 +4,6 @@ import androidx.annotation.NonNull;
 
 public interface IGameCollider<T> {
     boolean intersects(@NonNull T other);
+
+    IGameCollider<T> getIntersectsCollider(@NonNull T other);
 }

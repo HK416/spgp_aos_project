@@ -18,6 +18,7 @@ public class Tino extends GameObject {
         LeftScared, RightScared,
         LeftHappy, RightHappy,
         LeftInvincible, RightInvincible,
+        LeftDamaged, RightDamaged,
         LeftDive, RightDive,
     }
 
@@ -53,6 +54,8 @@ public class Tino extends GameObject {
         behaviors.put(Behavior.RightHappy, new RightHappyBehavior(player));
         behaviors.put(Behavior.LeftInvincible, new LeftInvincibleBehavior(player));
         behaviors.put(Behavior.RightInvincible, new RightInvincibleBehavior(player));
+        behaviors.put(Behavior.LeftDamaged, new LeftDamagedBehavior(player));
+        behaviors.put(Behavior.RightDamaged, new RightDamagedBehavior(player));
         behaviors.put(Behavior.LeftDive, new LeftDiveBehavior(player));
         behaviors.put(Behavior.RightDive, new RightDiveBehavior(player));
         child = behaviors.get(currBehavior);
@@ -135,6 +138,12 @@ public class Tino extends GameObject {
                 break;
             case RightScared:
                 setBehavior(Behavior.LeftScared);
+                break;
+            case LeftDamaged:
+                setBehavior(Behavior.RightDamaged);
+                break;
+            case RightDamaged:
+                setBehavior(Behavior.LeftDamaged);
                 break;
             default:
                 /* empty */

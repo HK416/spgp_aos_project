@@ -58,6 +58,10 @@ public final class BoundingBox implements IGameCollider<BoundingBox> {
         size.y = sy;
     }
 
+    public Vector getSize() {
+        return size;
+    }
+
     public void updateTransform(@Nullable Transform parent) {
         worldTransform = transform.postMul((parent != null) ? parent : new Transform());
     }
@@ -84,6 +88,15 @@ public final class BoundingBox implements IGameCollider<BoundingBox> {
 
         return leftSideA <= rightSideB && rightSideA >= leftSideB
         && bottomSideA <= topSideB && topSideA >= bottomSideB;
+    }
+
+    @Override
+    public IGameCollider<BoundingBox> getIntersectsCollider(@NonNull BoundingBox other) {
+        if (intersects(other)) {
+            return this;
+        } else {
+            return null;
+        }
     }
 
     public void onDraw(@NonNull Canvas canvas) {

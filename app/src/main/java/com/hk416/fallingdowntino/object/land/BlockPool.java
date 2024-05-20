@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.object.Player;
+import com.hk416.framework.collide.IGameCollider;
 import com.hk416.framework.object.GameObject;
 
 import java.security.InvalidParameterException;
@@ -247,8 +248,9 @@ public final class BlockPool extends GameObject {
 
     private void onCheckCollision() {
         for (Block block : activeBlocks) {
-            if (block.intersects(player)) {
-                player.onCollide(block);
+            GameObject collider = (GameObject)block.getIntersectsCollider(player);
+            if (collider != null) {
+                player.onCollide(collider);
                 break;
             }
         }
