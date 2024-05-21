@@ -1,6 +1,7 @@
 package com.hk416.fallingdowntino.scene;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -15,6 +16,7 @@ import com.hk416.fallingdowntino.object.items.ItemPool;
 import com.hk416.fallingdowntino.object.land.BlockPool;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.scene.GameScene;
+import com.hk416.framework.transform.Viewport;
 
 public final class InGameScene extends GameScene {
     private static final String TAG = InGameScene.class.getSimpleName();
@@ -91,6 +93,11 @@ public final class InGameScene extends GameScene {
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
+        Viewport viewport = DrawPipeline.getInstance().getViewport();
+        canvas.save();
+        canvas.clipRect(viewport.left, viewport.top, viewport.right, viewport.bottom);
+        canvas.drawColor(Color.parseColor("#FBEAFF"));
         super.onDraw(canvas);
+        canvas.restore();
     }
 }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.Choreographer;
@@ -77,6 +78,7 @@ public class GameView extends View {
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
+        canvas.drawColor(Color.BLACK);
         SceneManager.getInstance().onDraw(canvas);
         if (BuildConfig.DEBUG) {
             Viewport viewport = DrawPipeline.getInstance().getViewport();
