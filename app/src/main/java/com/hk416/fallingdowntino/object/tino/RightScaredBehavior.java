@@ -17,6 +17,7 @@ import com.hk416.fallingdowntino.scene.FinishGameScene;
 import com.hk416.framework.collide.BoundingBox;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteAnimeObject;
+import com.hk416.framework.object.SpriteClipAnimeObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.scene.SceneManager;
@@ -159,6 +160,14 @@ public class RightScaredBehavior extends SpriteAnimeObject {
 
         if (tileCenter.y < thisLowerSide && (tileLeftSide <= thisLeftSide && thisRightSide <= tileRightSide)) {
             Log.d(TAG, "::handleBlockCollision >> 게임 종료!");
+            Vector position = player.getWorldPosition();
+            SpriteClipAnimeObject player = new SpriteClipAnimeObject.Builder()
+                    .setX(position.x)
+                    .setY(position.y)
+                    .setRepeat(false)
+                    .addClips(1.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_landing_0, true, false)
+                    .addClips(1.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_landing_1, true, false)
+                    .build();
             SceneManager.getInstance().cmdChangeScene(
                     new FinishGameScene(player, tile)
             );

@@ -6,8 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.hk416.fallingdowntino.object.Player;
-import com.hk416.fallingdowntino.object.land.Tile;
+import com.hk416.framework.object.GameObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.scene.GameScene;
 import com.hk416.framework.transform.Viewport;
@@ -17,12 +16,12 @@ public final class FinishGameScene extends GameScene {
 
     private static final String TAG = FinishGameScene.class.getSimpleName();
 
-    private final Player player;
-    private final Tile tile;
+    private final GameObject player;
+    private final GameObject tile;
 
     public FinishGameScene(
-            @NonNull Player player,
-            @NonNull Tile tile
+            @NonNull GameObject player,
+            @NonNull GameObject tile
     ) {
         super(Tags.values().length);
         this.player = player;

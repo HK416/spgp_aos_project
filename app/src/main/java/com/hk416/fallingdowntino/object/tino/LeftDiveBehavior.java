@@ -13,6 +13,7 @@ import com.hk416.fallingdowntino.object.land.Tile;
 import com.hk416.fallingdowntino.scene.FinishGameScene;
 import com.hk416.framework.collide.BoundingBox;
 import com.hk416.framework.object.GameObject;
+import com.hk416.framework.object.SpriteClipAnimeObject;
 import com.hk416.framework.object.SpriteObject;
 import com.hk416.framework.scene.SceneManager;
 import com.hk416.framework.transform.Vector;
@@ -88,6 +89,16 @@ public class LeftDiveBehavior extends SpriteObject {
 
         if (tileCenter.y < thisLowerSide && (tileLeftSide <= thisLeftSide && thisRightSide <= tileRightSide)) {
             Log.d(TAG, "::handleBlockCollision >> 게임 종료!");
+            Vector position = player.getWorldPosition();
+            SpriteClipAnimeObject player = new SpriteClipAnimeObject.Builder()
+                    .setX(position.x)
+                    .setY(position.y)
+                    .setRepeat(false)
+                    .addClips(0.1f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_crash_0, false, false)
+                    .addClips(0.1f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_crash_1, false, false)
+                    .addClips(1.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_crash_2, false, false)
+                    .addClips(1.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_crash_3, false, false)
+                    .build();
             SceneManager.getInstance().cmdChangeScene(
                     new FinishGameScene(player, tile)
             );
