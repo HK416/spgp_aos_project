@@ -120,6 +120,11 @@ public final class Player extends GameObject {
         return likeCount;
     }
 
+    @NonNull
+    public Tino getTino() {
+        return tino;
+    }
+
     public void updatePlayer(float newX, float newDistance) {
         setPosition(newX, transform.zAxis.y);
         distance = newDistance;
