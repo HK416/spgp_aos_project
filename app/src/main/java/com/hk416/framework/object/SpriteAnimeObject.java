@@ -110,6 +110,7 @@ public class SpriteAnimeObject extends GameObject {
 
     @Override
     public void onUpdate(float elapsedTimeSec) {
+        super.onUpdate(elapsedTimeSec);
         final float EPSILON = 1.401298E-45f;
         if (Math.abs(animationSpeed) <= EPSILON) {
             return; // animationSpeed가 0인 경우 onUpdate함수를 실행하지 않는다. (0 나누기 오류 방지)
@@ -129,6 +130,7 @@ public class SpriteAnimeObject extends GameObject {
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
+        super.onDraw(canvas);
         Vector minimum = getWorldPosition().postSub(getSize().postMul(0.5f));
         Vector maximum = getWorldPosition().postAdd(getSize().postMul(0.5f));
 

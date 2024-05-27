@@ -20,9 +20,6 @@ public final class FinishGameScene extends GameScene {
 
     private static final String TAG = FinishGameScene.class.getSimpleName();
 
-    public static final float PROJ_WIDTH = 4.5f;
-    public static final float PROJ_HEIGHT = 8.0f;
-
     private final float duration;
     private final GameObject player;
     private final GameObject tile;
@@ -87,9 +84,6 @@ public final class FinishGameScene extends GameScene {
         GameCamera currCamera =  DrawPipeline.getInstance().getMainCamera();
         currCamera.setPosition(x, y);
         currCamera.generateCameraTransform();
-        Log.d(TAG, "camera(x:" + currCamera.getWorldPosition().x
-                + ", y:" + currCamera.getWorldPosition().y + ")"
-        );
         super.onUpdate(elapsedTimeSec, frameRate);
     }
 

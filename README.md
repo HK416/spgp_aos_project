@@ -286,8 +286,8 @@
 
 #### 8주차 (05/24~05/30)
 - [ ] InGameFinish에서 최고 기록을 출력하도록 구현
-- [ ] InGamePrepare 장면을 구현
-- [ ] InGamePrepare 장면에서 InGame 장면으로 전환 구현
+- [x] InGamePrepare 장면을 구현
+- [x] InGamePrepare 장면에서 InGame 장면으로 전환 구현
 - [ ] 게임 최고기록을 저장하는 기능을 구현
 
 #### 9주차 (05/31~06/06)
