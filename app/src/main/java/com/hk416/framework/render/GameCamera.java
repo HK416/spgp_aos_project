@@ -35,16 +35,16 @@ public class GameCamera extends GameObject {
     }
 
     public void generateCameraTransform() {
-        Vector position = getPosition();
-        Vector right = getRightVector();
-        Vector up = getUpVector();
+        Vector position = getWorldPosition();
+        Vector right = getWorldRightVector();
+        Vector up = getWorldUpVector();
 
-        cameraTransform.xAxis.x = transform.xAxis.x;
-        cameraTransform.xAxis.y = transform.yAxis.x;
+        cameraTransform.xAxis.x = worldTransform.xAxis.x;
+        cameraTransform.xAxis.y = worldTransform.yAxis.x;
         cameraTransform.xAxis.z = 0.0f;
 
-        cameraTransform.yAxis.x = transform.xAxis.y;
-        cameraTransform.yAxis.y = transform.yAxis.y;
+        cameraTransform.yAxis.x = worldTransform.xAxis.y;
+        cameraTransform.yAxis.y = worldTransform.yAxis.y;
         cameraTransform.yAxis.z = 0.0f;
 
         cameraTransform.zAxis.x = -position.dot(right);

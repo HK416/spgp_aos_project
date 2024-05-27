@@ -111,6 +111,10 @@ public final class SpriteClipAnimeObject extends GameObject {
         this.bitmaps = builder.bitmaps;
     }
 
+    public float getDuration() {
+        return duration;
+    }
+
     @Override
     public void onUpdate(float elapsedTimeSec) {
         if (clips.isEmpty() || duration <= animationTimer) {

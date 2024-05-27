@@ -19,6 +19,7 @@ public final class BlockPool extends GameObject {
     public static final float SPAWN_POS = -32.0f;
     public static final float RETAIN_POS = 32.0f;
     public static final float SPAWN_INTERVAL = 24.0f;
+    public static final float SPAWN_OFFSET_X = 2.0f;
 
     private final float minPosX;
     private final float maxPosX;
@@ -141,11 +142,11 @@ public final class BlockPool extends GameObject {
         float posX = getRandomPositionX(Block.STATIC_INTERVAL);
         float posY = SPAWN_POS + offsetY;
 
-        float leftBlockWidth = (posX - Block.HALF_STATIC_INTERVAL) - minPosX;
+        float leftBlockWidth = (posX - Block.HALF_STATIC_INTERVAL) - (minPosX - SPAWN_OFFSET_X);
         float leftBlockCenterX = (posX - Block.HALF_STATIC_INTERVAL) - 0.5f * leftBlockWidth;
         Tile leftBlockTile = getTileObject(leftBlockCenterX, leftBlockWidth);
 
-        float rightBlockWidth = maxPosX - (posX + Block.HALF_STATIC_INTERVAL);
+        float rightBlockWidth = (maxPosX + SPAWN_OFFSET_X) - (posX + Block.HALF_STATIC_INTERVAL);
         float rightBlockCenterX = (posX + Block.HALF_STATIC_INTERVAL) + 0.5f * rightBlockWidth;
         Tile rightBlockTile = getTileObject(rightBlockCenterX, rightBlockWidth);
 

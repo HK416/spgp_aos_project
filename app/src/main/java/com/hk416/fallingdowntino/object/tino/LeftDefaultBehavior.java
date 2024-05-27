@@ -172,7 +172,7 @@ public class LeftDefaultBehavior extends SpriteAnimeObject {
                     .addClips(1.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_landing_1, false, false)
                     .build();
             SceneManager.getInstance().cmdChangeScene(
-                    new FinishGameScene(player, tile)
+                    new FinishGameScene(player.getDuration(), player, tile)
             );
         } else {
             player.addParachuteDurability(Player.PARACHUTE_DAMAGE);
