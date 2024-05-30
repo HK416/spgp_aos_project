@@ -95,4 +95,8 @@ public class GameScene {
             }
         }
     }
+
+    public boolean isTransparent() {
+        return false;
+    }
 }
