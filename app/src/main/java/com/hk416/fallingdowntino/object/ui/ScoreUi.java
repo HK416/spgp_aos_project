@@ -1,10 +1,11 @@
-package com.hk416.fallingdowntino.object;
+package com.hk416.fallingdowntino.object.ui;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.object.Player;
 import com.hk416.framework.object.UiTextObject;
 import com.hk416.framework.transform.Anchor;
 

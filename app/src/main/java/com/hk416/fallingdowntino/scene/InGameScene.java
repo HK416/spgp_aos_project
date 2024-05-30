@@ -7,11 +7,11 @@ import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
-import com.hk416.fallingdowntino.object.DurabilityUi;
-import com.hk416.fallingdowntino.object.LikeUi;
+import com.hk416.fallingdowntino.object.ui.DurabilityUi;
+import com.hk416.fallingdowntino.object.ui.LikeUi;
 import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.fallingdowntino.object.Player;
-import com.hk416.fallingdowntino.object.ScoreUi;
+import com.hk416.fallingdowntino.object.ui.ScoreUi;
 import com.hk416.fallingdowntino.object.items.ItemPool;
 import com.hk416.fallingdowntino.object.land.BlockPool;
 import com.hk416.framework.render.DrawPipeline;
