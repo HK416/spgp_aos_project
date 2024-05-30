@@ -10,8 +10,7 @@ import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.transform.Viewport;
 
 import java.util.ArrayDeque;
-import java.util.Iterator;
-import java.util.Queue;
+import java.util.ListIterator;
 import java.util.Stack;
 
 public final class SceneManager {
@@ -25,7 +24,7 @@ public final class SceneManager {
 
     private final ArrayDeque<MotionEvent> eventQueue = new ArrayDeque<>();
     private final Stack<GameScene> sceneStack = new Stack<>();
-    private final Queue<GameScene> drawQueue = new ArrayDeque<>();
+    private final Stack<GameScene> drawStack = new Stack<>();
     private GameScene nextScene = null;
     private int commands = CMD_NONE;
 
@@ -80,15 +79,18 @@ public final class SceneManager {
         Viewport viewport = DrawPipeline.getInstance().getViewport();
         canvas.clipRect(viewport.left, viewport.top, viewport.right, viewport.bottom);
 
-        for (GameScene scene : sceneStack) {
-            drawQueue.add(scene);
+
+        ListIterator<GameScene> iterator = sceneStack.listIterator(sceneStack.size());
+        while(iterator.hasPrevious()) {
+            GameScene scene = iterator.previous();
+            drawStack.push(scene);
             if (!scene.isTransparent()) {
                 break;
             }
         }
 
-        while (!drawQueue.isEmpty()) {
-            GameScene scene = drawQueue.poll();
+        while (!drawStack.isEmpty()) {
+            GameScene scene = drawStack.pop();
             scene.onDraw(canvas);
         }
     }

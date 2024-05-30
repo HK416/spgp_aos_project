@@ -47,8 +47,8 @@ public final class FinishGameScene extends GameScene {
         Projection srcProjection = currCamera.getProjection();
         float leftProj = 0.5f * Projection.DEF_LEFT;
         float rightProj = 0.5f * Projection.DEF_RIGHT;
-        float topSide = 0.5f * Projection.DEF_TOP;
-        float bottomSide = 0.5f * Projection.DEF_BOTTOM;
+        float topSide = 0.75f * Projection.DEF_TOP;
+        float bottomSide = 0.25f * Projection.DEF_BOTTOM;
 
         this.srcProjection = srcProjection;
         this.dstProjection = new Projection(topSide, leftProj, bottomSide, rightProj, 0.0f, 100.0f);
