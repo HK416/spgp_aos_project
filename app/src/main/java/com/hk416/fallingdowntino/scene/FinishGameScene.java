@@ -6,7 +6,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.hk416.fallingdowntino.object.tino.Tino;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
@@ -31,15 +30,22 @@ public final class FinishGameScene extends GameScene {
     private final Vector srcPosition;
     private final Vector dstPosition;
 
+    private final float distance;
+    private final int likeCount;
+
     private float timer = 0.0f;
 
     public FinishGameScene(
             float duration,
+            float distance,
+            int likeCount,
             @NonNull GameObject player,
             @NonNull GameObject tile
     ) {
         super(Tags.values().length);
         this.duration = duration;
+        this.distance = distance;
+        this.likeCount = likeCount;
         this.player = player;
         this.tile = tile;
 
@@ -88,7 +94,7 @@ public final class FinishGameScene extends GameScene {
 
         // 결과 표시 장면으로 넘어간다.
         if (timer >= duration) {
-            SceneManager.getInstance().cmdPushScene(new ResultGameScene());
+            SceneManager.getInstance().cmdPushScene(new ResultGameScene(distance, likeCount));
             return;
         }
         super.onUpdate(elapsedTimeSec, frameRate);

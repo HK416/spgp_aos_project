@@ -100,7 +100,13 @@ public class LeftDiveBehavior extends SpriteObject {
                     .addClips(1.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_crash_3, false, false)
                     .build();
             SceneManager.getInstance().cmdChangeScene(
-                    new FinishGameScene(player.getDuration(), player, tile)
+                    new FinishGameScene(
+                            player.getDuration(),
+                            this.player.getDistance(),
+                            this.player.getLikeCount(),
+                            player,
+                            tile
+                    )
             );
         }
     }
