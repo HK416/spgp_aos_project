@@ -11,6 +11,7 @@ import com.hk416.framework.object.GameObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.scene.GameScene;
+import com.hk416.framework.scene.SceneManager;
 import com.hk416.framework.transform.Projection;
 import com.hk416.framework.transform.Vector;
 import com.hk416.framework.transform.Viewport;
@@ -84,6 +85,12 @@ public final class FinishGameScene extends GameScene {
         GameCamera currCamera =  DrawPipeline.getInstance().getMainCamera();
         currCamera.setPosition(x, y);
         currCamera.generateCameraTransform();
+
+        // 결과 표시 장면으로 넘어간다.
+        if (timer >= duration) {
+            SceneManager.getInstance().cmdPushScene(new ResultGameScene());
+            return;
+        }
         super.onUpdate(elapsedTimeSec, frameRate);
     }
 
