@@ -24,7 +24,8 @@ import com.hk416.framework.scene.SceneManager;
 import com.hk416.framework.transform.Viewport;
 
 public class GameView extends View {
-    public static final String TAG = GameView.class.getSimpleName();
+    private static final String TAG = GameView.class.getSimpleName();
+    private static Resources res = null;
 
     private FrameCallback currentCallback = null;
 
@@ -52,6 +53,11 @@ public class GameView extends View {
 
         // Context는 반드시 Activity라 가정한다.
         activity = (Activity)context;
+
+        // Resources를 설정한다.
+        if (res == null) {
+            res = getResources();
+        }
 
         // Resources를 가져오고, BitmapPool을 초기화 한다.
         BitmapPool.init(getResources());
@@ -133,5 +139,9 @@ public class GameView extends View {
     private void onStopScheduling(long frameTimeNanos) {
         Log.d(TAG, "::onStopScheduling >> 게임 루프 정지.");
         SceneManager.getInstance().onPause();
+    }
+
+    public static String getStringFromRes(int resId) {
+        return res.getString(resId);
     }
 }

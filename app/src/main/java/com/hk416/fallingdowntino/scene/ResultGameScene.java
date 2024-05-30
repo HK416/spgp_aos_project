@@ -3,6 +3,7 @@ package com.hk416.fallingdowntino.scene;
 import android.graphics.Color;
 import android.util.Log;
 
+import com.hk416.fallingdowntino.GameView;
 import com.hk416.fallingdowntino.R;
 import com.hk416.fallingdowntino.object.ui.DialogUi;
 import com.hk416.fallingdowntino.object.ui.LikeUi;
@@ -14,7 +15,7 @@ import com.hk416.framework.scene.GameScene;
 import com.hk416.framework.transform.Anchor;
 
 public class ResultGameScene extends GameScene {
-    enum Tags { Dialog, Image, Button, Text }
+    enum Tags { Dialog, Image, Text }
 
     private static final String TAG = ResultGameScene.class.getSimpleName();
 
@@ -60,6 +61,14 @@ public class ResultGameScene extends GameScene {
         );
         likeText.setColor(Color.BLACK);
         insertObject(Tags.Text, likeText);
+
+        // 터치하여 종료하기 텍스트
+        UiTextObject exitText = new UiTextObject(
+                GameView.getStringFromRes(R.string.in_game_exit_msg),
+                new Anchor(0.55f, 0.15f, 0.55f, 0.85f)
+        );
+        exitText.setColor(Color.BLACK);
+        insertObject(Tags.Text, exitText);
     }
 
     @Override

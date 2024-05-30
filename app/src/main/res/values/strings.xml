@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Falling down Tino</string>
+    <string name="in_game_exit_msg">Tap the screen to continue</string>
 </resources>
