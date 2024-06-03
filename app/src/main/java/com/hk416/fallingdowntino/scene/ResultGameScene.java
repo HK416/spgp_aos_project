@@ -5,11 +5,8 @@ import android.util.Log;
 
 import com.hk416.fallingdowntino.GameView;
 import com.hk416.fallingdowntino.R;
-import com.hk416.fallingdowntino.object.ui.DialogUi;
-import com.hk416.fallingdowntino.object.ui.LikeUi;
-import com.hk416.fallingdowntino.object.ui.ScoreUi;
-import com.hk416.framework.object.SpriteObject;
 import com.hk416.framework.object.UiImageObject;
+import com.hk416.framework.object.UiRectObject;
 import com.hk416.framework.object.UiTextObject;
 import com.hk416.framework.scene.GameScene;
 import com.hk416.framework.transform.Anchor;
@@ -33,10 +30,11 @@ public class ResultGameScene extends GameScene {
         Log.d(TAG, ":: onEnter >> 게임 장면에 진입함.");
 
         // 배경 사각형
-        insertObject(Tags.Dialog, new DialogUi(
+        insertObject(Tags.Dialog, new UiRectObject(
                 Color.argb(204, 255, 255, 255),
                 45.0f,
-                45.0f
+                45.0f,
+                new Anchor(0.1f, 0.05f, 0.65f, 0.95f)
         ));
 
         // 이동 거리 텍스트

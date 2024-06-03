@@ -6,14 +6,17 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.GameView;
 import com.hk416.fallingdowntino.R;
 import com.hk416.fallingdowntino.object.land.Tile;
 import com.hk416.fallingdowntino.object.tino.Tino;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteObject;
+import com.hk416.framework.object.UiTextObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.scene.GameScene;
+import com.hk416.framework.transform.Anchor;
 import com.hk416.framework.transform.Projection;
 import com.hk416.framework.transform.Viewport;
 
@@ -59,14 +62,27 @@ public class TitleScene extends GameScene {
     }
 
     GameObject createTino() {
-        return new SpriteObject(
+        final int[] MIPMAP_RES_IDS = new int[] {
                 R.mipmap.tino_crash_3,
+                R.mipmap.tino_landing_1
+        };
+        int resId = (int)Math.round(Math.random());
+        return new SpriteObject(
+                MIPMAP_RES_IDS[resId],
                 TINO_POS_X,
                 TINO_POS_Y,
                 Tino.WIDTH,
                 Tino.HEIGHT,
                 true,
                 false
+        );
+    }
+
+    GameObject createTitleText() {
+        String titleText = GameView.getStringFromRes(R.string.app_name);
+        return new UiTextObject(
+                titleText,
+                new Anchor(0.1f, 0.1f, 0.1f, 0.9f)
         );
     }
 
@@ -77,6 +93,8 @@ public class TitleScene extends GameScene {
         setupMainCamera();
         insertObject(Tags.Background, createGround());
         insertObject(Tags.Tino, createTino());
+        insertObject(Tags.Text, createTitleText());
+
     }
 
     @Override

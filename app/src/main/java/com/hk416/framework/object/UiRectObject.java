@@ -1,4 +1,4 @@
-package com.hk416.fallingdowntino.object.ui;
+package com.hk416.framework.object;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -6,26 +6,33 @@ import android.graphics.RectF;
 
 import androidx.annotation.NonNull;
 
-import com.hk416.framework.object.UiObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.transform.Anchor;
 import com.hk416.framework.transform.Viewport;
 
-public final class DialogUi extends UiObject {
-    private static final Anchor anchor = new Anchor(
-            0.1f, 0.05f, 0.65f, 0.95f
-    );
+public class UiRectObject extends UiObject {
+    protected final Paint drawPaint = new Paint();
+    protected final RectF drawArea = new RectF();
+    protected final float rx;
+    protected final float ry;
 
-    private final Paint drawPaint = new Paint();
-    private final RectF drawArea = new RectF();
-    private final float rx;
-    private final float ry;
+    public UiRectObject(int color, float rx, float ry) {
+        super();
+        this.rx = rx;
+        this.ry = ry;
+        drawPaint.setColor(color);
+    }
 
-    public DialogUi(int bgColor, float rx, float ry) {
+    public UiRectObject(
+            int color,
+            float rx,
+            float ry,
+            @NonNull Anchor anchor
+    ) {
         super(anchor);
         this.rx = rx;
         this.ry = ry;
-        drawPaint.setColor(bgColor);
+        drawPaint.setColor(color);
     }
 
     @Override
