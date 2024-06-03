@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.scene.InGameScene;
 import com.hk416.fallingdowntino.scene.PrepareGameScene;
+import com.hk416.fallingdowntino.scene.TitleScene;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.texture.BitmapPool;
 import com.hk416.framework.timer.GameTimer;
@@ -63,7 +64,7 @@ public class GameView extends View {
         BitmapPool.init(getResources());
 
         // 게임의 첫 번째 장면을 추가.
-        SceneManager.getInstance().cmdPushScene(new PrepareGameScene());
+        SceneManager.getInstance().cmdPushScene(new TitleScene());
     }
 
     private void setFullScreen() {
