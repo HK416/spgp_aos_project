@@ -12,6 +12,7 @@ import com.hk416.fallingdowntino.object.land.Tile;
 import com.hk416.fallingdowntino.object.tino.Tino;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteObject;
+import com.hk416.framework.object.UiButtonObject;
 import com.hk416.framework.object.UiTextObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
@@ -86,6 +87,15 @@ public class TitleScene extends GameScene {
         );
     }
 
+    GameObject createStartButton() {
+        UiButtonObject button = new UiButtonObject(
+                R.mipmap.button_released,
+                R.mipmap.button_pressed,
+                new Anchor(0.5f, 0.1f, 0.68f, 0.9f)
+        );
+        return button;
+    }
+
     @Override
     public void onEnter() {
         Log.d(TAG, "::onEnter >> 장면에 진입함");
@@ -94,7 +104,7 @@ public class TitleScene extends GameScene {
         insertObject(Tags.Background, createGround());
         insertObject(Tags.Tino, createTino());
         insertObject(Tags.Text, createTitleText());
-
+        insertObject(Tags.Button, createStartButton());
     }
 
     @Override
