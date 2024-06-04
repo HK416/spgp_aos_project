@@ -25,6 +25,18 @@ public class TitleScene extends GameScene {
     enum Tags { Background, Tino, Button, Text };
 
     private static final String TAG = TitleScene.class.getSimpleName();
+    private static final Anchor START_BTN_ANCHOR = new Anchor(
+            0.25f, 0.1f, 0.43f, 0.9f
+    );
+    private static final Anchor START_BTN_TEXT_ANCHOR = new Anchor(
+            0.295f, 0.1f, 0.365f, 0.9f
+    );
+    private static final Anchor EXIT_BTN_ANCHOR = new Anchor(
+            0.6f, 0.1f, 0.78f, 0.9f
+    );
+    private static final Anchor EXIT_BTN_TEXT_ANCHOR = new Anchor(
+            0.645f, 0.1f, 0.715f, 0.9f
+    );
 
     public static final float CAMERA_POS_X = 0.0f;
     public static final float CAMERA_POS_Y = 8.0f;
@@ -83,17 +95,43 @@ public class TitleScene extends GameScene {
         String titleText = GameView.getStringFromRes(R.string.app_name);
         return new UiTextObject(
                 titleText,
-                new Anchor(0.1f, 0.1f, 0.1f, 0.9f)
+                new Anchor(0.1f, 0.1f, 0.1f, 0.9f),
+                UiTextObject.Pivot.Horizontal
+        );
+    }
+
+    GameObject createExitButton() {
+        return new UiButtonObject(
+                R.mipmap.button_released,
+                R.mipmap.button_pressed,
+                EXIT_BTN_ANCHOR,
+                null
+        );
+    }
+
+    GameObject createExitButtonText() {
+        return new UiTextObject(
+                R.string.title_btn_exit,
+                EXIT_BTN_TEXT_ANCHOR,
+                UiTextObject.Pivot.Vertical
         );
     }
 
     GameObject createStartButton() {
-        UiButtonObject button = new UiButtonObject(
+        return new UiButtonObject(
                 R.mipmap.button_released,
                 R.mipmap.button_pressed,
-                new Anchor(0.5f, 0.1f, 0.68f, 0.9f)
+                START_BTN_ANCHOR,
+                null
         );
-        return button;
+    }
+
+    GameObject createStartButtonText() {
+        return new UiTextObject(
+                R.string.title_btn_start,
+                START_BTN_TEXT_ANCHOR,
+                UiTextObject.Pivot.Vertical
+        );
     }
 
     @Override
@@ -103,8 +141,14 @@ public class TitleScene extends GameScene {
         setupMainCamera();
         insertObject(Tags.Background, createGround());
         insertObject(Tags.Tino, createTino());
+
         insertObject(Tags.Text, createTitleText());
+
         insertObject(Tags.Button, createStartButton());
+        insertObject(Tags.Text, createStartButtonText());
+
+        insertObject(Tags.Button, createExitButton());
+        insertObject(Tags.Text, createExitButtonText());
     }
 
     @Override

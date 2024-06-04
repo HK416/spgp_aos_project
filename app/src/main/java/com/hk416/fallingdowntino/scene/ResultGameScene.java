@@ -40,7 +40,8 @@ public class ResultGameScene extends GameScene {
         // 이동 거리 텍스트
         UiTextObject distText = new UiTextObject(
                 String.format("%04dm", (int)distance),
-                new Anchor(0.15f, 0.2f, 0.6f, 0.8f)
+                new Anchor(0.15f, 0.2f, 0.6f, 0.8f),
+                UiTextObject.Pivot.Horizontal
         );
         distText.setColor(Color.BLACK);
         insertObject(Tags.Text, distText);
@@ -55,7 +56,8 @@ public class ResultGameScene extends GameScene {
         // 좋아요 갯수 텍스트
         UiTextObject likeText = new UiTextObject(
                 String.format("%03d", likeCount),
-                new Anchor(0.35f, 0.5f, 0.45f, 0.8f)
+                new Anchor(0.35f, 0.5f, 0.45f, 0.8f),
+                UiTextObject.Pivot.Horizontal
         );
         likeText.setColor(Color.BLACK);
         insertObject(Tags.Text, likeText);
@@ -63,7 +65,8 @@ public class ResultGameScene extends GameScene {
         // 터치하여 종료하기 텍스트
         UiTextObject exitText = new UiTextObject(
                 GameView.getStringFromRes(R.string.in_game_exit_msg),
-                new Anchor(0.55f, 0.15f, 0.55f, 0.85f)
+                new Anchor(0.55f, 0.15f, 0.55f, 0.85f),
+                UiTextObject.Pivot.Horizontal
         );
         exitText.setColor(Color.BLACK);
         insertObject(Tags.Text, exitText);

@@ -16,12 +16,8 @@ import com.hk416.framework.transform.Margin;
 
 public final class DurabilityUi extends UiObject {
     public final class ImageUi extends UiImageObject {
-        public ImageUi(
-                int bitmapResId,
-                @NonNull Anchor anchor,
-                @NonNull Margin margin
-        ) {
-            super(bitmapResId, anchor, margin);
+        public ImageUi(int bitmapResId, @NonNull Anchor anchor) {
+            super(bitmapResId, anchor);
         }
     }
 
@@ -29,8 +25,8 @@ public final class DurabilityUi extends UiObject {
         private int maxDurability = 0;
         private int durability = 0;
 
-        public TextUi(@NonNull Anchor anchor, @NonNull Margin margin) {
-            super(null, anchor, margin);
+        public TextUi(@NonNull Anchor anchor, Pivot pivot) {
+            super(null, anchor, pivot);
             setColor(Color.BLACK);
         }
 
@@ -51,21 +47,16 @@ public final class DurabilityUi extends UiObject {
     }
 
     private static final int BITMAP_RES_ID = R.mipmap.item_spanner;
+    private static final Anchor imgAnchor = new Anchor(0.02f, 0.02f, 0.06f, 0.107f);
+    private static final Anchor textAnchor = new Anchor(0.02f, 0.117f, 0.06f, 0.24f);
     private final Player player;
     private final TextUi text;
 
     public DurabilityUi(@NonNull Player player) {
         super();
         this.player = player;
-        GameObject img = new ImageUi(
-                BITMAP_RES_ID,
-                new Anchor(0.02f, 0.02f, 0.06f, 0.107f),
-                new Margin(0, 0, 0, 0)
-        );
-        text = new TextUi(
-                new Anchor(0.02f, 0.117f, 0.06f, 0.24f),
-                new Margin(0, 0, 0, 0)
-        );
+        GameObject img = new ImageUi(BITMAP_RES_ID, imgAnchor);
+        text = new TextUi(textAnchor, UiTextObject.Pivot.Horizontal);
         text.setMaxDurability((int)player.getMaxParachuteDurability());
         text.setDurability((int)player.getCurrParachuteDurability());
         img.setSibling(text);

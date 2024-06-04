@@ -18,10 +18,9 @@ public final class LikeUi extends UiObject {
     public class LikeImageUi extends UiImageObject {
         public LikeImageUi(
                 int bitmapResId,
-                @NonNull Anchor anchor,
-                @NonNull Margin margin
+                @NonNull Anchor anchor
         ) {
-            super(bitmapResId, anchor, margin);
+            super(bitmapResId, anchor);
         }
     }
 
@@ -31,9 +30,9 @@ public final class LikeUi extends UiObject {
 
         public LikeCountUi(
                 @NonNull Anchor anchor,
-                @NonNull Margin margin
+                @NonNull UiTextObject.Pivot pivot
         ) {
-            super(null, anchor, margin);
+            super(null, anchor, pivot);
             setColor(Color.BLACK);
         }
 
@@ -51,21 +50,16 @@ public final class LikeUi extends UiObject {
     }
 
     private static final int BITMAP_RES_ID = R.mipmap.item_like;
+    private static final Anchor imgAnchor = new Anchor(0.02f, 0.76f, 0.06f, 0.865f);
+    private static final Anchor textAnchor = new Anchor(0.02f, 0.875f, 0.06f, 0.98f);
     private final LikeCountUi textUi;
     private final Player player;
 
     public LikeUi(@NonNull Player player) {
         super();
         this.player = player;
-        GameObject imgUi = new LikeImageUi(
-                BITMAP_RES_ID,
-                new Anchor(0.02f, 0.76f, 0.06f, 0.865f),
-                new Margin(0, 0, 0, 0)
-        );
-        textUi = new LikeCountUi(
-                new Anchor(0.02f, 0.875f, 0.06f, 0.98f),
-                new Margin(0, 0, 0, 0)
-        );
+        GameObject imgUi = new LikeImageUi(BITMAP_RES_ID, imgAnchor);
+        textUi = new LikeCountUi(textAnchor, UiTextObject.Pivot.Horizontal);
         imgUi.setSibling(textUi);
         setChild(imgUi);
     }

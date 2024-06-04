@@ -11,10 +11,12 @@ import com.hk416.framework.transform.Anchor;
 
 public class ScoreUi extends UiTextObject {
     private static final int MAX_DISTANCE = 9999;
+    private static final Anchor anchor =new Anchor(0.01f, 0.3f, 0.1f, 0.7f);
+    private static final UiTextObject.Pivot pivot = Pivot.Horizontal;
     private final Player player;
 
     public ScoreUi(@NonNull Player player) {
-        super(null, new Anchor(0.01f, 0.3f, 0.1f, 0.7f));
+        super(null, anchor, pivot);
         this.player = player;
         setColor(Color.BLACK);
     }
