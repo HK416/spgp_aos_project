@@ -17,6 +17,8 @@ import com.hk416.framework.object.UiTextObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
 import com.hk416.framework.scene.GameScene;
+import com.hk416.framework.scene.SceneManager;
+import com.hk416.framework.texture.BitmapPool;
 import com.hk416.framework.transform.Anchor;
 import com.hk416.framework.transform.Projection;
 import com.hk416.framework.transform.Viewport;
@@ -105,7 +107,9 @@ public class TitleScene extends GameScene {
                 R.mipmap.button_released,
                 R.mipmap.button_pressed,
                 EXIT_BTN_ANCHOR,
-                null
+                () -> {
+                    SceneManager.getInstance().cmdPopScene();
+                }
         );
     }
 
@@ -122,7 +126,7 @@ public class TitleScene extends GameScene {
                 R.mipmap.button_released,
                 R.mipmap.button_pressed,
                 START_BTN_ANCHOR,
-                null
+                () -> SceneManager.getInstance().cmdChangeScene(new PrepareGameScene())
         );
     }
 
@@ -149,6 +153,12 @@ public class TitleScene extends GameScene {
 
         insertObject(Tags.Button, createExitButton());
         insertObject(Tags.Text, createExitButtonText());
+    }
+
+    @Override
+    public void onExit() {
+        Log.d(TAG, "::onExit >> 장면을 빠져나감");
+        BitmapPool.getInstance().clear();
     }
 
     @Override
