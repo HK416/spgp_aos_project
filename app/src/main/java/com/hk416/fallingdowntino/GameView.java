@@ -89,6 +89,11 @@ public class GameView extends View {
         currentCallback = stopCallback;
     }
 
+    public void onDestroy() {
+        activity = null;
+        res = null;
+    }
+
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
@@ -159,5 +164,9 @@ public class GameView extends View {
     public static void setDataBlock(DataLoader.DataBlock block) {
         dataBlock = block;
         DataLoader.store(activity, dataBlock);
+    }
+
+    public static Context getRootContext() {
+        return activity;
     }
 }

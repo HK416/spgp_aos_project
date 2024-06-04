@@ -29,4 +29,11 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         gameView.stopScheduling();
     }
+
+    @Override
+    protected void onDestroy() {
+        gameView.onDestroy();
+        gameView = null;
+        super.onDestroy();
+    }
 }
