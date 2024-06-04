@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">티노의 낙하실험</string>
+    <string name="in_game_exit_msg">화면을 터치해서 계속하기</string>
+    <string name="title_btn_exit">게임 종료</string>
+    <string name="title_btn_start">게임 시작</string>
+</resources>
