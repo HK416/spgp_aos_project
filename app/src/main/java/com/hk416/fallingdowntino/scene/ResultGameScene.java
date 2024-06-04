@@ -21,11 +21,13 @@ public class ResultGameScene extends GameScene {
 
     private static final String TAG = ResultGameScene.class.getSimpleName();
 
+    private final boolean newRecord;
     private final float distance;
     private final int likeCount;
 
     ResultGameScene(boolean newRecord, float distance, int likeCount) {
         super(Tags.values().length);
+        this.newRecord = newRecord;
         this.distance = distance;
         this.likeCount = likeCount;
     }
@@ -41,6 +43,17 @@ public class ResultGameScene extends GameScene {
                 45.0f,
                 new Anchor(0.1f, 0.05f, 0.65f, 0.95f)
         ));
+
+        if (newRecord) {
+            // 기록 갱신 텍스트
+            UiTextObject newRecordText = new UiTextObject(
+                    "New Record!",
+                    new Anchor(0.12f, 0.2f, 0.15f, 0.6f),
+                    UiTextObject.Pivot.Vertical
+            );
+            newRecordText.setColor(Color.RED);
+            insertObject(Tags.Text, newRecordText);
+        }
 
         // 이동 거리 텍스트
         UiTextObject distText = new UiTextObject(
