@@ -12,6 +12,7 @@ import com.hk416.fallingdowntino.GameView;
 import com.hk416.fallingdowntino.R;
 import com.hk416.fallingdowntino.object.land.Tile;
 import com.hk416.fallingdowntino.object.tino.Tino;
+import com.hk416.framework.audio.Sound;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteObject;
 import com.hk416.framework.object.UiButtonObject;
@@ -174,11 +175,14 @@ public class TitleScene extends GameScene {
 
         insertObject(Tags.Button, createExitButton());
         insertObject(Tags.Text, createExitButtonText());
+
+        Sound.playMusic(R.raw.title);
     }
 
     @Override
     public void onExit() {
         Log.d(TAG, "::onExit >> 장면을 빠져나감");
+        Sound.stopMusic();
         BitmapPool.getInstance().clear();
     }
 

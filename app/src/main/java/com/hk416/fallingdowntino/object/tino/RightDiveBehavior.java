@@ -11,6 +11,7 @@ import com.hk416.fallingdowntino.object.Player;
 import com.hk416.fallingdowntino.object.items.ItemObject;
 import com.hk416.fallingdowntino.object.land.Tile;
 import com.hk416.fallingdowntino.scene.FinishGameScene;
+import com.hk416.framework.audio.Sound;
 import com.hk416.framework.collide.BoundingBox;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteClipAnimeObject;
@@ -66,7 +67,9 @@ public class RightDiveBehavior extends SpriteObject {
             case Energy:
             case Spanner:
                 break;
-            case Like: player.addLikeCount();
+            case Like:
+                player.addLikeCount();
+                Sound.playEffect(R.raw.effect0);
                 break;
             default:
                 throw new RuntimeException("해당 유형의 아이템에 대해 행동이 구현되어 있지 않습니다! (type:" + type + ")");
@@ -95,7 +98,7 @@ public class RightDiveBehavior extends SpriteObject {
                     .setRepeat(false)
                     .addClips(0.1f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_crash_0, true, false)
                     .addClips(0.1f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_crash_1, true, false)
-                    .addClips(1.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_crash_2, true, false)
+                    .addClips(2.8f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_crash_2, true, false)
                     .addClips(1.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_crash_3, true, false)
                     .build();
             SceneManager.getInstance().cmdChangeScene(

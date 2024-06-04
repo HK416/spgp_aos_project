@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.DataLoader;
 import com.hk416.fallingdowntino.GameView;
+import com.hk416.fallingdowntino.R;
+import com.hk416.framework.audio.Sound;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
@@ -21,6 +23,8 @@ public final class FinishGameScene extends GameScene {
     public enum Tags { Object, Player };
 
     private static final String TAG = FinishGameScene.class.getSimpleName();
+
+    public static final float MIN_DURATION = 4.0f;
 
     private final float duration;
     private final GameObject player;
@@ -45,7 +49,7 @@ public final class FinishGameScene extends GameScene {
             @NonNull GameObject tile
     ) {
         super(Tags.values().length);
-        this.duration = duration;
+        this.duration = Math.max(duration, MIN_DURATION);
         this.distance = distance;
         this.likeCount = likeCount;
         this.player = player;
@@ -76,6 +80,9 @@ public final class FinishGameScene extends GameScene {
 
         insertObject(Tags.Player, player);
         insertObject(Tags.Object, tile);
+
+        Sound.pauseMusic();
+        Sound.playEffect(R.raw.effect2);
     }
 
     @Override

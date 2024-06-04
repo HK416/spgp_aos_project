@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.GameView;
 import com.hk416.fallingdowntino.R;
+import com.hk416.framework.audio.Sound;
 import com.hk416.framework.object.UiImageObject;
 import com.hk416.framework.object.UiRectObject;
 import com.hk416.framework.object.UiTextObject;
@@ -88,12 +89,15 @@ public class ResultGameScene extends GameScene {
         );
         exitText.setColor(Color.BLACK);
         insertObject(Tags.Text, exitText);
+
+        Sound.resumeMusic();
     }
 
     @Override
     public void onExit() {
         Log.d(TAG, "::onExit >> 장면에 빠져나감");
         BitmapPool.getInstance().clear();
+        Sound.stopMusic();
     }
 
     @Override

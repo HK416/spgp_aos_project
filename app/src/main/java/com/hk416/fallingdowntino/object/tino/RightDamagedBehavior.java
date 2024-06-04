@@ -16,6 +16,7 @@ import com.hk416.fallingdowntino.object.Player;
 import com.hk416.fallingdowntino.object.items.ItemObject;
 import com.hk416.fallingdowntino.object.items.SpannerItem;
 import com.hk416.fallingdowntino.object.parachute.Parachute;
+import com.hk416.framework.audio.Sound;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteAnimeObject;
 import com.hk416.framework.render.DrawPipeline;
@@ -175,16 +176,17 @@ public class RightDamagedBehavior extends SpriteAnimeObject {
                 case Energy:
                     player.setInvincibleTimer(Tino.INVINCIBLE_DURATION);
                     player.setCurrDownSpeed(Player.MAX_DOWN_SPEED);
-                    player.setBehaviors(
-                            Tino.Behavior.RightInvincible,
-                            null
-                    );
+                    player.setBehaviors(Tino.Behavior.RightInvincible, null);
+                    Sound.pauseMusic();
+                    Sound.playEffect(R.raw.effect1);
                     break;
                 case Spanner:
                     player.addParachuteDurability(SpannerItem.DURABILITY);
+                    Sound.playEffect(R.raw.effect0);
                     break;
                 case Like:
                     player.addLikeCount();
+                    Sound.playEffect(R.raw.effect0);
                     break;
                 default:
                     throw new RuntimeException("해당 유형의 아이템에 대해 행동이 구현되어 있지 않습니다! (type:" + type + ")");

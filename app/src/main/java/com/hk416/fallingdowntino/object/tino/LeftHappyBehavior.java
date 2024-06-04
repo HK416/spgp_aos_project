@@ -14,6 +14,7 @@ import com.hk416.fallingdowntino.object.items.SpannerItem;
 import com.hk416.fallingdowntino.object.land.Tile;
 import com.hk416.fallingdowntino.object.parachute.Parachute;
 import com.hk416.fallingdowntino.scene.FinishGameScene;
+import com.hk416.framework.audio.Sound;
 import com.hk416.framework.collide.BoundingBox;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteAnimeObject;
@@ -131,18 +132,19 @@ public class LeftHappyBehavior extends SpriteAnimeObject {
             case Energy:
                 player.setInvincibleTimer(Tino.INVINCIBLE_DURATION);
                 player.setCurrDownSpeed(Player.MAX_DOWN_SPEED);
-                player.setBehaviors(
-                        Tino.Behavior.LeftInvincible,
-                        null
-                );
+                player.setBehaviors(Tino.Behavior.LeftInvincible, null);
+                Sound.pauseMusic();
+                Sound.playEffect(R.raw.effect1);
                 break;
             case Spanner:
                 player.addParachuteDurability(SpannerItem.DURABILITY);
                 player.setBehaviorTimer(Tino.HAPPY_DUARTION);
+                Sound.playEffect(R.raw.effect0);
                 break;
             case Like:
                 player.addLikeCount();
                 player.setBehaviorTimer(Tino.HAPPY_DUARTION);
+                Sound.playEffect(R.raw.effect0);
                 break;
             default:
                 throw new RuntimeException("해당 유형의 아이템에 대해 행동이 구현되어 있지 않습니다! (type:" + type + ")");
@@ -170,7 +172,7 @@ public class LeftHappyBehavior extends SpriteAnimeObject {
                     .setX(position.x)
                     .setY(position.y)
                     .setRepeat(false)
-                    .addClips(1.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_landing_0, false, false)
+                    .addClips(3.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_landing_0, false, false)
                     .addClips(1.0f, Tino.WIDTH, Tino.HEIGHT, R.mipmap.tino_landing_1, false, false)
                     .build();
             SceneManager.getInstance().cmdChangeScene(

@@ -46,7 +46,17 @@ public class Sound {
             soundIdMap.put(resId, soundId);
         }
         // int streamId =
-        pool.play(soundId, 1f, 1f, 1, 0, 1f);
+        pool.play(soundId, 1f, 1f, 0, 0, 1f);
+    }
+
+    public static void preloadEffect(int resId) {
+        if (soundIdMap.containsKey(resId)) {
+            return;
+        }
+
+        SoundPool pool = getSoundPool();
+        int soundId = pool.load(GameView.getRootContext(), resId, 1);
+        soundIdMap.put(resId, soundId);
     }
 
     private static SoundPool getSoundPool() {

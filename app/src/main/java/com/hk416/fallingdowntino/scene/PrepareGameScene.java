@@ -11,6 +11,7 @@ import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.fallingdowntino.object.Player;
 import com.hk416.fallingdowntino.object.parachute.Parachute;
 import com.hk416.fallingdowntino.object.tino.Tino;
+import com.hk416.framework.audio.Sound;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteAnimeObject;
 import com.hk416.framework.render.DrawPipeline;
@@ -119,6 +120,11 @@ public class PrepareGameScene extends GameScene {
         tinoSprite.setChild(parachuteSprite);
         tinoSprite.setPosition(Player.X_POS, Player.Y_POS);
         insertObject(Tags.Player, tinoSprite);
+
+        Sound.preloadEffect(R.raw.effect0);
+        Sound.preloadEffect(R.raw.effect1);
+        Sound.preloadEffect(R.raw.effect2);
+        Sound.playMusic(R.raw.game);
     }
 
     @Override
