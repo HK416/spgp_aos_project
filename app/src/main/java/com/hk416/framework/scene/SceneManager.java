@@ -120,8 +120,12 @@ public final class SceneManager {
     }
 
     private void processChangeScene() {
-        GameScene currentScene = getCurrentScene();
-        if (currentScene != null) {
+        while (true) {
+            GameScene currentScene = getCurrentScene();
+            if (currentScene == null) {
+                break;
+            }
+
             currentScene.onExit();
             sceneStack.pop();
         }

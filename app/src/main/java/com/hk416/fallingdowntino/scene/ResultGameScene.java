@@ -2,6 +2,9 @@ package com.hk416.fallingdowntino.scene;
 
 import android.graphics.Color;
 import android.util.Log;
+import android.view.MotionEvent;
+
+import androidx.annotation.NonNull;
 
 import com.hk416.fallingdowntino.GameView;
 import com.hk416.fallingdowntino.R;
@@ -9,6 +12,8 @@ import com.hk416.framework.object.UiImageObject;
 import com.hk416.framework.object.UiRectObject;
 import com.hk416.framework.object.UiTextObject;
 import com.hk416.framework.scene.GameScene;
+import com.hk416.framework.scene.SceneManager;
+import com.hk416.framework.texture.BitmapPool;
 import com.hk416.framework.transform.Anchor;
 
 public class ResultGameScene extends GameScene {
@@ -70,6 +75,20 @@ public class ResultGameScene extends GameScene {
         );
         exitText.setColor(Color.BLACK);
         insertObject(Tags.Text, exitText);
+    }
+
+    @Override
+    public void onExit() {
+        Log.d(TAG, "::onExit >> 장면에 빠져나감");
+        BitmapPool.getInstance().clear();
+    }
+
+    @Override
+    public void handleEvent(@NonNull MotionEvent e) {
+        super.handleEvent(e);
+        if (e.getAction() == MotionEvent.ACTION_DOWN) {
+            SceneManager.getInstance().cmdChangeScene(new TitleScene());
+        }
     }
 
     @Override
