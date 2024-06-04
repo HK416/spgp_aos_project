@@ -1,11 +1,13 @@
 package com.hk416.fallingdowntino.scene;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.DataLoader;
 import com.hk416.fallingdowntino.GameView;
 import com.hk416.fallingdowntino.R;
 import com.hk416.fallingdowntino.object.land.Tile;
@@ -27,11 +29,17 @@ public class TitleScene extends GameScene {
     enum Tags { Background, Tino, Button, Text };
 
     private static final String TAG = TitleScene.class.getSimpleName();
+    private static final Anchor TITLE_TEXT_ANCHOR = new Anchor(
+            0.1f, 0.1f, 0.1f, 0.9f
+    );
+    private static final Anchor BEST_TEXT_ANCHOR = new Anchor(
+            0.25f, 0.3f, 0.28f, 0.7f
+    );
     private static final Anchor START_BTN_ANCHOR = new Anchor(
-            0.25f, 0.1f, 0.43f, 0.9f
+            0.4f, 0.1f, 0.58f, 0.9f
     );
     private static final Anchor START_BTN_TEXT_ANCHOR = new Anchor(
-            0.295f, 0.1f, 0.365f, 0.9f
+            0.445f, 0.1f, 0.515f, 0.9f
     );
     private static final Anchor EXIT_BTN_ANCHOR = new Anchor(
             0.6f, 0.1f, 0.78f, 0.9f
@@ -97,8 +105,20 @@ public class TitleScene extends GameScene {
         String titleText = GameView.getStringFromRes(R.string.app_name);
         return new UiTextObject(
                 titleText,
-                new Anchor(0.1f, 0.1f, 0.1f, 0.9f),
+                TITLE_TEXT_ANCHOR,
                 UiTextObject.Pivot.Horizontal
+        );
+    }
+
+    @SuppressLint("DefaultLocale")
+    GameObject createBestDistText() {
+        DataLoader.DataBlock block = GameView.getDataBlock();
+        String locale = GameView.getStringFromRes(R.string.title_best_text);
+        String bestText = String.format("%s:%04dm", locale, block.bestDistance);
+        return new UiTextObject(
+                bestText,
+                BEST_TEXT_ANCHOR,
+                UiTextObject.Pivot.Vertical
         );
     }
 
@@ -147,6 +167,7 @@ public class TitleScene extends GameScene {
         insertObject(Tags.Tino, createTino());
 
         insertObject(Tags.Text, createTitleText());
+        insertObject(Tags.Text, createBestDistText());
 
         insertObject(Tags.Button, createStartButton());
         insertObject(Tags.Text, createStartButtonText());

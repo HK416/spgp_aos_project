@@ -3,4 +3,5 @@
     <string name="in_game_exit_msg">Tap the screen to continue</string>
     <string name="title_btn_exit">Exit</string>
     <string name="title_btn_start">Start</string>
+    <string name="title_best_text">Best</string>
 </resources>

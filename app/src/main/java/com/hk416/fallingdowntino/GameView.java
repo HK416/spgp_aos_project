@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.Log;
 import android.view.Choreographer;
 import android.view.Choreographer.FrameCallback;
@@ -15,8 +14,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.hk416.fallingdowntino.scene.InGameScene;
-import com.hk416.fallingdowntino.scene.PrepareGameScene;
 import com.hk416.fallingdowntino.scene.TitleScene;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.texture.BitmapPool;
@@ -26,6 +23,9 @@ import com.hk416.framework.transform.Viewport;
 
 public class GameView extends View {
     private static final String TAG = GameView.class.getSimpleName();
+    private static DataLoader.DataBlock dataBlock = null;
+    private static Activity activity = null;
+
     private static Resources res = null;
 
     private FrameCallback currentCallback = null;
@@ -46,14 +46,15 @@ public class GameView extends View {
     };
 
     private final GameTimer timer = new GameTimer();
-    private final Activity activity;
 
     public GameView(Context context) {
         super(context);
         setFullScreen();
 
         // Context는 반드시 Activity라 가정한다.
-        activity = (Activity)context;
+        if (activity == null) {
+            activity = (Activity) context;
+        }
 
         // Resources를 설정한다.
         if (res == null) {
@@ -62,6 +63,11 @@ public class GameView extends View {
 
         // Resources를 가져오고, BitmapPool을 초기화 한다.
         BitmapPool.init(getResources());
+
+        // 유저 데이터를 가져옵니다.
+        if (dataBlock == null) {
+            dataBlock = DataLoader.load(context);
+        }
 
         // 게임의 첫 번째 장면을 추가.
         SceneManager.getInstance().cmdPushScene(new TitleScene());
@@ -144,5 +150,14 @@ public class GameView extends View {
 
     public static String getStringFromRes(int resId) {
         return res.getString(resId);
+    }
+
+    public static DataLoader.DataBlock getDataBlock() {
+        return dataBlock;
+    }
+
+    public static void setDataBlock(DataLoader.DataBlock block) {
+        dataBlock = block;
+        DataLoader.store(activity, dataBlock);
     }
 }

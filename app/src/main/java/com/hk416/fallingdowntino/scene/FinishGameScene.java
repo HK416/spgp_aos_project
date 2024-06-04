@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.DataLoader;
+import com.hk416.fallingdowntino.GameView;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
@@ -94,7 +96,17 @@ public final class FinishGameScene extends GameScene {
 
         // 결과 표시 장면으로 넘어간다.
         if (timer >= duration) {
-            SceneManager.getInstance().cmdPushScene(new ResultGameScene(distance, likeCount));
+            DataLoader.DataBlock block = GameView.getDataBlock();
+            boolean newRecord = block.bestDistance < (long)distance;
+            block.bestDistance = Math.max(block.bestDistance, (long)distance);
+            block.numLikes += likeCount;
+            GameView.setDataBlock(block);
+
+            SceneManager.getInstance().cmdPushScene(new ResultGameScene(
+                    newRecord,
+                    distance,
+                    likeCount
+            ));
             return;
         }
         super.onUpdate(elapsedTimeSec, frameRate);

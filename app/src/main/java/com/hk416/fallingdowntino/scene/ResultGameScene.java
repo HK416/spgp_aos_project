@@ -24,7 +24,7 @@ public class ResultGameScene extends GameScene {
     private final float distance;
     private final int likeCount;
 
-    ResultGameScene(float distance, int likeCount) {
+    ResultGameScene(boolean newRecord, float distance, int likeCount) {
         super(Tags.values().length);
         this.distance = distance;
         this.likeCount = likeCount;
