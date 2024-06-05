@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.DataLoader;
+import com.hk416.fallingdowntino.GameView;
 import com.hk416.fallingdowntino.R;
 import com.hk416.fallingdowntino.object.MainCamera;
 import com.hk416.fallingdowntino.object.Player;
@@ -153,7 +155,12 @@ public class PrepareGameScene extends GameScene {
         mainCamera.generateCameraTransform();
 
         if (timer >= DURATION) {
-            SceneManager.getInstance().cmdPushScene(new BoostGameScene());
+            DataLoader.DataBlock block = GameView.getDataBlock();
+            if (block.numLikes > 30) {
+                SceneManager.getInstance().cmdPushScene(new BoostGameScene(block));
+            } else {
+                SceneManager.getInstance().cmdChangeScene(new InGameScene());
+            }
         }
         super.onUpdate(elapsedTimeSec, frameRate);
     }

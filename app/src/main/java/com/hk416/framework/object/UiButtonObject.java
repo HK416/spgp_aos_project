@@ -1,6 +1,5 @@
 package com.hk416.framework.object;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.util.Log;
@@ -10,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hk416.framework.render.DrawPipeline;
-import com.hk416.framework.texture.BitmapPool;
 import com.hk416.framework.transform.Anchor;
 import com.hk416.framework.transform.Margin;
 import com.hk416.framework.transform.Viewport;
@@ -26,11 +24,11 @@ public class UiButtonObject extends UiObject {
 
     private static final String TAG = UiButtonObject.class.getSimpleName();
 
-    protected final ArrayList<Bitmap> btnImages = new ArrayList<>();
+    protected final ArrayList<GameObject> state = new ArrayList<>();
     protected final RectF drawArea = new RectF();
     protected final IButtonFunc buttonFunc;
 
-    private State state = State.Released;
+    private State currState = State.Released;
     private Integer pointerId = null;
 
     public UiButtonObject(
@@ -41,7 +39,7 @@ public class UiButtonObject extends UiObject {
     ) {
         super(anchor);
         this.buttonFunc = buttonFunc;
-        init(releasedResId, pressedResId);
+        initFromBitmaps(releasedResId, pressedResId);
     }
 
     public UiButtonObject(
@@ -53,33 +51,43 @@ public class UiButtonObject extends UiObject {
     ) {
         super(anchor, margin);
         this.buttonFunc = buttonFunc;
-        init(releasedResId, pressedResId);
+        initFromBitmaps(releasedResId, pressedResId);
     }
 
-    private void init(int releasedResId, int pressedResId) {
-        BitmapPool pool = BitmapPool.getInstance();
-        btnImages.add(pool.get(releasedResId));
-        btnImages.add(pool.get(pressedResId));
+    public UiButtonObject(
+            int releasedColor,
+            int pressedColor,
+            float rx,
+            float ry,
+            @NonNull Anchor anchor,
+            @Nullable IButtonFunc buttonFunc
+    ) {
+        super(anchor);
+        this.buttonFunc = buttonFunc;
+        initFromColors(releasedColor, pressedColor, rx, ry);
     }
 
-    private void buildDrawArea(Bitmap bitmap) {
+    private void initFromColors(int releasedColor, int pressedColor, float rx, float ry) {
+        state.add(new UiRectObject(releasedColor, rx, ry, super.anchor));
+        state.add(new UiRectObject(pressedColor, rx, ry, super.anchor));
+    }
+
+    private void initFromBitmaps(int releasedResId, int pressedResId) {
+        state.add(new UiImageObject(releasedResId, super.anchor, super.margin));
+        state.add(new UiImageObject(pressedResId, super.anchor, super.margin));
+    }
+
+    private void buildArea() {
         Viewport viewport = DrawPipeline.getInstance().getViewport();
 
         drawArea.top = viewport.top + anchor.top * viewport.getHeight() + margin.top;
         drawArea.left = viewport.left + anchor.left * viewport.getWidth() + margin.left;
         drawArea.bottom = viewport.top + anchor.bottom * viewport.getHeight() + margin.bottom;
         drawArea.right = viewport.left + anchor.right * viewport.getWidth() + margin.right;
-
-        if (bitmap != null) {
-            float desiredBitmapSize = bitmap.getHeight() * drawArea.width() / bitmap.getWidth();
-            float centerY = drawArea.centerY();
-            drawArea.top = centerY - 0.5f * desiredBitmapSize;
-            drawArea.bottom = centerY + 0.5f * desiredBitmapSize;
-        }
     }
 
     private boolean contains(float x, float y) {
-        buildDrawArea(btnImages.get(state.ordinal()));
+        buildArea();
         return drawArea.contains(x, y);
     }
 
@@ -95,16 +103,16 @@ public class UiButtonObject extends UiObject {
         super.onTouchEvent(e);
         int index = e.getActionIndex();
         int id = e.getPointerId(index);
-        if (state == State.Released && e.getAction() == MotionEvent.ACTION_DOWN) {
+        if (currState == State.Released && e.getAction() == MotionEvent.ACTION_DOWN) {
             if (contains(e.getX(), e.getY())) {
-                state = State.Pressed;
+                currState = State.Pressed;
                 pointerId = id;
             }
-        } else if (state == State.Pressed && pointerId == id && e.getAction() == MotionEvent.ACTION_UP) {
+        } else if (currState == State.Pressed && pointerId == id && e.getAction() == MotionEvent.ACTION_UP) {
             if (contains(e.getX(), e.getY())) {
                 onClick();
             }
-            state = State.Released;
+            currState = State.Released;
             pointerId = null;
         }
     }
@@ -112,10 +120,9 @@ public class UiButtonObject extends UiObject {
     @Override
     public void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
-        Bitmap bitmap = btnImages.get(state.ordinal());
-        if (bitmap != null) {
-            buildDrawArea(bitmap);
-            canvas.drawBitmap(bitmap, null, drawArea, null);
+        GameObject btn = state.get(currState.ordinal());
+        if (btn != null) {
+            btn.onDraw(canvas);
         }
     }
 }
