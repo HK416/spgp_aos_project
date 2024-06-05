@@ -6,4 +6,6 @@
     <string name="title_best_text">Best</string>
     <string name="pause_main_text">Pause</string>
     <string name="pause_sub_text">Tap the screen to continue</string>
+    <string name="boost_btn_skip_text">Skip</string>
+    <string name="boost_cost_text">Cost</string>
 </resources>

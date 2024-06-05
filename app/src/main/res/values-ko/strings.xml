@@ -7,4 +7,6 @@
     <string name="title_best_text">최고기록</string>
     <string name="pause_main_text">일시정지</string>
     <string name="pause_sub_text">화면을 터치해서 계속하기</string>
+    <string name="boost_btn_skip_text">생략하기</string>
+    <string name="boost_cost_text">비용</string>
 </resources>

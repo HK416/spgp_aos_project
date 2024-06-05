@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.R;
 import com.hk416.fallingdowntino.object.tino.Tino;
 import com.hk416.fallingdowntino.object.ui.DurabilityUi;
 import com.hk416.fallingdowntino.object.ui.LikeUi;
@@ -27,12 +28,17 @@ public final class InGameScene extends GameScene {
     public enum Tags { Object, Item, Player, Ui }
 
     private final PauseScene pauseScene = new PauseScene();
-
+    private final boolean boost;
     private Player player;
-
 
     public InGameScene() {
         super(Tags.values().length);
+        boost = false;
+    }
+
+    public InGameScene(boolean boost) {
+        super(Tags.values().length);
+        this.boost = boost;
     }
 
     private void setupDrawPipeline() {
@@ -43,6 +49,12 @@ public final class InGameScene extends GameScene {
 
     private void setupObjects() {
         player = new Player();
+        if (boost) {
+            player.setInvincibleTimer(Tino.INVINCIBLE_DURATION);
+            player.setCurrDownSpeed(Player.MAX_DOWN_SPEED);
+            player.setBehaviors(Tino.Behavior.RightInvincible, null);
+        }
+
         insertObject(Tags.Player, player);
         insertObject(Tags.Object, new BlockPool(
                 MainCamera.PROJ_LEFT,
@@ -70,7 +82,13 @@ public final class InGameScene extends GameScene {
         setupDrawPipeline();
         setupObjects();
         setupUserInterface();
-        Sound.resumeAllSounds();
+
+        if (boost) {
+            Sound.pauseMusic();
+            Sound.playEffect(R.raw.effect1);
+        } else {
+            Sound.resumeAllSounds();
+        }
     }
 
     @Override

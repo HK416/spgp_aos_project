@@ -156,7 +156,7 @@ public class PrepareGameScene extends GameScene {
 
         if (timer >= DURATION) {
             DataLoader.DataBlock block = GameView.getDataBlock();
-            if (block.numLikes > 30) {
+            if (block.numLikes > BoostGameScene.COST) {
                 SceneManager.getInstance().cmdPushScene(new BoostGameScene(block));
             } else {
                 SceneManager.getInstance().cmdChangeScene(new InGameScene());
