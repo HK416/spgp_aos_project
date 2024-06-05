@@ -153,7 +153,7 @@ public class PrepareGameScene extends GameScene {
         mainCamera.generateCameraTransform();
 
         if (timer >= DURATION) {
-            SceneManager.getInstance().cmdChangeScene(new InGameScene());
+            SceneManager.getInstance().cmdPushScene(new BoostGameScene());
         }
         super.onUpdate(elapsedTimeSec, frameRate);
     }

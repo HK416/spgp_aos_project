@@ -70,6 +70,7 @@ public final class InGameScene extends GameScene {
         setupDrawPipeline();
         setupObjects();
         setupUserInterface();
+        Sound.resumeAllSounds();
     }
 
     @Override
