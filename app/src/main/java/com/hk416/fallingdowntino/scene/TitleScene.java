@@ -16,6 +16,7 @@ import com.hk416.framework.audio.Sound;
 import com.hk416.framework.object.GameObject;
 import com.hk416.framework.object.SpriteObject;
 import com.hk416.framework.object.UiButtonObject;
+import com.hk416.framework.object.UiImageObject;
 import com.hk416.framework.object.UiTextObject;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.render.GameCamera;
@@ -27,7 +28,7 @@ import com.hk416.framework.transform.Projection;
 import com.hk416.framework.transform.Viewport;
 
 public class TitleScene extends GameScene {
-    enum Tags { Background, Tino, Button, Text };
+    enum Tags { Background, Icon, Button, Text };
 
     private static final String TAG = TitleScene.class.getSimpleName();
     private static final Anchor TITLE_TEXT_ANCHOR = new Anchor(
@@ -35,6 +36,12 @@ public class TitleScene extends GameScene {
     );
     private static final Anchor BEST_TEXT_ANCHOR = new Anchor(
             0.25f, 0.3f, 0.28f, 0.7f
+    );
+    private static final Anchor LIKE_ICO_ANCHOR = new Anchor(
+            0.9f, 0.7f, 0.9f, 0.8f
+    );
+    private static final Anchor LIKE_SCORE_ANCHOR = new Anchor(
+            0.878f, 0.82f, 0.9f, 0.92f
     );
     private static final Anchor START_BTN_ANCHOR = new Anchor(
             0.4f, 0.1f, 0.58f, 0.9f
@@ -112,10 +119,9 @@ public class TitleScene extends GameScene {
     }
 
     @SuppressLint("DefaultLocale")
-    GameObject createBestDistText() {
-        DataLoader.DataBlock block = GameView.getDataBlock();
+    GameObject createBestDistText(long bestDistance) {
         String locale = GameView.getStringFromRes(R.string.title_best_text);
-        String bestText = String.format("%s:%04dm", locale, block.bestDistance);
+        String bestText = String.format("%s:%04dm", locale, bestDistance);
         return new UiTextObject(
                 bestText,
                 BEST_TEXT_ANCHOR,
@@ -142,6 +148,16 @@ public class TitleScene extends GameScene {
         );
     }
 
+    GameObject createLikeIcon() {
+        return new UiImageObject(R.mipmap.item_like, LIKE_ICO_ANCHOR);
+    }
+
+    @SuppressLint("DefaultLocale")
+    GameObject createLikeScore(long numLikes) {
+        String text = String.format("%03d", numLikes);
+        return new UiTextObject(text, LIKE_SCORE_ANCHOR, UiTextObject.Pivot.Horizontal);
+    }
+
     GameObject createStartButton() {
         return new UiButtonObject(
                 R.mipmap.button_released,
@@ -163,12 +179,17 @@ public class TitleScene extends GameScene {
     public void onEnter() {
         Log.d(TAG, "::onEnter >> 장면에 진입함");
 
+        DataLoader.DataBlock block = GameView.getDataBlock();
+
         setupMainCamera();
         insertObject(Tags.Background, createGround());
-        insertObject(Tags.Tino, createTino());
+        insertObject(Tags.Icon, createTino());
 
         insertObject(Tags.Text, createTitleText());
-        insertObject(Tags.Text, createBestDistText());
+        insertObject(Tags.Text, createBestDistText(block.bestDistance));
+
+        insertObject(Tags.Icon, createLikeIcon());
+        insertObject(Tags.Text, createLikeScore(block.numLikes));
 
         insertObject(Tags.Button, createStartButton());
         insertObject(Tags.Text, createStartButtonText());
