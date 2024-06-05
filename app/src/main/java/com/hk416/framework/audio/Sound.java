@@ -26,13 +26,35 @@ public class Sound {
         mediaPlayer.stop();
         mediaPlayer = null;
     }
+
+    public static void pauseAllSounds() {
+        pauseMusic();
+        pauseEffects();
+    }
+
     public static void pauseMusic() {
         if (mediaPlayer == null) return;
         mediaPlayer.pause();
+        getSoundPool().autoPause();
     }
+
+    public static void pauseEffects() {
+        getSoundPool().autoPause();
+    }
+
+    public static void resumeAllSounds() {
+        resumeMusic();
+        resumeEffects();
+    }
+
     public static void resumeMusic() {
         if (mediaPlayer == null) return;
         mediaPlayer.start();
+        getSoundPool().autoResume();
+    }
+
+    public static void resumeEffects() {
+        getSoundPool().autoResume();
     }
 
     private static final HashMap<Integer, Integer> soundIdMap = new HashMap<>();
@@ -45,7 +67,7 @@ public class Sound {
             soundId = pool.load(GameView.getRootContext(), resId, 1);
             soundIdMap.put(resId, soundId);
         }
-        // int streamId =
+
         pool.play(soundId, 1f, 1f, 0, 0, 1f);
     }
 

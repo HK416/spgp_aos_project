@@ -5,6 +5,7 @@ import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.framework.audio.Sound;
 import com.hk416.framework.object.GameObject;
 
 import java.util.ArrayDeque;
@@ -49,11 +50,11 @@ public class GameScene {
     }
 
     public void onPause() {
-        /* empty */
+        Sound.pauseAllSounds();
     }
 
     public void onResume() {
-        /* empty */
+        Sound.resumeAllSounds();
     }
 
     public void handleEvent(@NonNull MotionEvent e) {

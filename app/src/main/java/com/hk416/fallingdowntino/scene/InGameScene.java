@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
+import com.hk416.fallingdowntino.object.tino.Tino;
 import com.hk416.fallingdowntino.object.ui.DurabilityUi;
 import com.hk416.fallingdowntino.object.ui.LikeUi;
 import com.hk416.fallingdowntino.object.MainCamera;
@@ -17,6 +18,7 @@ import com.hk416.fallingdowntino.object.land.BlockPool;
 import com.hk416.framework.audio.Sound;
 import com.hk416.framework.render.DrawPipeline;
 import com.hk416.framework.scene.GameScene;
+import com.hk416.framework.scene.SceneManager;
 import com.hk416.framework.transform.Viewport;
 
 public final class InGameScene extends GameScene {
@@ -24,7 +26,10 @@ public final class InGameScene extends GameScene {
 
     public enum Tags { Object, Item, Player, Ui }
 
+    private final PauseScene pauseScene = new PauseScene();
+
     private Player player;
+
 
     public InGameScene() {
         super(Tags.values().length);
@@ -75,11 +80,25 @@ public final class InGameScene extends GameScene {
     @Override
     public void onPause() {
         Log.d(TAG, "::onPause >> 장면을 정지함.");
+        if (player.getTino().getBehavior() == Tino.Behavior.LeftInvincible
+        || player.getTino().getBehavior() == Tino.Behavior.RightInvincible) {
+            Sound.pauseEffects();
+        } else {
+            Sound.pauseMusic();
+        }
+
+        SceneManager.getInstance().cmdPushScene(pauseScene);
     }
 
     @Override
     public void onResume() {
         Log.d(TAG, "::onResume >> 장면을 재개함.");
+        if (player.getTino().getBehavior() == Tino.Behavior.LeftInvincible
+                || player.getTino().getBehavior() == Tino.Behavior.RightInvincible) {
+            Sound.resumeEffects();
+        } else {
+            Sound.resumeMusic();
+        }
     }
 
     @Override

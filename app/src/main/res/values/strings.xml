@@ -4,4 +4,6 @@
     <string name="title_btn_exit">Exit</string>
     <string name="title_btn_start">Start</string>
     <string name="title_best_text">Best</string>
+    <string name="pause_main_text">Pause</string>
+    <string name="pause_sub_text">Tap the screen to continue</string>
 </resources>

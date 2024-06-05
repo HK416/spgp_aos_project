@@ -71,6 +71,10 @@ public class Tino extends GameObject {
         }
     }
 
+    public Behavior getBehavior() {
+        return currBehavior;
+    }
+
     public void setBehavior(Behavior nextBehavior) {
         currBehavior = nextBehavior;
         GameObject object = behaviors.get(currBehavior);

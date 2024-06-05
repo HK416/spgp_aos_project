@@ -86,6 +86,18 @@ public final class FinishGameScene extends GameScene {
     }
 
     @Override
+    public void onPause() {
+        Log.d(TAG, "::onPause >> 일시정지");
+        Sound.pauseEffects();
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "::onResume >> 재개");
+        Sound.resumeEffects();
+    }
+
+    @Override
     public void onUpdate(float elapsedTimeSec, long frameRate) {
         timer = Math.min(timer + elapsedTimeSec, duration);
 

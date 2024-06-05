@@ -5,4 +5,6 @@
     <string name="title_btn_exit">게임 종료</string>
     <string name="title_btn_start">게임 시작</string>
     <string name="title_best_text">최고기록</string>
+    <string name="pause_main_text">일시정지</string>
+    <string name="pause_sub_text">화면을 터치해서 계속하기</string>
 </resources>
